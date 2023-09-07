@@ -13,6 +13,7 @@ namespace FreeRentLibrary
 {
     public class Startup
     {
+        //test de git
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
