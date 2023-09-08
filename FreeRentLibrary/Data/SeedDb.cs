@@ -33,15 +33,15 @@ namespace FreeRentLibrary.Data
 
 
             // Creates Admin
-            var user = await _userHelper.GetUserByEmailAsync("luispatricio.info@gmail.com");
+            var user = await _userHelper.GetUserByEmailAsync("FreeRentLibrary.info@gmail.com");
             if (user == null)
             {
                 user = new User
                 {
-                    FirstName = "Luis",
-                    LastName = "Patricio",
-                    Email = "luispatricio.info@gmail.com",
-                    UserName = "luispatricio.info@gmail.com",
+                    FirstName = "FreeRent",
+                    LastName = "Library",
+                    Email = "FreeRentLibrary.info@gmail.com",
+                    UserName = "FreeRentLibrary.info@gmail.com",
                     PhoneNumber = "999666333",
                     Address = "Rua Ua 2",
                     EmployeeApproved = true,

@@ -1,8 +1,7 @@
+using FreeRentLibrary.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using FreeRentLibrary;
-using FreeRentLibrary.Data;
 
 namespace FreeRentLibrary
 {
