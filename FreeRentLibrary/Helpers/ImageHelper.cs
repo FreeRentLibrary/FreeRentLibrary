@@ -11,11 +11,9 @@ namespace FreeRentLibrary.Helpers
         {
             string guid = Guid.NewGuid().ToString();
             string file = $"{guid}.jpg";
-
-            string path = Path.Combine(
-                Directory.GetCurrentDirectory(),
+            string path = Path.Combine(Directory.GetCurrentDirectory(),
                 $"wwwroot\\images\\{folder}",
-                file);
+            file);
 
             using (FileStream stream = new FileStream(path, FileMode.Create))
             {

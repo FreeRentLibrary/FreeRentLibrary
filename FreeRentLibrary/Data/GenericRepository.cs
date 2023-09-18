@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using FreeRentLibrary.Data.Entities;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using FreeRentLibrary.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace FreeRentLibrary.Data
 {
@@ -21,9 +21,7 @@ namespace FreeRentLibrary.Data
 
         public async Task<T> GetByIdAsync(int id)
         {
-            return await _context.Set<T>()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(e => e.Id == id);
+            return await _context.Set<T>().AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public async Task CreateAsync(T entity)
@@ -48,11 +46,9 @@ namespace FreeRentLibrary.Data
         {
             return await _context.Set<T>().AnyAsync(e => e.Id == id);
         }
-
         private async Task<bool> SaveAllAsync()
         {
             return await _context.SaveChangesAsync() > 0;
         }
-
     }
 }

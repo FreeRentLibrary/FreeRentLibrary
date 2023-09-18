@@ -18,13 +18,11 @@ namespace FreeRentLibrary.Helpers
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(keys);
             _blobClient = storageAccount.CreateCloudBlobClient();
         }
-
         public async Task<Guid> UploadBlobAsync(IFormFile file, string containerName)
         {
             Stream stream = file.OpenReadStream();
             return await UploadStreamAsync(stream, containerName);
         }
-
 
         public async Task<Guid> UploadBlobAsync(byte[] file, string containerName)
         {
@@ -37,6 +35,7 @@ namespace FreeRentLibrary.Helpers
             Stream stream = File.OpenRead(image);
             return await UploadStreamAsync(stream, containerName);
         }
+
         private async Task<Guid> UploadStreamAsync(Stream stream, string containerName)
         {
             Guid name = Guid.NewGuid();

@@ -1,3 +1,5 @@
+using System;
+
 namespace FreeRentLibrary.Models
 {
     public class ErrorViewModel

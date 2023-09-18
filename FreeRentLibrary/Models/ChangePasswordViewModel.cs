@@ -9,7 +9,7 @@ namespace FreeRentLibrary.Models
         public string OldPassword { get; set; }
 
         [Required]
-        [Display(Name = "New Password")]
+        [Display(Name = "Current Password")]
         public string NewPassword { get; set; }
 
         [Required]

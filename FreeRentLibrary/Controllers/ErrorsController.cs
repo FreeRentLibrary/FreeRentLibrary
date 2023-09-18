@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using FreeRentLibrary.Models;
+﻿using FreeRentLibrary.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace FreeRentLibrary.Controllers
@@ -11,7 +11,6 @@ namespace FreeRentLibrary.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
         [Route("error/404")]
         public IActionResult Error404()
         {
