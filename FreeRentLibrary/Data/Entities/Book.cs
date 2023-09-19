@@ -40,7 +40,7 @@ namespace FreeRentLibrary.Data.Entities
 
         public string ImageFullPath => ImageId == Guid.Empty
             ? $"/images/noimage.png"
-            : $"https://supershoptpsirs.blob.core.windows.net/products/{ImageId}";
+            : $"https://supershopsi.blob.core.windows.net/books/{ImageId}";
 
     }
 }
