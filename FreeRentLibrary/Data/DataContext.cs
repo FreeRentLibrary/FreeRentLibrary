@@ -42,6 +42,8 @@ namespace FreeRentLibrary.Data
             base.OnModelCreating(modelBuilder);
         }
 
+        public DbSet<FreeRentLibrary.Data.Entities.Library> Library { get; set; }
+
 
 
         //Habilita a regra de apagar em cascata chama-se cascate delete rule
