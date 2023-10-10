@@ -11,6 +11,7 @@ namespace FreeRentLibrary.Data.Entities
 
         public int CityId { get; set; }
         public City City { get; set; }
+        public bool TwoFactorEnabled { get; set; }
 
         [Display(Name = "Full Name")]
         public string FullName => $"{FirstName} {LastName}";

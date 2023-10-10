@@ -40,7 +40,14 @@
                 <label asp-for="PhoneNumber">Phone Number</label>
                 <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-warning"></span>
-            </div>  
+            </div>
+            <br/>
+            <div class="form-group">
+                <div class="form-check">
+                    <input asp-for="TwoFactorAuthentication" type="checkbox" class="form-check-input" />
+                    <span asp-validation-for="TwoFactorAuthentication" class="form-check-label">Two factor Authentiocation</span>
+                </div>
+                <br/>
             <div class="form-group">
                 <input type="submit" value="Update" class="btn btn-primary" />
                 <a asp-action="ChangePassword" class="btn btn-success">Change Password</a>
