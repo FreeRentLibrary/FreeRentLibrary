@@ -8,7 +8,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-
+//Ordered by CRUD -> Create(Add) > Read(Details) > Update(Edit) > Delete
 namespace FreeRentLibrary.Controllers
 {
     //[Authorize]
@@ -26,6 +26,34 @@ namespace FreeRentLibrary.Controllers
             _userHelper = userHelper;
             _blobHelper = blobHelper;
             _converterHelper = converterHelper;
+        }
+
+        // GET: Books/Create
+        //[Authorize(Roles ="Admin")]
+        [Authorize]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Books/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(BookViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Guid imageId = Guid.Empty;
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "books");
+                }
+
+                var book = _converterHelper.ToBook(model, imageId, true);
+                await _bookRepository.CreateAsync(book);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(model);
         }
 
         // GET: Books
@@ -51,53 +79,6 @@ namespace FreeRentLibrary.Controllers
             return View(book);
         }
 
-        // GET: Books/Create
-        //[Authorize(Roles ="Admin")]
-        [Authorize]
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Books/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(BookViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                Guid imageId = Guid.Empty;
-                if (model.ImageFile != null && model.ImageFile.Length > 0)
-                {
-                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "books");
-                }
-
-                var book = _converterHelper.ToBook(model, imageId, true);
-                book.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-                await _bookRepository.CreateAsync(book);
-                return RedirectToAction(nameof(Index));
-            }
-            return View(model);
-        }
-
-        //private Book ToBook(BookViewModel model, string path)
-        //{
-        //    return new Book
-        //    {
-        //        Id = model.Id,
-        //        ImageUrl = path,
-        //        IsAvailable = model.IsAvailable,
-        //        LastPurchase = model.LastPurchase,
-        //        LastSale = model.LastSale,
-        //        Name = model.Name,
-        //        Price = model.Price,
-        //        Stock = model.Stock,
-        //        User = model.User
-        //    };
-        //}
-
         // GET: Books/Edit/5
         //[Authorize(Roles = "Admin")]
         [Authorize]
@@ -118,8 +99,6 @@ namespace FreeRentLibrary.Controllers
         }
 
         // POST: Books/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(BookViewModel model)
@@ -137,8 +116,6 @@ namespace FreeRentLibrary.Controllers
                     }
 
                     var book = _converterHelper.ToBook(model, imageId, false);
-
-                    book.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
 
                     await _bookRepository.UpdateAsync(book);
                 }
@@ -176,22 +153,6 @@ namespace FreeRentLibrary.Controllers
             return View(book);
         }
 
-        //private BookViewModel ToBookViewModel(Book Book)
-        //{
-        //    return new BookViewModel
-        //    {
-        //        Id = book.Id,
-        //        IsAvailable = book.IsAvailable,
-        //        LastPurchase = book.LastPurchase,
-        //        LastSale = book.LastSale,
-        //        ImageUrl = book.ImageUrl,
-        //        Price = book.Price,
-        //        Name = book.Name,
-        //        Stock = book.Stock,
-        //        User = book.User
-        //    };
-        //}
-
         // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -207,9 +168,9 @@ namespace FreeRentLibrary.Controllers
             {
                 if (ex.InnerException != null && ex.InnerException.Message.Contains("DELETE"))
                 {
-                    ViewBag.ErrorTitle = $"{book.Title} provavelmente esta a ser usado!!";
-                    ViewBag.ErrorMessage = $"{book.Title} não pode ser apagado visto que ha encomenda que o usam.</br></br>" +
-                    $"Experimente apagar todas as encomendas que estão a usar," +
+                    ViewBag.ErrorTitle = $"{book.Name} provavelmente esta a ser usado!!";
+                    ViewBag.ErrorMessage = $"{book.Name} não pode ser apagado visto está a ser alugado.</br></br>" +
+                    $"Experimente cancelar todos os alugers," +
                     $"e torne novamente a apaga-lo";
 
                 }
@@ -218,6 +179,19 @@ namespace FreeRentLibrary.Controllers
 
 
         }
+
+        public async Task<ActionResult> GetBooksByName(string name)
+        {
+            var books = await _bookRepository.GetBooksByNameAsync(name);
+
+            if (books == null || !books.Any())
+            {
+                return new NotFoundViewResult("ProductNotFound");
+            }
+
+            return View(books);
+        }
+
 
         public IActionResult ProductNotFound()
         {
