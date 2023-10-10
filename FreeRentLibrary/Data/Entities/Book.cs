@@ -6,12 +6,15 @@ namespace FreeRentLibrary.Data.Entities
 {
     public class Book : IEntity
     {
+        [Key]
         public int Id { get; set; }
 
         [Required]
         [Display(Name = "Title")]
         [MaxLength(50, ErrorMessage = "The field {0} only can contain {1} characters lenght.")]
         public string Name { get; set; }
+
+        //TODO: Add classes Editions (that connects to Publishers), Author, Genre/Category
 
         [Required]
         [MaxLength(50, ErrorMessage = "The field {0} only can contain {1} characters lenght.")]

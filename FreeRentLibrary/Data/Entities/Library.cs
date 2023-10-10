@@ -1,13 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace FreeRentLibrary.Data.Entities
 {
     public class Library
     {
+        [Key]
         public int Id { get; set; }
 
-        public List<Book> Books { get; set; }
+        //TODO: Create class Stock/LibraryStock for stock of books
 
-        public User User { get; set; }
+        //TODO: Other data like address, name, city, etc...
+
+        //TODO: Connect to classes of Rent and Reservation
     }
 }

@@ -21,11 +21,12 @@ namespace FreeRentLibrary.Data
             return await _context.Books.Where(b => b.Name == name).ToListAsync();
         }
 
+        //TODO: In progress
         public IQueryable GetBooksWithUsers()
         {
-            return _context.Books
-                .Include(b => b.User)
-                .OrderBy(b => b.Name);
+            //return _context.Books.Include(b => b.User).OrderBy(b => b.Name);
+            //To change after
+            return _context.Books;
         }
 
         public Task<Book> GetBookWithAuthorAsync(string author)
