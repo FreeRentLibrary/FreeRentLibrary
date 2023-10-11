@@ -22,6 +22,21 @@ namespace FreeRentLibrary.Helpers
             return await _userManager.CreateAsync(user, password);
         }
 
+        public async Task<bool> TwoFactorConfirmation(User user,string token)
+        {
+           return await _userManager.VerifyTwoFactorTokenAsync(user, "Email", token);
+        }
+
+        public async Task<string>GenerateTwoFactorTokenAsync(User user)
+        {
+            return await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+        }
+
+        public async Task<IdentityResult>TurnTwofactorOn(User user)
+        {
+          return await _userManager.SetTwoFactorEnabledAsync(user, true);
+        }
+
         public async Task AddUserToRoleAsync(User user, string roleName)
         {
             await _userManager.AddToRoleAsync(user, roleName);
@@ -52,6 +67,7 @@ namespace FreeRentLibrary.Helpers
 
         public async Task<string> GenerateEmailConfirmationTokenAsync(User user)
         {
+            
             return await _userManager.GenerateEmailConfirmationTokenAsync(user);
         }
 
@@ -95,6 +111,7 @@ namespace FreeRentLibrary.Helpers
             return await _userManager.UpdateAsync(user);
         }
 
+       
         public async Task<SignInResult> ValidatePasswordAsync(User user, string password)
         {
             return await _signInManager.CheckPasswordSignInAsync(user, password, false);

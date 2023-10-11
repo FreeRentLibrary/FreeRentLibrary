@@ -39,6 +39,8 @@ namespace FreeRentLibrary.Models
 
 
         public IEnumerable<SelectListItem> Countries { get; set; }
+
+        public bool TwoFactorAuthentication { get; set; }
     }
 }
 

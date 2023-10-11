@@ -46,6 +46,14 @@ namespace FreeRentLibrary.Controllers
                 var result = await _userHelper.LoginAsync(model);
                 if (result.Succeeded)
                 {
+                    var user =  await _userHelper.GetUserByEmailAsync(model.UserName);
+                    if (user.TwoFactorEnabled)
+                    {
+                        var token = await _userHelper.GenerateTwoFactorTokenAsync(user);
+                        _mailHelper.SendEmail(user.Email, "Two Factor Authentication", token);
+                       
+                        return this.RedirectToAction("VerifyLoginToken", "Account",user);
+                    }
                     if (this.Request.Query.Keys.Contains("ReturnUrl"))
                     {
                         return Redirect(this.Request.Query["ReturnUrl"].First());
@@ -54,6 +62,26 @@ namespace FreeRentLibrary.Controllers
                 }
             }
             this.ModelState.AddModelError(string.Empty, "Failed  to Login");
+            return View(model);
+        }
+
+        public IActionResult VerifyLoginToken()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public IActionResult VerifyLoginToken(TwoFactorViewModel model, User user)
+        {
+            if (ModelState.IsValid)
+            {
+              var validToken = _userHelper.TwoFactorConfirmation(user, model.TwoFactorCode);
+                if(validToken.IsCompleted)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
             return View(model);
         }
 
@@ -137,6 +165,7 @@ namespace FreeRentLibrary.Controllers
                 model.LastName = user.LastName;
                 model.Address = user.Adress;
                 model.PhoneNumber = user.PhoneNumber;
+                model.TwoFactorAuthentication = user.TwoFactorEnabled;
                 var city = await _countryRepository.GetCityAsync(user.CityId);
                 if (city != null)
                 {
@@ -150,6 +179,8 @@ namespace FreeRentLibrary.Controllers
                     }
                 }
             }
+            model.Cities = _countryRepository.GetComboCities(model.CountryId);
+            model.Countries = _countryRepository.GetComboCountries();
             return View(model);
         }
 
@@ -168,6 +199,7 @@ namespace FreeRentLibrary.Controllers
                     user.PhoneNumber = model.PhoneNumber;
                     user.CityId = model.CityId;
                     user.City = city;
+                    user.TwoFactorEnabled = model.TwoFactorAuthentication;
                     var response = await _userHelper.UpdateUserAsync(user);
                     if (response.Succeeded)
                     {
@@ -303,7 +335,7 @@ namespace FreeRentLibrary.Controllers
                     "Account",
                     new { token = myToken }, protocol: HttpContext.Request.Scheme);
 
-                Response response = _mailHelper.SendEmail(model.Email, "Shop Password Reset", $"<h1>Shop Password Reset</h1>" +
+                Response response = _mailHelper.SendEmail(model.Email, "Free Rent Library Password Reset", $"<h1>Free Rent Library Password Reset</h1>" +
                 $"To reset the password click in this link:</br></br>" +
                 $"<a href = \"{link}\">Reset Password</a>");
 

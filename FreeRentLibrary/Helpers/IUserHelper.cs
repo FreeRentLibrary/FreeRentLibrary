@@ -26,5 +26,8 @@ namespace FreeRentLibrary.Helpers
         Task<string> GeneratePasswordResetTokenAsync(User user);
 
         Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
+        Task<string> GenerateTwoFactorTokenAsync(User user);
+        Task<IdentityResult> TurnTwofactorOn(User user);
+        Task<bool> TwoFactorConfirmation(User user, string token);
     }
 }
