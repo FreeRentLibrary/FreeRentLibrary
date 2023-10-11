@@ -43,6 +43,8 @@ namespace FreeRentLibrary.Data.Entities
 
         public ICollection<Rent> Rentals { get; set; }
 
+        public ICollection<Reserve> Reserves { get; set; }
+
         [Display(Name = "Full Name")]
         public string FullName => $"{FirstName} {LastName}";
     }
