@@ -25,7 +25,7 @@ namespace FreeRentLibrary.Data.Entities
         public ICollection<Rent> Rentals { get; set; }
 
         //Might not be needed due to Rentals/Stock
-        //public ICollection<Resevation> Reservations { get; set; }
+        public ICollection<Reservation> Reservations { get; set; }
 
         //Change to ICollection in case of failure
         public IEnumerable<Edition> Editions { get; set; }

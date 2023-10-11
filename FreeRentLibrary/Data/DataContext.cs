@@ -8,7 +8,8 @@ namespace FreeRentLibrary.Data
     {
         public DbSet<Book> Books { get; set; }
         public DbSet<Rent> Rentals { get; set; }
-        public DbSet<Order> Orders { get; set; }
+		public DbSet<Reservation> Reservations { get; set; }
+		public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<OrderDetailTemp> OrderDetailTemps { get; set; }
         public DbSet<Country> Countries { get; set; }
@@ -38,7 +39,19 @@ namespace FreeRentLibrary.Data
                 .WithMany(b => b.Rentals)
                 .HasForeignKey(c => c.BookId);
 
-            modelBuilder.Entity<Country>()
+			//Reservation - User : Relation
+			modelBuilder.Entity<Reservation>()
+				.HasOne(c => c.User)
+				.WithMany(u => u.Reservations)
+				.HasForeignKey(c => c.UserId);
+
+			//Reservation - Book : Relation
+			modelBuilder.Entity<Reservation>()
+				.HasOne(c => c.Book)
+				.WithMany(b => b.Reservations)
+				.HasForeignKey(c => c.BookId);
+
+			modelBuilder.Entity<Country>()
                 .HasIndex(c => c.Name)
                 .IsUnique();
 
