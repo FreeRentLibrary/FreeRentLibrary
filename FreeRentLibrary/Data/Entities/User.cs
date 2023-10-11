@@ -21,6 +21,10 @@ namespace FreeRentLibrary.Data.Entities
         [MaxLength(15, ErrorMessage = "The field {0} only can contain {1} characters lenght.")]
         public string PhoneNumber { get; set; }
 
+        public int CityId { get; set; }
+        public City City { get; set; }
+        public bool TwoFactorEnabled { get; set; }
+
         /* In Case of District, County and Parish Combo Boxes
         public int CountyId { get; set; }
         public County County { get; set; }
