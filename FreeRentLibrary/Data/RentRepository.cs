@@ -55,8 +55,9 @@ namespace FreeRentLibrary.Data
             {
                 UserId = userId,
                 BookId = bookId,
-                RentDate = DateTime.Now
-            };
+                RentDate = DateTime.Now,
+                DueDate = DateTime.Now.AddDays(30)
+			};
 
             _context.Set<Rent>().Add(rent);
             await _context.SaveChangesAsync();
