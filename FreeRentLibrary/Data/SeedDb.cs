@@ -25,7 +25,8 @@ namespace FreeRentLibrary.Data
         {
             await _context.Database.MigrateAsync();
             await _userHelper.CheckRoleAsync("Admin");
-            await _userHelper.CheckRoleAsync("Custumer");
+            await _userHelper.CheckRoleAsync("Employee");
+            await _userHelper.CheckRoleAsync("Reader");
 
             if (!_context.Countries.Any())
             {
@@ -53,7 +54,7 @@ namespace FreeRentLibrary.Data
                     Email = "FreeRentLibrary@gmail.com",
                     UserName = "FreeRentLibrary@gmail.com",
                     PhoneNumber = "936232511",
-                    Adress = "Rua da Cruz Vermelha",
+                    Address = "Rua da Cruz Vermelha",
                     CityId = _context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
                     City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault()
                 };
@@ -72,17 +73,17 @@ namespace FreeRentLibrary.Data
                 await _userHelper.AddUserToRoleAsync(user, "Admin");
             }
 
-            if (!_context.Books.Any())
+            /*if (!_context.Books.Any())
             {
                 AddBook("Iphone X", user);
                 AddBook("Magic Mause", user);
                 AddBook("Iwatch", user);
                 AddBook("Ipad mini", user);
                 await _context.SaveChangesAsync();
-            }
+            }*/
         }
 
-        private void AddBook(string name, User user)
+        /*private void AddBook(string name, User user)
         {
             _context.Books.Add(new Book
             {
@@ -92,6 +93,6 @@ namespace FreeRentLibrary.Data
                 Stock = _random.Next(100),
                 User = user
             });
-        }
+        }*/
     }
 }

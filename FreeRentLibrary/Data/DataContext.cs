@@ -13,6 +13,11 @@ namespace FreeRentLibrary.Data
         public DbSet<OrderDetailTemp> OrderDetailTemps { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
+        public DbSet<Library> Libraries { get; set; }
+        public DbSet<Edition> Editions { get; set; }
+        public DbSet<Publisher> Publishers { get; set; }
+        public DbSet<Author> Authors { get; set; }
+        public DbSet<Genre> Genres { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -49,10 +54,6 @@ namespace FreeRentLibrary.Data
 
             base.OnModelCreating(modelBuilder);
         }
-
-        public DbSet<FreeRentLibrary.Data.Entities.Library> Library { get; set; }
-
-
 
         //Habilita a regra de apagar em cascata chama-se cascate delete rule
         //protected override void OnModelCreating(ModelBuilder modelBuilder)

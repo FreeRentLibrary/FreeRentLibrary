@@ -3,10 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FreeRentLibrary.Data.Entities
 {
-    public class Library
+    public class Library : IEntity
     {
         [Key]
         public int Id { get; set; }
+
+        public string Name { get; set; }
 
         //TODO: Create class Stock/LibraryStock for stock of books
 

@@ -17,7 +17,7 @@ namespace FreeRentLibrary.Data
             _context = context;
         }
 
-        public async Task<IEnumerable<Book>> GetRentalsByUserAsync(int userId)
+        public async Task<IEnumerable<Book>> GetRentalsByUserAsync(string userId)
         {
             return await _context.Set<Rent>()
                 .Where(rent => rent.UserId == userId && rent.DueDate == null)
@@ -25,7 +25,7 @@ namespace FreeRentLibrary.Data
                 .ToListAsync();
         }
 
-        public async Task ReturnBookAsync(int userId, int bookId)
+        public async Task ReturnBookAsync(string userId, int bookId)
         {
             var rent = await _context.Set<Rent>()
                 .FirstOrDefaultAsync(r => r.UserId == userId && r.BookId == bookId && r.DueDate == null);
@@ -37,7 +37,7 @@ namespace FreeRentLibrary.Data
             }
         }
 
-        public async Task CancelRentalAsync(int userId, int bookId)
+        public async Task CancelRentalAsync(string userId, int bookId)
         {
             var rent = await _context.Set<Rent>()
                 .FirstOrDefaultAsync(r => r.UserId == userId && r.BookId == bookId && r.DueDate == null);
@@ -49,7 +49,7 @@ namespace FreeRentLibrary.Data
             }
         }
 
-        public async Task RentBookAsync(int userId, int bookId)
+        public async Task RentBookAsync(string userId, int bookId)
         {
             var rent = new Rent
             {

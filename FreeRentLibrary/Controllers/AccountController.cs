@@ -116,7 +116,7 @@ namespace FreeRentLibrary.Controllers
                         LastName = model.LastName,
                         Email = model.Username,
                         UserName = model.Username,
-                        Adress = model.Address,
+                        Address = model.Address,
                         PhoneNumber = model.PhoneNumber,
                         CityId = city.Id,
                         City = city
@@ -163,7 +163,7 @@ namespace FreeRentLibrary.Controllers
             {
                 model.FirtsName = user.FirstName;
                 model.LastName = user.LastName;
-                model.Address = user.Adress;
+                model.Address = user.Address;
                 model.PhoneNumber = user.PhoneNumber;
                 model.TwoFactorAuthentication = user.TwoFactorEnabled;
                 var city = await _countryRepository.GetCityAsync(user.CityId);
@@ -195,7 +195,7 @@ namespace FreeRentLibrary.Controllers
                     var city = await _countryRepository.GetCityAsync(model.CityId);
                     user.FirstName = model.FirtsName;
                     user.LastName = model.LastName;
-                    user.Adress = model.Address;
+                    user.Address = model.Address;
                     user.PhoneNumber = model.PhoneNumber;
                     user.CityId = model.CityId;
                     user.City = city;

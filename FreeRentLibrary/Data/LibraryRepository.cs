@@ -14,27 +14,38 @@ namespace FreeRentLibrary.Data
         {
             _context = context;
         }
+
+        public IEnumerable<SelectListItem> GetUserBooks()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public IQueryable GetUserLibrary()
         {
+            throw new System.NotImplementedException();
+        }
 
-            return _context.Books.Include(b => b.User);
+        /*public IQueryable GetUserLibrary()
+        {
+
+           return _context.Books.Include(b => b.User);
         }
 
         public IEnumerable<SelectListItem> GetUserBooks()
         {
-            var list = _context.Books.Select(p => new SelectListItem
-            {
-                Text = p.Title,
-                Value = p.Id.ToString()
+           var list = _context.Books.Select(p => new SelectListItem
+           {
+               Text = p.Title,
+               Value = p.Id.ToString()
 
-            }).ToList();
-            list.Insert(0, new SelectListItem
-            {
-                Text = "(Select a product...)",
-                Value = "0"
-            });
-            return list;
-        }
+           }).ToList();
+           list.Insert(0, new SelectListItem
+           {
+               Text = "(Select a product...)",
+               Value = "0"
+           });
+           return list;
+        }*/
 
     }
 }

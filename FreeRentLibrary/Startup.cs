@@ -56,7 +56,7 @@ namespace FreeRentLibrary
 
             services.AddDbContext<DataContext>(cfg =>
             {
-                cfg.UseSqlServer(this.Configuration.GetConnectionString("LocalConnection"));
+                cfg.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddTransient<SeedDB>();

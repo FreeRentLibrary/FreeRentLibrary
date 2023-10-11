@@ -3,11 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FreeRentLibrary.Data.Entities
 {
-    public class Rent
+    public class Rent : IEntity
     {
+        [Key]
         public int Id { get; set; }
-        public int UserId { get; set; }
-        public int BookId { get; set; }
+        public string? UserId { get; set; }
+        public int? BookId { get; set; }
 
         [Display(Name = "Rental Date")]
         public DateTime? RentDate { get; set; }

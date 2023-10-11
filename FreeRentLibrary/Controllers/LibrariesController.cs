@@ -28,7 +28,7 @@ namespace FreeRentLibrary.Controllers
         // GET: Libraries
         public async Task<IActionResult> Index()
         {
-            return View(_bookRepository.GetAll().OrderBy(b => b.Title));
+            return View(_bookRepository.GetAll().OrderBy(b => b.Name));
         }
 
         // GET: Libraries/Details/5
@@ -39,7 +39,7 @@ namespace FreeRentLibrary.Controllers
                 return NotFound();
             }
 
-            var library = await _context.Library
+            var library = await _context.Libraries
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (library == null)
             {
@@ -79,7 +79,7 @@ namespace FreeRentLibrary.Controllers
                 return NotFound();
             }
 
-            var library = await _context.Library.FindAsync(id);
+            var library = await _context.Libraries.FindAsync(id);
             if (library == null)
             {
                 return NotFound();
@@ -130,7 +130,7 @@ namespace FreeRentLibrary.Controllers
                 return NotFound();
             }
 
-            var library = await _context.Library
+            var library = await _context.Libraries
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (library == null)
             {
@@ -145,15 +145,15 @@ namespace FreeRentLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var library = await _context.Library.FindAsync(id);
-            _context.Library.Remove(library);
+            var library = await _context.Libraries.FindAsync(id);
+            _context.Libraries.Remove(library);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool LibraryExists(int id)
         {
-            return _context.Library.Any(e => e.Id == id);
+            return _context.Libraries.Any(e => e.Id == id);
         }
     }
 }

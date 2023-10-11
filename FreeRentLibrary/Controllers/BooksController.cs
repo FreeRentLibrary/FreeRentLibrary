@@ -59,7 +59,7 @@ namespace FreeRentLibrary.Controllers
         // GET: Books
         public IActionResult Index()
         {
-            return View(_bookRepository.GetAll().OrderBy(p => p.Title));
+            return View(_bookRepository.GetAll().OrderBy(b => b.Name));
         }
 
         // GET: Books/Details/5

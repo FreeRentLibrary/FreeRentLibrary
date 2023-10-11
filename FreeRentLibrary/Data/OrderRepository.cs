@@ -39,7 +39,6 @@ namespace FreeRentLibrary.Data
             {
                 orderDetailTemp = new OrderDetailTemp
                 {
-                    Price = book.Price,
                     Book = book,
                     Quantity = model.Quantity,
                     User = user,
@@ -127,7 +126,7 @@ namespace FreeRentLibrary.Data
             return _context.OrderDetailTemps
                 .Include(p => p.Book)
                 .Where(o => o.User == user)
-                .OrderBy(o => o.Book.Title);
+                .OrderBy(o => o.Book.Name);
         }
 
         public async Task<IQueryable<Order>> GetOrderAsync(string userName)
