@@ -71,7 +71,6 @@ namespace FreeRentLibrary.Helpers
 
         #region RoleRegion
 
-        public async Task CheckRoleAsync(string roleName)
         public async Task<System.Linq.IQueryable<IdentityRole>> GetRoles()
         {
            return _roleManager.Roles;

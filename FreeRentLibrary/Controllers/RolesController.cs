@@ -1,5 +1,5 @@
 ﻿using FreeRentLibrary.Data.Entities;
-using FreeRentLibrary.Helpers;
+using FreeRentLibrary.Helpers.IHelpers;
 using FreeRentLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FreeRentLibrary.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class RolesController : Controller
     {
         private readonly IUserHelper _userHelper;
@@ -28,14 +28,14 @@ namespace FreeRentLibrary.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult>CreateRole(CreateRoleViewModel model)
+        public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {
             if (ModelState.IsValid)
             {
-              var result = await _userHelper.CheckRoleAsync(model.RoleName);
+                var result = await _userHelper.CheckRoleAsync(model.RoleName);
                 if (result == true)
                 {
-                    return RedirectToAction("Index","Home");
+                    return RedirectToAction("Index", "Home");
                 }
             }
             return View(model);
@@ -47,13 +47,13 @@ namespace FreeRentLibrary.Controllers
             return View(roles);
         }
 
-        public async Task<IActionResult>EditRole(string id)
+        public async Task<IActionResult> EditRole(string id)
         {
             var role = await _roleManager.FindByIdAsync(id);
-            if(role == null)
+            if (role == null)
             {
                 ViewBag.ErrorMessage = $"Role with id = {id} can not be found";
-                return(View("NotFound"));
+                return (View("NotFound"));
             }
             var model = new EditRoleViewModel
             {
@@ -62,9 +62,9 @@ namespace FreeRentLibrary.Controllers
 
 
             };
-            foreach( var user in _userManager.Users)
+            foreach (var user in _userManager.Users)
             {
-                if(await _userManager.IsInRoleAsync(user, role.Name))
+                if (await _userManager.IsInRoleAsync(user, role.Name))
                 {
                     model.Users.Add(user.UserName);
                 }
@@ -91,16 +91,16 @@ namespace FreeRentLibrary.Controllers
                     return RedirectToAction("ListRoles");
                 }
 
-                foreach(var error in result.Errors)
+                foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("ERROR", error.Description);
                 }
                 return View(model);
 
-            }            
+            }
         }
 
-        public async Task<IActionResult>EditUsersInRole(string roleId)
+        public async Task<IActionResult> EditUsersInRole(string roleId)
         {
             ViewBag.roleId = roleId;
             var role = await _roleManager.FindByIdAsync(roleId);
@@ -110,14 +110,14 @@ namespace FreeRentLibrary.Controllers
                 return (View("NotFound"));
             }
             var model = new List<UserRoleViewModel>();
-            foreach(var user in _userManager.Users)
+            foreach (var user in _userManager.Users)
             {
                 var userRoleViewModel = new UserRoleViewModel
                 {
                     UserId = user.Id,
                     UserName = user.UserName
                 };
-                if(await _userManager.IsInRoleAsync(user, role.Name))
+                if (await _userManager.IsInRoleAsync(user, role.Name))
                 {
                     userRoleViewModel.IsSelected = true;
                 }
@@ -139,17 +139,17 @@ namespace FreeRentLibrary.Controllers
                 ViewBag.ErrorMessage = $"Role with id = {roleId} can not be found";
                 return (View("NotFound"));
             }
-            for(int i = 0; i < model.Count; i++)
+            for (int i = 0; i < model.Count; i++)
             {
                 var user = await _userManager.FindByIdAsync(model[i].UserId);
 
                 IdentityResult result = null;
 
-                if (model[i].IsSelected && !(await _userManager.IsInRoleAsync(user,role.Name)))
+                if (model[i].IsSelected && !(await _userManager.IsInRoleAsync(user, role.Name)))
                 {
                     result = await _userManager.AddToRoleAsync(user, role.Name);
                 }
-                else if(!model[i].IsSelected && (await _userManager.IsInRoleAsync(user, role.Name)))
+                else if (!model[i].IsSelected && (await _userManager.IsInRoleAsync(user, role.Name)))
                 {
                     result = await _userManager.RemoveFromRoleAsync(user, role.Name);
                 }
@@ -159,17 +159,17 @@ namespace FreeRentLibrary.Controllers
                 }
                 if (result.Succeeded)
                 {
-                    if(i< (model.Count - 1))
+                    if (i < (model.Count - 1))
                     {
                         continue;
                     }
                     else
                     {
-                        return RedirectToAction("EditRole",new {Id = roleId});
+                        return RedirectToAction("EditRole", new { Id = roleId });
                     }
                 }
             }
             return RedirectToAction("EditRole", new { Id = roleId });
-        }        
+        }
     }
 }

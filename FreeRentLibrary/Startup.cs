@@ -1,7 +1,9 @@
-using System.Text;
 using FreeRentLibrary.Data;
 using FreeRentLibrary.Data.Entities;
+using FreeRentLibrary.Data.Repositories;
+using FreeRentLibrary.Data.Repositories.IRepositories;
 using FreeRentLibrary.Helpers;
+using FreeRentLibrary.Helpers.IHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace FreeRentLibrary
 {
@@ -31,11 +34,11 @@ namespace FreeRentLibrary
             {
                 cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
                 cfg.SignIn.RequireConfirmedEmail = true;
-                
+
                 cfg.User.RequireUniqueEmail = true;
                 cfg.Password.RequireDigit = false;
                 cfg.Password.RequireLowercase = false;
-                
+
                 cfg.Password.RequiredUniqueChars = 0;
                 cfg.Password.RequireUppercase = false;
                 cfg.Password.RequireNonAlphanumeric = false;
@@ -104,7 +107,7 @@ namespace FreeRentLibrary
             app.UseStatusCodePagesWithReExecute("/error/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-           
+
             app.UseRouting();
 
             app.UseAuthentication();

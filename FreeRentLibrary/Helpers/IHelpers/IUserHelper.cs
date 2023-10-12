@@ -9,7 +9,7 @@ namespace FreeRentLibrary.Helpers.IHelpers
 {
     public interface IUserHelper
     {
-        Task<System.Linq.IQueryable<IdentityRole>> GetRoles();
+        
         #region UserRegion
         
         Task<User> GetUserByIdAsync(string id);
@@ -38,18 +38,20 @@ namespace FreeRentLibrary.Helpers.IHelpers
         
         #region RoleRegion
         
-        Task CheckRoleAsync(string roleName);
+        Task<bool> CheckRoleAsync(string roleName);
         
         Task AddUserToRoleAsync(User user, string roleName);
         
         Task<bool> IsUserInRoleAsync(User user, string roleName);
-        
+
+        Task<System.Linq.IQueryable<IdentityRole>> GetRoles();
+
         #endregion
 
         //--
 
         #region ValidationRegion
-        
+
         Task<SignInResult> ValidatePasswordAsync(User user, string password);
         
         Task<string> GenerateEmailConfirmationTokenAsync(User user);
