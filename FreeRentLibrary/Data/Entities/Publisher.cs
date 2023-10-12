@@ -17,6 +17,6 @@ namespace FreeRentLibrary.Data.Entities
         public string Url { get; set; }
 
         //Change to ICollection in case of failure
-        public IEnumerable<Edition> Editions { get; set; }
+        public IEnumerable<BookEdition> Editions { get; set; }
     }
 }

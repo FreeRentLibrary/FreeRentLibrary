@@ -7,8 +7,6 @@ namespace FreeRentLibrary.Data.Entities
     {
         [Key]
         public int Id { get; set; }
-        public string? UserId { get; set; }
-        public int? BookId { get; set; }
 
         [Display(Name = "Rental Date")]
         public DateTime? RentDate { get; set; }
@@ -16,7 +14,16 @@ namespace FreeRentLibrary.Data.Entities
         [Display(Name = "Due Date")]
         public DateTime? DueDate { get; set; }
 
+        public int? LibraryId { get; set; }
+
+        public Library Library { get; set; }
+
+        public string? UserId { get; set; }
+
         public User User { get; set; }
-        public Book Book { get; set; }
+
+        public int? BookEditionId { get; set; }
+
+        public BookEdition BookEdition { get; set; }
     }
 }

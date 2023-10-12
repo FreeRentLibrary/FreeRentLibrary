@@ -1,5 +1,6 @@
 ﻿using FreeRentLibrary.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,18 +18,19 @@ namespace FreeRentLibrary.Data
             _context = context;
         }
 
-        public async Task<IEnumerable<Book>> GetRentalsByUserAsync(string userId)
+        public async Task<IEnumerable<Rent>> GetRentalsByUserAsync(string userId)
         {
-            return await _context.Set<Rent>()
-                .Where(rent => rent.UserId == userId && rent.DueDate == null)
-                .Select(rent => rent.Book)
+            return await _context.Rentals.Include(r => r.Library)
+                .ThenInclude(l => l.LibraryStocks)
+                .ThenInclude(ls => ls.BookEdition)
+                .Where(r => r.UserId == userId)
                 .ToListAsync();
         }
 
-        public async Task ReturnBookAsync(string userId, int bookId)
+        public async Task ReturnBookAsync(string userId, int libraryId)
         {
             var rent = await _context.Set<Rent>()
-                .FirstOrDefaultAsync(r => r.UserId == userId && r.BookId == bookId && r.DueDate == null);
+                .FirstOrDefaultAsync(r => r.UserId == userId && r.LibraryId == libraryId && r.DueDate == null);
 
             if (rent != null)
             {
@@ -37,10 +39,10 @@ namespace FreeRentLibrary.Data
             }
         }
 
-        public async Task CancelRentalAsync(string userId, int bookId)
+        public async Task CancelRentalAsync(string userId, int libraryId)
         {
             var rent = await _context.Set<Rent>()
-                .FirstOrDefaultAsync(r => r.UserId == userId && r.BookId == bookId && r.DueDate == null);
+                .FirstOrDefaultAsync(r => r.UserId == userId && r.LibraryId == libraryId && r.DueDate == null);
 
             if (rent != null)
             {
@@ -49,12 +51,12 @@ namespace FreeRentLibrary.Data
             }
         }
 
-        public async Task RentBookAsync(string userId, int bookId)
+        public async Task RentBookAsync(string userId, int libraryId)
         {
             var rent = new Rent
             {
                 UserId = userId,
-                BookId = bookId,
+                LibraryId = libraryId,
                 RentDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30)
 			};

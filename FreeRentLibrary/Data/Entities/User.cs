@@ -41,9 +41,9 @@ namespace FreeRentLibrary.Data.Entities
         public bool AdminApproved { get; set; }
         */
 
-        public ICollection<Rent> Rentals { get; set; }
+        public IEnumerable<Rent> Rentals { get; set; }
 
-        public ICollection<Reservation> Reservations { get; set; }
+        public IEnumerable<Reservation> Reservations { get; set; }
 
         [Display(Name = "Full Name")]
         public string FullName => $"{FirstName} {LastName}";

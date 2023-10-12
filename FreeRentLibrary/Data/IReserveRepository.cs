@@ -6,10 +6,10 @@ namespace FreeRentLibrary.Data
 {
 	public interface IReserveRepository
     {
-        Task ReserveBookAsync(string userId, int bookId);
-        Task<IEnumerable<Book>> GetReservationsByUserAsync(string userId);
+        Task ReserveBookAsync(string userId, int libraryId);
+        Task<IEnumerable<Reservation>> GetReservationsByUserAsync(string userId);
         Task ReserveToRentAsync(Reservation reservation);
-        Task CancelReservationAsync(string userId, int bookId);
+        Task CancelReservationAsync(string userId, int libraryId);
     }
 
 }

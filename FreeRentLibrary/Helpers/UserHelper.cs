@@ -1,6 +1,9 @@
 ﻿using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FreeRentLibrary.Helpers
@@ -115,6 +118,21 @@ namespace FreeRentLibrary.Helpers
         public async Task<SignInResult> ValidatePasswordAsync(User user, string password)
         {
             return await _signInManager.CheckPasswordSignInAsync(user, password, false);
+        }
+
+        //SAMPLE
+        public IQueryable GetBookEditionsReservedByUser(string userId)
+        {
+            //return await _userManager.Users.Include(u => u.Reservations)
+            //    .ThenInclude(r => r.Library)
+            //    .ThenInclude(l => l.LibraryStocks)
+            //    .ThenInclude(ls => ls.BookEdition)
+            //    .Where(u => u.Id == userId)
+            //    .ToListAsync();
+
+            return _userManager.Users.Include(u => u.Reservations)
+                .ThenInclude(r => r.BookEdition)
+                .Where(u => u.Id == userId);
         }
     }
 }

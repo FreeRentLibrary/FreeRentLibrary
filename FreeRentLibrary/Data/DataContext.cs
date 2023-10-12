@@ -15,7 +15,7 @@ namespace FreeRentLibrary.Data
         public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Library> Libraries { get; set; }
-        public DbSet<Edition> Editions { get; set; }
+        public DbSet<BookEdition> Editions { get; set; }
         public DbSet<Publisher> Publishers { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<Genre> Genres { get; set; }
@@ -34,10 +34,10 @@ namespace FreeRentLibrary.Data
                 .HasForeignKey(c => c.UserId);
 
             //Rentals - Book : Relation
-            modelBuilder.Entity<Rent>()
-                .HasOne(c => c.Book)
-                .WithMany(b => b.Rentals)
-                .HasForeignKey(c => c.BookId);
+            //modelBuilder.Entity<Rent>()
+            //    .HasOne(c => c.Book)
+            //    .WithMany(b => b.Rentals)
+            //    .HasForeignKey(c => c.BookId);
 
 			//Reservation - User : Relation
 			modelBuilder.Entity<Reservation>()
@@ -46,10 +46,10 @@ namespace FreeRentLibrary.Data
 				.HasForeignKey(c => c.UserId);
 
 			//Reservation - Book : Relation
-			modelBuilder.Entity<Reservation>()
-				.HasOne(c => c.Book)
-				.WithMany(b => b.Reservations)
-				.HasForeignKey(c => c.BookId);
+			//modelBuilder.Entity<Reservation>()
+			//	.HasOne(c => c.Book)
+			//	.WithMany(b => b.Reservations)
+			//	.HasForeignKey(c => c.BookId);
 
 			modelBuilder.Entity<Country>()
                 .HasIndex(c => c.Name)

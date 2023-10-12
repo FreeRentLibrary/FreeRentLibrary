@@ -1,6 +1,8 @@
 ﻿using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Models;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FreeRentLibrary.Helpers
@@ -29,5 +31,9 @@ namespace FreeRentLibrary.Helpers
         Task<string> GenerateTwoFactorTokenAsync(User user);
         Task<IdentityResult> TurnTwofactorOn(User user);
         Task<bool> TwoFactorConfirmation(User user, string token);
+
+
+        //Sample
+        IQueryable GetBookEditionsReservedByUser(string userId);
     }
 }

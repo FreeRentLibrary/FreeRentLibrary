@@ -20,10 +20,10 @@ namespace FreeRentLibrary.Data
 			_rentRepository = rentRepository;
 		}
 
-		public async Task CancelReservationAsync(string userId, int bookId)
+		public async Task CancelReservationAsync(string userId, int libraryId)
 		{
 			var reserve = await _context.Set<Reservation>()
-				.FirstOrDefaultAsync(r => r.UserId == userId && r.BookId == bookId && r.EndDate == null);
+				.FirstOrDefaultAsync(r => r.UserId == userId && r.LibraryId == libraryId && r.EndDate == null);
 			
 			reserve.EndDate = DateTime.Now;
 
@@ -34,20 +34,22 @@ namespace FreeRentLibrary.Data
 			}
 		}
 
-		public async Task<IEnumerable<Book>> GetReservationsByUserAsync(string userId)
+		//TODO: Correct
+		public async Task<IEnumerable<Reservation>> GetReservationsByUserAsync(string userId)
 		{
-			return await _context.Set<Reservation>()
-				.Where(reservation => reservation.UserId == userId && reservation.EndDate == null)
-				.Select(reservation => reservation.Book)
+			return await _context.Reservations.Include(r => r.Library)
+				.ThenInclude(l => l.LibraryStocks)
+				.ThenInclude(ls => ls.BookEdition)
+				.Where(r => r.UserId == userId)
 				.ToListAsync();
 		}
 
-		public async Task ReserveBookAsync(string userId, int bookId)
+		public async Task ReserveBookAsync(string userId, int libraryId)
 		{
 			var reservation = new Reservation
 			{
 				UserId = userId,
-				BookId = bookId,
+				LibraryId = libraryId,
 				ReservationDate = DateTime.Now
 			};
 
@@ -57,10 +59,10 @@ namespace FreeRentLibrary.Data
 
 		public async Task ReserveToRentAsync(Reservation reservation)
 		{
-			if (reservation.UserId != null && reservation.BookId != null)
+			if (reservation.UserId != null && reservation.LibraryId != null)
 			{
 				var userId = reservation.UserId;
-				int bookId = reservation.BookId.Value;
+				int bookId = reservation.LibraryId.Value;
 
 				await _rentRepository.RentBookAsync(userId, bookId);
 
@@ -68,5 +70,5 @@ namespace FreeRentLibrary.Data
 				await _context.SaveChangesAsync();
 			}
 		}
-	}
+    }
 }
