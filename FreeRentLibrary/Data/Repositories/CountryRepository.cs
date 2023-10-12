@@ -2,11 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FreeRentLibrary.Data.Entities;
+using FreeRentLibrary.Data.Repositories.IRepositories;
 using FreeRentLibrary.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace FreeRentLibrary.Data
+namespace FreeRentLibrary.Data.Repositories
 {
     public class CountryRepository : GenericRepository<Country>, ICountryRepository
     {
@@ -19,12 +20,23 @@ namespace FreeRentLibrary.Data
 
         public async Task AddCityAsync(CityViewModel model)
         {
-            var country = await this.GetCountryWithCityAsync(model.CountryId);
+            var country = await GetCountryWithCityAsync(model.CountryId);
             if (country == null)
             {
                 return;
             }
             country.Cities.Add(new City { Name = model.Name });
+            _context.Countries.Update(country);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddCityListAsync(string countryName, List<City> cities)
+        {
+            var country = await GetCountryByNameAsync(countryName);
+            foreach (var city in cities)
+            {
+                country.Cities.Add(new City { Name = city.Name });
+            }
             _context.Countries.Update(country);
             await _context.SaveChangesAsync();
         }
@@ -104,6 +116,24 @@ namespace FreeRentLibrary.Data
             return await _context.Countries
                 .Include(c => c.Cities)
                 .Where(c => c.Id == id)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<City> GetFirstCityByCountryNameAsync(string countryName)
+        {
+            var country = await _context.Countries
+                .Include(c => c.Cities)
+                .Where(c => c.Name == countryName)
+                .FirstOrDefaultAsync();
+
+            return country.Cities.FirstOrDefault();
+        }
+
+        public async Task<Country> GetCountryByNameAsync(string countryName)
+        {
+            return await _context.Countries
+                .Include(c => c.Cities)
+                .Where(c => c.Name == countryName)
                 .FirstOrDefaultAsync();
         }
 

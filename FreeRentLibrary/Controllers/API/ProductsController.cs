@@ -1,4 +1,4 @@
-﻿using FreeRentLibrary.Data;
+﻿using FreeRentLibrary.Data.Repositories.IRepositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FreeRentLibrary.Controllers.API
 {
+    //TODO: Delete Controller/Create another controller
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme)]
@@ -17,12 +18,12 @@ namespace FreeRentLibrary.Controllers.API
         {
             _productRepository = productRepository;
         }
-
-
+        
         [HttpGet]
         public IActionResult GetProducts()
         {
-            return Ok(_productRepository.GetAllWithUsers());
+            //return Ok(_productRepository.GetAllWithUsers());
+            return View();
         }
     }
 }

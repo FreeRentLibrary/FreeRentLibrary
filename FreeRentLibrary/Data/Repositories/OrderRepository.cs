@@ -2,11 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FreeRentLibrary.Data.Entities;
-using FreeRentLibrary.Helpers;
+using FreeRentLibrary.Data.Repositories.IRepositories;
+using FreeRentLibrary.Helpers.IHelpers;
 using FreeRentLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace FreeRentLibrary.Data
+namespace FreeRentLibrary.Data.Repositories
 {
     public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {
@@ -39,7 +40,6 @@ namespace FreeRentLibrary.Data
             {
                 orderDetailTemp = new OrderDetailTemp
                 {
-                    Price = book.Price,
                     Book = book,
                     Quantity = model.Quantity,
                     User = user,
@@ -127,7 +127,7 @@ namespace FreeRentLibrary.Data
             return _context.OrderDetailTemps
                 .Include(p => p.Book)
                 .Where(o => o.User == user)
-                .OrderBy(o => o.Book.Title);
+                .OrderBy(o => o.Book.Name);
         }
 
         public async Task<IQueryable<Order>> GetOrderAsync(string userName)

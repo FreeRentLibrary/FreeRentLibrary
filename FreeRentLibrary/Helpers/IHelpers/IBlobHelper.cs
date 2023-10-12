@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace FreeRentLibrary.Helpers
+namespace FreeRentLibrary.Helpers.IHelpers
 {
     public interface IBlobHelper
     {

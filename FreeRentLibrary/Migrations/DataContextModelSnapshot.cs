@@ -19,6 +19,24 @@ namespace FreeRentLibrary.Migrations
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Author", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PenName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Authors");
+                });
+
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Book", b =>
                 {
                     b.Property<int>("Id")
@@ -26,8 +44,8 @@ namespace FreeRentLibrary.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime?>("DueDate")
-                        .HasColumnType("datetime2");
+                    b.Property<int?>("AuthorId")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("ImageId")
                         .HasColumnType("uniqueidentifier");
@@ -35,28 +53,68 @@ namespace FreeRentLibrary.Migrations
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("RentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("Stock")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Synopsis")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("AuthorId");
 
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.BookEdition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EditionName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EditionType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ISBN")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MinimumAge")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NativeLanguage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Pages")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PublisherId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReleaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("TranslatedLanguage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Translator")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.HasIndex("PublisherId");
+
+                    b.ToTable("Editions");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.City", b =>
@@ -71,8 +129,8 @@ namespace FreeRentLibrary.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -90,8 +148,8 @@ namespace FreeRentLibrary.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.HasKey("Id");
 
@@ -99,6 +157,76 @@ namespace FreeRentLibrary.Migrations
                         .IsUnique();
 
                     b.ToTable("Countries");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Genre", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AuthorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BookId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("Genres");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Library", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("CityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.ToTable("Libraries");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.LibraryStock", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BookEditionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LibraryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookEditionId");
+
+                    b.HasIndex("LibraryId");
+
+                    b.ToTable("LibraryStock");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Order", b =>
@@ -180,6 +308,95 @@ namespace FreeRentLibrary.Migrations
                     b.ToTable("OrderDetailTemps");
                 });
 
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Publisher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CountryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.ToTable("Publishers");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Rent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BookEditionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("LibraryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("RentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookEditionId");
+
+                    b.HasIndex("LibraryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Rentals");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("BookEditionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("LibraryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ReservationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookEditionId");
+
+                    b.HasIndex("LibraryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reservations");
+                });
+
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.User", b =>
                 {
                     b.Property<string>("Id")
@@ -188,8 +405,9 @@ namespace FreeRentLibrary.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("Adress")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("Address")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("CityId")
                         .HasColumnType("int");
@@ -206,10 +424,12 @@ namespace FreeRentLibrary.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -229,7 +449,8 @@ namespace FreeRentLibrary.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
@@ -392,11 +613,26 @@ namespace FreeRentLibrary.Migrations
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Book", b =>
                 {
-                    b.HasOne("FreeRentLibrary.Data.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                    b.HasOne("FreeRentLibrary.Data.Entities.Author", "Author")
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorId");
 
-                    b.Navigation("User");
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.BookEdition", b =>
+                {
+                    b.HasOne("FreeRentLibrary.Data.Entities.Book", "Book")
+                        .WithMany("Editions")
+                        .HasForeignKey("BookId");
+
+                    b.HasOne("FreeRentLibrary.Data.Entities.Publisher", "Publisher")
+                        .WithMany("Editions")
+                        .HasForeignKey("PublisherId");
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Publisher");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.City", b =>
@@ -404,6 +640,41 @@ namespace FreeRentLibrary.Migrations
                     b.HasOne("FreeRentLibrary.Data.Entities.Country", null)
                         .WithMany("Cities")
                         .HasForeignKey("CountryId");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Genre", b =>
+                {
+                    b.HasOne("FreeRentLibrary.Data.Entities.Author", null)
+                        .WithMany("Genres")
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("FreeRentLibrary.Data.Entities.Book", null)
+                        .WithMany("Genres")
+                        .HasForeignKey("BookId");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Library", b =>
+                {
+                    b.HasOne("FreeRentLibrary.Data.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId");
+
+                    b.Navigation("City");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.LibraryStock", b =>
+                {
+                    b.HasOne("FreeRentLibrary.Data.Entities.BookEdition", "BookEdition")
+                        .WithMany("LibraryStocks")
+                        .HasForeignKey("BookEditionId");
+
+                    b.HasOne("FreeRentLibrary.Data.Entities.Library", "Library")
+                        .WithMany("LibraryStocks")
+                        .HasForeignKey("LibraryId");
+
+                    b.Navigation("BookEdition");
+
+                    b.Navigation("Library");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Order", b =>
@@ -439,6 +710,57 @@ namespace FreeRentLibrary.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("Book");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Publisher", b =>
+                {
+                    b.HasOne("FreeRentLibrary.Data.Entities.Country", "Country")
+                        .WithMany()
+                        .HasForeignKey("CountryId");
+
+                    b.Navigation("Country");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Rent", b =>
+                {
+                    b.HasOne("FreeRentLibrary.Data.Entities.BookEdition", "BookEdition")
+                        .WithMany()
+                        .HasForeignKey("BookEditionId");
+
+                    b.HasOne("FreeRentLibrary.Data.Entities.Library", "Library")
+                        .WithMany("Rentals")
+                        .HasForeignKey("LibraryId");
+
+                    b.HasOne("FreeRentLibrary.Data.Entities.User", "User")
+                        .WithMany("Rentals")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("BookEdition");
+
+                    b.Navigation("Library");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Reservation", b =>
+                {
+                    b.HasOne("FreeRentLibrary.Data.Entities.BookEdition", "BookEdition")
+                        .WithMany()
+                        .HasForeignKey("BookEditionId");
+
+                    b.HasOne("FreeRentLibrary.Data.Entities.Library", "Library")
+                        .WithMany("Reservations")
+                        .HasForeignKey("LibraryId");
+
+                    b.HasOne("FreeRentLibrary.Data.Entities.User", "User")
+                        .WithMany("Reservations")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("BookEdition");
+
+                    b.Navigation("Library");
 
                     b.Navigation("User");
                 });
@@ -505,14 +827,54 @@ namespace FreeRentLibrary.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Author", b =>
+                {
+                    b.Navigation("Books");
+
+                    b.Navigation("Genres");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Book", b =>
+                {
+                    b.Navigation("Editions");
+
+                    b.Navigation("Genres");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.BookEdition", b =>
+                {
+                    b.Navigation("LibraryStocks");
+                });
+
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Country", b =>
                 {
                     b.Navigation("Cities");
                 });
 
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Library", b =>
+                {
+                    b.Navigation("LibraryStocks");
+
+                    b.Navigation("Rentals");
+
+                    b.Navigation("Reservations");
+                });
+
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Order", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Publisher", b =>
+                {
+                    b.Navigation("Editions");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.User", b =>
+                {
+                    b.Navigation("Rentals");
+
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }
