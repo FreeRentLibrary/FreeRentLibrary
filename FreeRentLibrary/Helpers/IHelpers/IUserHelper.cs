@@ -62,11 +62,11 @@ namespace FreeRentLibrary.Helpers.IHelpers
         
         Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
         
-        Task<string> GenerateTwoFactorTokenAsync(User user);
+        Task<string> GenerateTwoFactorAuthenticationTokenAsync(User user);
         
-        Task<IdentityResult> TurnTwofactorOn(User user);
+        Task<IdentityResult> TurnTwoFactorAuthenticationOnAsync(User user);
         
-        Task<bool> TwoFactorConfirmation(User user, string token);
+        Task<bool> TwoFactorAuthenticationConfirmationAsync(User user, string token);
         
         #endregion
 

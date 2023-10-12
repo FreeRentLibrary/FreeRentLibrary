@@ -52,7 +52,7 @@ namespace FreeRentLibrary.Controllers
                     var user =  await _userHelper.GetUserByEmailAsync(model.UserName);
                     if (user.TwoFactorEnabled)
                     {
-                        var token = await _userHelper.GenerateTwoFactorTokenAsync(user);
+                        var token = await _userHelper.GenerateTwoFactorAuthenticationTokenAsync(user);
                         _mailHelper.SendEmail(user.Email, "Two Factor Authentication", "This is your code to login: "+token);
                        
                         return this.RedirectToAction("VerifyLoginToken", "Account",user);
@@ -79,7 +79,7 @@ namespace FreeRentLibrary.Controllers
         {
             if (ModelState.IsValid)
             {
-              var validToken = _userHelper.TwoFactorConfirmation(user, model.TwoFactorCode);
+              var validToken = _userHelper.TwoFactorAuthenticationConfirmationAsync(user, model.TwoFactorCode);
                 if(validToken.IsCompleted)
                 {
                     return RedirectToAction("Index", "Home");

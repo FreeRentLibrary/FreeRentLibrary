@@ -131,17 +131,17 @@ namespace FreeRentLibrary.Helpers
             return await _userManager.ResetPasswordAsync(user, token, password);
         }
 
-        public async Task<string> GenerateTwoFactorTokenAsync(User user)
+        public async Task<string> GenerateTwoFactorAuthenticationTokenAsync(User user)
         {
             return await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
         }
 
-        public async Task<IdentityResult> TurnTwofactorOn(User user)
+        public async Task<IdentityResult> TurnTwoFactorAuthenticationOnAsync(User user)
         {
             return await _userManager.SetTwoFactorEnabledAsync(user, true);
         }
 
-        public async Task<bool> TwoFactorConfirmation(User user, string token)
+        public async Task<bool> TwoFactorAuthenticationConfirmationAsync(User user, string token)
         {
             return await _userManager.VerifyTwoFactorTokenAsync(user, "Email", token);
         }
