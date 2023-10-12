@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace FreeRentLibrary.Data
+namespace FreeRentLibrary.Data.Repositories.IRepositories
 {
-	public interface IReserveRepository
+    public interface IReserveRepository
     {
         Task ReserveBookAsync(string userId, int libraryId);
         Task<IEnumerable<Reservation>> GetReservationsByUserAsync(string userId);

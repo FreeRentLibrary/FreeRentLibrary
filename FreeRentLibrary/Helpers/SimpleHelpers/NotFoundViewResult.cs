@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace FreeRentLibrary.Helpers
+namespace FreeRentLibrary.Helpers.SimpleHelpers
 {
     public class NotFoundViewResult : ViewResult
     {

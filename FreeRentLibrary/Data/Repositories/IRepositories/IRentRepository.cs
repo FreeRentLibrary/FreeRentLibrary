@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace FreeRentLibrary.Data
+namespace FreeRentLibrary.Data.Repositories.IRepositories
 {
     public interface IRentRepository
     {

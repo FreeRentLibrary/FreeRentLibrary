@@ -1,7 +1,10 @@
 using System.Text;
 using FreeRentLibrary.Data;
 using FreeRentLibrary.Data.Entities;
+using FreeRentLibrary.Data.Repositories;
+using FreeRentLibrary.Data.Repositories.IRepositories;
 using FreeRentLibrary.Helpers;
+using FreeRentLibrary.Helpers.IHelpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;

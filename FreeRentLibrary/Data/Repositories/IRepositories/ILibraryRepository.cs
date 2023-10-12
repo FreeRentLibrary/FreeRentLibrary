@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FreeRentLibrary.Data
+namespace FreeRentLibrary.Data.Repositories.IRepositories
 {
     public interface ILibraryRepository : IGenericRepository<Book>
     {

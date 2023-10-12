@@ -1,9 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using FreeRentLibrary.Data.Entities;
+using FreeRentLibrary.Data.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace FreeRentLibrary.Data
+namespace FreeRentLibrary.Data.Repositories
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class, IEntity
     {

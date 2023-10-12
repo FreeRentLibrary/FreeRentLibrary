@@ -1,5 +1,6 @@
-﻿using FreeRentLibrary.Data;
-using FreeRentLibrary.Helpers;
+﻿using FreeRentLibrary.Data.Repositories.IRepositories;
+using FreeRentLibrary.Helpers.IHelpers;
+using FreeRentLibrary.Helpers.SimpleHelpers;
 using FreeRentLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

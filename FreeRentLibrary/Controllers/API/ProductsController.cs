@@ -1,4 +1,4 @@
-﻿using FreeRentLibrary.Data;
+﻿using FreeRentLibrary.Data.Repositories.IRepositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

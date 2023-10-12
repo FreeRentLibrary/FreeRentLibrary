@@ -2,7 +2,7 @@
 using FreeRentLibrary.Models;
 using System;
 
-namespace FreeRentLibrary.Helpers
+namespace FreeRentLibrary.Helpers.IHelpers
 {
     public interface IConverterHelper
     {

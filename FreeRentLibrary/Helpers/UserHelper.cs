@@ -1,4 +1,5 @@
 ﻿using FreeRentLibrary.Data.Entities;
+using FreeRentLibrary.Helpers.IHelpers;
 using FreeRentLibrary.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -20,35 +21,55 @@ namespace FreeRentLibrary.Helpers
             _signInManager = signInManager;
             _roleManager = roleManager;
         }
+
+        #region UserRegion
+
+        public async Task<User> GetUserByIdAsync(string userId)
+        {
+            return await _userManager.FindByIdAsync(userId);
+        }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            return await _userManager.FindByEmailAsync(email);
+        }
+
         public async Task<IdentityResult> AddUserAsync(User user, string password)
         {
             return await _userManager.CreateAsync(user, password);
         }
 
-        public async Task<bool> TwoFactorConfirmation(User user,string token)
+        public async Task<IdentityResult> UpdateUserAsync(User user)
         {
-           return await _userManager.VerifyTwoFactorTokenAsync(user, "Email", token);
-        }
-
-        public async Task<string>GenerateTwoFactorTokenAsync(User user)
-        {
-            return await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
-        }
-
-        public async Task<IdentityResult>TurnTwofactorOn(User user)
-        {
-          return await _userManager.SetTwoFactorEnabledAsync(user, true);
-        }
-
-        public async Task AddUserToRoleAsync(User user, string roleName)
-        {
-            await _userManager.AddToRoleAsync(user, roleName);
+            return await _userManager.UpdateAsync(user);
         }
 
         public async Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
         {
             return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
         }
+
+        #endregion
+
+        //--
+
+        #region SignInRegion
+
+        public async Task<SignInResult> LoginAsync(LoginViewModel model)
+        {
+            return await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
+        }
+
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
+        }
+
+        #endregion
+
+        //--
+
+        #region RoleRegion
 
         public async Task CheckRoleAsync(string roleName)
         {
@@ -63,30 +84,9 @@ namespace FreeRentLibrary.Helpers
             }
         }
 
-        public async Task<IdentityResult> ConfirmEmailAsync(User user, string token)
+        public async Task AddUserToRoleAsync(User user, string roleName)
         {
-            return await _userManager.ConfirmEmailAsync(user, token);
-        }
-
-        public async Task<string> GenerateEmailConfirmationTokenAsync(User user)
-        {
-            
-            return await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        }
-
-        public async Task<string> GeneratePasswordResetTokenAsync(User user)
-        {
-            return await _userManager.GeneratePasswordResetTokenAsync(user);
-        }
-
-        public async Task<User> GetUserByEmailAsync(string email)
-        {
-            return await _userManager.FindByEmailAsync(email);
-        }
-
-        public async Task<User> GetUserByIdAsync(string userId)
-        {
-            return await _userManager.FindByIdAsync(userId);
+            await _userManager.AddToRoleAsync(user, roleName);
         }
 
         public async Task<bool> IsUserInRoleAsync(User user, string roleName)
@@ -94,14 +94,30 @@ namespace FreeRentLibrary.Helpers
             return await _userManager.IsInRoleAsync(user, roleName);
         }
 
-        public async Task<SignInResult> LoginAsync(LoginViewModel model)
+        #endregion
+
+        //--
+
+        #region ValidationRegion
+
+        public async Task<SignInResult> ValidatePasswordAsync(User user, string password)
         {
-            return await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
+            return await _signInManager.CheckPasswordSignInAsync(user, password, false);
         }
 
-        public async Task LogoutAsync()
+        public async Task<string> GenerateEmailConfirmationTokenAsync(User user)
         {
-            await _signInManager.SignOutAsync();
+            return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        }
+
+        public async Task<IdentityResult> ConfirmEmailAsync(User user, string token)
+        {
+            return await _userManager.ConfirmEmailAsync(user, token);
+        }
+
+        public async Task<string> GeneratePasswordResetTokenAsync(User user)
+        {
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
 
         public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password)
@@ -109,18 +125,24 @@ namespace FreeRentLibrary.Helpers
             return await _userManager.ResetPasswordAsync(user, token, password);
         }
 
-        public async Task<IdentityResult> UpdateUserAsync(User user)
+        public async Task<string> GenerateTwoFactorTokenAsync(User user)
         {
-            return await _userManager.UpdateAsync(user);
+            return await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
         }
 
-       
-        public async Task<SignInResult> ValidatePasswordAsync(User user, string password)
+        public async Task<IdentityResult> TurnTwofactorOn(User user)
         {
-            return await _signInManager.CheckPasswordSignInAsync(user, password, false);
+            return await _userManager.SetTwoFactorEnabledAsync(user, true);
         }
 
-        //SAMPLE
+        public async Task<bool> TwoFactorConfirmation(User user, string token)
+        {
+            return await _userManager.VerifyTwoFactorTokenAsync(user, "Email", token);
+        }
+
+        #endregion
+
+        //SAMPLE TO DELETE LATER
         public IQueryable GetBookEditionsReservedByUser(string userId)
         {
             //return await _userManager.Users.Include(u => u.Reservations)

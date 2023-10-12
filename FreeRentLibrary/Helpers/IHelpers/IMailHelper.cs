@@ -1,4 +1,6 @@
-﻿namespace FreeRentLibrary.Helpers
+﻿using FreeRentLibrary.Helpers.SimpleHelpers;
+
+namespace FreeRentLibrary.Helpers.IHelpers
 {
     public interface IMailHelper
     {

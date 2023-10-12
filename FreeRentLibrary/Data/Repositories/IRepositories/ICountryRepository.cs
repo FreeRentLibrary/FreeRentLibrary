@@ -5,7 +5,7 @@ using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace FreeRentLibrary.Data
+namespace FreeRentLibrary.Data.Repositories.IRepositories
 {
     public interface ICountryRepository : IGenericRepository<Country>
     {
@@ -18,5 +18,8 @@ namespace FreeRentLibrary.Data
         IEnumerable<SelectListItem> GetComboCountries();
         IEnumerable<SelectListItem> GetComboCities(int countryId);
         Task<Country> GetCountryAsync(City city);
+        Task<City> GetFirstCityByCountryNameAsync(string countryName);
+        Task<Country> GetCountryByNameAsync(string countryName);
+        Task AddCityListAsync(string countryName, List<City> cities);
     }
 }

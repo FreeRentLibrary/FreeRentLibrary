@@ -2,11 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FreeRentLibrary.Data.Entities;
-using FreeRentLibrary.Helpers;
+using FreeRentLibrary.Data.Repositories.IRepositories;
+using FreeRentLibrary.Helpers.IHelpers;
 using FreeRentLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace FreeRentLibrary.Data
+namespace FreeRentLibrary.Data.Repositories
 {
     public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {

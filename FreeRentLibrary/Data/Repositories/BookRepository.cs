@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FreeRentLibrary.Data.Entities;
+using FreeRentLibrary.Data.Repositories.IRepositories;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace FreeRentLibrary.Data
+namespace FreeRentLibrary.Data.Repositories
 {
     public class BookRepository : GenericRepository<Book>, IBookRepository
     {

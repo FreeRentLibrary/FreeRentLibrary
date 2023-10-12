@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 
-namespace FreeRentLibrary.Data
+namespace FreeRentLibrary.Data.Repositories.IRepositories
 {
     public interface IGenericRepository<T> where T : class
     {

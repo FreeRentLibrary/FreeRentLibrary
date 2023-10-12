@@ -1,4 +1,5 @@
 ﻿using FreeRentLibrary.Data.Entities;
+using FreeRentLibrary.Data.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyModel;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace FreeRentLibrary.Data
+namespace FreeRentLibrary.Data.Repositories
 {
     public class RentRepository : IRentRepository
     {
@@ -59,7 +60,7 @@ namespace FreeRentLibrary.Data
                 LibraryId = libraryId,
                 RentDate = DateTime.Now,
                 DueDate = DateTime.Now.AddDays(30)
-			};
+            };
 
             _context.Set<Rent>().Add(rent);
             await _context.SaveChangesAsync();

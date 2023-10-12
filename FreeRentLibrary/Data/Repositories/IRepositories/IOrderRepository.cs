@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Models;
 
-namespace FreeRentLibrary.Data
+namespace FreeRentLibrary.Data.Repositories.IRepositories
 {
     public interface IOrderRepository : IGenericRepository<Order>
     {

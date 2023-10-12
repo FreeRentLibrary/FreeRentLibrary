@@ -1,4 +1,6 @@
-﻿using MailKit.Net.Smtp;
+﻿using FreeRentLibrary.Helpers.IHelpers;
+using FreeRentLibrary.Helpers.SimpleHelpers;
+using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 using System;
@@ -46,13 +48,13 @@ namespace FreeRentLibrary.Helpers
             {
                 return new Response
                 {
-                    IsSucess = false,
+                    IsSuccess = false,
                     Message = ex.ToString()
                 };
             }
             return new Response
             {
-                IsSucess = true
+                IsSuccess = true
             };
 
         }

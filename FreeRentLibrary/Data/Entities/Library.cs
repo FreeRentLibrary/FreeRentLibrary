@@ -19,10 +19,11 @@ namespace FreeRentLibrary.Data.Entities
         //Reservations made to this library
         public IEnumerable<Reservation> Reservations { get; set; }
 
-        //TODO: Create class Stock/LibraryStock for stock of books
-
         //TODO: Other data like address, name, city, etc...
+        public string Address { get; set; }
 
-        //TODO: Connect to classes of Rent and Reservation
+        public City City { get; set; }
+
+        
     }
 }

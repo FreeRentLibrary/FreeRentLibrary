@@ -1,9 +1,10 @@
-﻿namespace FreeRentLibrary.Helpers
+﻿namespace FreeRentLibrary.Helpers.SimpleHelpers
 {
     public class Response
     {
-        public bool IsSucess { get; set; }
+        public bool IsSuccess { get; set; }
         public string Message { get; set; }
+
         public object Results;
     }
 }

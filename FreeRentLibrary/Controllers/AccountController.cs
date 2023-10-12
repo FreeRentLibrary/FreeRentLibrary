@@ -1,6 +1,7 @@
-﻿using FreeRentLibrary.Data;
-using FreeRentLibrary.Data.Entities;
-using FreeRentLibrary.Helpers;
+﻿using FreeRentLibrary.Data.Entities;
+using FreeRentLibrary.Data.Repositories.IRepositories;
+using FreeRentLibrary.Helpers.IHelpers;
+using FreeRentLibrary.Helpers.SimpleHelpers;
 using FreeRentLibrary.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -139,7 +140,7 @@ namespace FreeRentLibrary.Controllers
                         $"To allow the user, " +
                         $"plase click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
 
-                    if (response.IsSucess)
+                    if (response.IsSuccess)
                     {
                         ViewBag.Message = "The instructions to allow you user has been send to email";
                         return View(model);
@@ -339,7 +340,7 @@ namespace FreeRentLibrary.Controllers
                 $"To reset the password click in this link:</br></br>" +
                 $"<a href = \"{link}\">Reset Password</a>");
 
-                if (response.IsSucess)
+                if (response.IsSuccess)
                 {
                     this.ViewBag.Message = "The instructions to recover your password has been sent to email.";
                 }
