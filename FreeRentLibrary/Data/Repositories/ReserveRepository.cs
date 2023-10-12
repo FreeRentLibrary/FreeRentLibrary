@@ -1,11 +1,9 @@
 ﻿using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Data.Repositories.IRepositories;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 
@@ -52,8 +50,8 @@ namespace FreeRentLibrary.Data.Repositories
             {
                 UserId = userId,
                 LibraryId = libraryId,
-				BookEditionId = bookId,
-				ReservationDate = DateTime.Now
+                BookEditionId = bookId,
+                ReservationDate = DateTime.Now
             };
 
             _context.Set<Reservation>().Add(reservation);
@@ -65,9 +63,10 @@ namespace FreeRentLibrary.Data.Repositories
             if (reservation.UserId != null && reservation.LibraryId != null)
             {
                 var userId = reservation.UserId;
-                int bookId = reservation.LibraryId.Value;
+                int bookId = reservation.BookEditionId.Value;
+                int libraryId = reservation.LibraryId.Value;
 
-                await _rentRepository.RentBookAsync(userId, bookId);
+                await _rentRepository.RentBookAsync(userId, libraryId, bookId);
 
                 reservation.EndDate = DateTime.Now;
                 await _context.SaveChangesAsync();

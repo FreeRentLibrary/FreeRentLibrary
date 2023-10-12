@@ -145,8 +145,14 @@ namespace FreeRentLibrary.Data
 
                     foreach (var country in jCountries)
                     {
-                        if (country.States != null)
+                        if (await _countryRepository.GetCountryByNameAsync(country.Name) == null)
                         {
+                            _context.Countries.Add(new Country
+                            {
+                                Name = country.Name
+                            });
+                            await _context.SaveChangesAsync();
+
                             if (country.States != null)
                             {
                                 foreach (var city in country.States)
@@ -155,16 +161,7 @@ namespace FreeRentLibrary.Data
                                 }
                             }
 
-                            if (await _countryRepository.GetCountryByNameAsync(country.Name) == null)
-                            {
-                                _context.Countries.Add(new Country
-                                {
-                                    Name = country.Name
-                                });
-                                await _context.SaveChangesAsync();
-
-                                await _countryRepository.AddCityListAsync(country.Name, cities);
-                            }
+                            await _countryRepository.AddCityListAsync(country.Name, cities);
 
                             cities.Clear();
                         }
