@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FreeRentLibrary.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class BooksController : Controller
     {
         private readonly IBookRepository _bookRepository;

@@ -17,6 +17,8 @@ namespace FreeRentLibrary.Helpers
             _signInManager = signInManager;
             _roleManager = roleManager;
         }
+
+        
         public async Task<IdentityResult> AddUserAsync(User user, string password)
         {
             return await _userManager.CreateAsync(user, password);
@@ -47,7 +49,12 @@ namespace FreeRentLibrary.Helpers
             return await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
         }
 
-        public async Task CheckRoleAsync(string roleName)
+        public async Task<System.Linq.IQueryable<IdentityRole>> GetRoles()
+        {
+           return _roleManager.Roles;
+        }
+
+        public async Task<bool> CheckRoleAsync(string roleName)
         {
             var roleExists = await _roleManager.RoleExistsAsync(roleName);
             if (!roleExists)
@@ -56,8 +63,9 @@ namespace FreeRentLibrary.Helpers
                 {
                     Name = roleName
                 });
-
+                return true;
             }
+            return false;
         }
 
         public async Task<IdentityResult> ConfirmEmailAsync(User user, string token)

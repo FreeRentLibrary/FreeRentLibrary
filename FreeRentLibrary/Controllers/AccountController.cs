@@ -2,6 +2,7 @@
 using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Helpers;
 using FreeRentLibrary.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ using System.Threading.Tasks;
 
 namespace FreeRentLibrary.Controllers
 {
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly IUserHelper _userHelper;
@@ -50,7 +52,7 @@ namespace FreeRentLibrary.Controllers
                     if (user.TwoFactorEnabled)
                     {
                         var token = await _userHelper.GenerateTwoFactorTokenAsync(user);
-                        _mailHelper.SendEmail(user.Email, "Two Factor Authentication", token);
+                        _mailHelper.SendEmail(user.Email, "Two Factor Authentication", "This is your code to login: "+token);
                        
                         return this.RedirectToAction("VerifyLoginToken", "Account",user);
                     }
@@ -127,7 +129,7 @@ namespace FreeRentLibrary.Controllers
                         ModelState.AddModelError(string.Empty, "The user could not be created");
                         return View(model);
                     }
-
+                     await _userHelper.AddUserToRoleAsync(user, "Custumer");
                     string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
                     string tokenLink = Url.Action("ConfirmEmail", "Account", new
                     {
