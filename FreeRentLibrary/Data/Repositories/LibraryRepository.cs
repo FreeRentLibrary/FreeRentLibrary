@@ -23,38 +23,30 @@ namespace FreeRentLibrary.Data.Repositories
 			_reserveRepository = reserveRepository;
 		}
 
-		public async Task<Book> CheckAndReserveBookAsync(int libraryId, int bookId, string userId)
+		public async Task<bool> CheckStockAsync(int libraryId, int bookId)
 		{
-			var library = await _context.Libraries.FindAsync(libraryId);
-			if (library == null) // Library not Found
-			{
-				return null;
-			}
+			//var stock = await _context.LibraryStocks
+			//	.FirstOrDefaultAsync(s => s.LibraryId == libraryId && s.BookEditionId == bookId);
 
-			var stock = library.LibraryStocks.FirstOrDefault(s => s.BookEditionId == bookId);
-			if (stock == null) // The book is not in stock in this library
-			{
-				await _reserveRepository.ReserveBookAsync(userId, libraryId, bookId);
+			//return stock != null;
 
-				return null;
-			}
-
-			var bookAvailableId = Convert.ToInt32(stock.BookEditionId);
-			try
-			{
-				await _rentRepository.RentBookAsync(userId,libraryId,bookAvailableId);
-			}
-			catch (Exception e)
-			{
-				throw;
-			}
-
-			return null;
+			return false;
 		}
 
 		public IEnumerable<SelectListItem> GetUserBooks()
 		{
 			throw new System.NotImplementedException();
+		}
+
+
+		public async Task RentBookAsync(int libraryId, int bookId, string userId)
+		{
+			await _rentRepository.RentBookAsync(userId, libraryId, bookId);
+		}
+
+		public async Task ReserveBookAsync(int libraryId, int bookId, string userId)
+		{
+			await _reserveRepository.ReserveBookAsync(userId, libraryId, bookId);
 		}
 
 		public IQueryable GetUserLibrary()

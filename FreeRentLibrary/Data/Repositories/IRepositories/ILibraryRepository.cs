@@ -1,4 +1,5 @@
 ﻿using FreeRentLibrary.Data.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +9,14 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
 {
     public interface ILibraryRepository : IGenericRepository<Book>
     {
-        public IQueryable GetUserLibrary();
+        IQueryable GetUserLibrary();
 
         IEnumerable<SelectListItem> GetUserBooks();
 
-        Task<Book> CheckAndReserveBookAsync(int libraryId, int bookId, string userId);
+        Task<bool> CheckStockAsync(int libraryId, int bookId);
+
+        Task ReserveBookAsync(int libraryId, int bookId, string userId);
+
+        Task RentBookAsync(int libraryId, int bookId, string userId);
 	}
 }

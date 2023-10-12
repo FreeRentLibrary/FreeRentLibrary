@@ -1,10 +1,12 @@
 ﻿using FreeRentLibrary.Data;
 using FreeRentLibrary.Data.Entities;
+using FreeRentLibrary.Data.Repositories;
 using FreeRentLibrary.Data.Repositories.IRepositories;
 using FreeRentLibrary.Helpers.IHelpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,14 +19,24 @@ namespace FreeRentLibrary.Controllers
         private readonly ILibraryRepository _libraryRepository;
         private readonly IBookRepository _bookRepository;
         private readonly IUserHelper _userHelper;
+		private readonly IRentRepository _rentRepository;
+		private readonly IReserveRepository _reserveRepository;
 
-        public LibrariesController(DataContext context, ILibraryRepository libraryRepository, IBookRepository bookRepository, IUserHelper userHelper)
+		public LibrariesController(
+            DataContext context, 
+            ILibraryRepository libraryRepository, 
+            IBookRepository bookRepository, 
+            IUserHelper userHelper,
+            IRentRepository rentRepository,
+            IReserveRepository reserveRepository)
         {
             _context = context;
             _libraryRepository = libraryRepository;
             _bookRepository = bookRepository;
             _userHelper = userHelper;
-        }
+			_rentRepository = rentRepository;
+			_reserveRepository = reserveRepository;
+		}
 
         // GET: Libraries
         public async Task<IActionResult> Index()
@@ -156,5 +168,34 @@ namespace FreeRentLibrary.Controllers
         {
             return _context.Libraries.Any(e => e.Id == id);
         }
-    }
+
+		public async Task<IActionResult> RentOrReserve(int libraryId, int bookId, string userId)
+		{
+			var library = await _context.Libraries.FindAsync(libraryId);
+			if (library == null) // Library not Found
+			{
+				return NotFound();
+			}
+
+			var stock = library.LibraryStocks.FirstOrDefault(s => s.BookEditionId == bookId);
+			if (stock == null) // The book is not in stock in this library
+			{
+				await _reserveRepository.ReserveBookAsync(userId, libraryId, bookId);
+
+				return View("UserReservations"); //Returns to the User's Reservations Page
+			}
+
+			var bookAvailableId = Convert.ToInt32(stock.BookEditionId);
+			try
+			{
+				await _rentRepository.RentBookAsync(userId, libraryId, bookAvailableId);
+			}
+			catch (Exception e)
+			{
+				return NotFound(e);
+			}
+
+            return View("UserRentals"); //Returns to the User's Rentals Page
+		}
+	}
 }
