@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FreeRentLibrary.Data.Repositories.IRepositories
 {
@@ -10,5 +11,7 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
         public IQueryable GetUserLibrary();
 
         IEnumerable<SelectListItem> GetUserBooks();
-    }
+
+        Task<Book> CheckAndReserveBookAsync(int libraryId, int bookId, string userId);
+	}
 }

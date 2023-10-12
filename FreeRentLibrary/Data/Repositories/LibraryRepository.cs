@@ -1,32 +1,68 @@
-﻿using FreeRentLibrary.Data.Entities;
+﻿using FreeRentLibrary.Controllers;
+using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Data.Repositories.IRepositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FreeRentLibrary.Data.Repositories
 {
-    public class LibraryRepository : GenericRepository<Book>, ILibraryRepository
-    {
-        private readonly DataContext _context;
+	public class LibraryRepository : GenericRepository<Book>, ILibraryRepository
+	{
+		private readonly DataContext _context;
+		private readonly RentRepository _rentRepository;
+		private readonly ReserveRepository _reserveRepository;
 
-        public LibraryRepository(DataContext context) : base(context)
-        {
-            _context = context;
-        }
+		public LibraryRepository(DataContext context, RentRepository rentRepository, ReserveRepository reserveRepository): base(context)
+		{
+			_context = context;
+			_rentRepository = rentRepository;
+			_reserveRepository = reserveRepository;
+		}
 
-        public IEnumerable<SelectListItem> GetUserBooks()
-        {
-            throw new System.NotImplementedException();
-        }
+		public async Task<Book> CheckAndReserveBookAsync(int libraryId, int bookId, string userId)
+		{
+			var library = await _context.Libraries.FindAsync(libraryId);
+			if (library == null) // Library not Found
+			{
+				return null;
+			}
 
-        public IQueryable GetUserLibrary()
-        {
-            throw new System.NotImplementedException();
-        }
+			var stock = library.LibraryStocks.FirstOrDefault(s => s.BookEditionId == bookId);
+			if (stock == null) // The book is not in stock in this library
+			{
+				await _reserveRepository.ReserveBookAsync(userId, libraryId, bookId);
 
-        /*public IQueryable GetUserLibrary()
+				return null;
+			}
+
+			var bookAvailableId = Convert.ToInt32(stock.BookEditionId);
+			try
+			{
+				await _rentRepository.RentBookAsync(userId,libraryId,bookAvailableId);
+			}
+			catch (Exception e)
+			{
+				throw;
+			}
+
+			return null;
+		}
+
+		public IEnumerable<SelectListItem> GetUserBooks()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public IQueryable GetUserLibrary()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		/*public IQueryable GetUserLibrary()
         {
 
            return _context.Books.Include(b => b.User);
@@ -48,5 +84,5 @@ namespace FreeRentLibrary.Data.Repositories
            return list;
         }*/
 
-    }
+	}
 }

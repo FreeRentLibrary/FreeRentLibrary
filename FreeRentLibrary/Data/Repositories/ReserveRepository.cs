@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 
@@ -45,13 +46,14 @@ namespace FreeRentLibrary.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task ReserveBookAsync(string userId, int libraryId)
+        public async Task ReserveBookAsync(string userId, int libraryId, int bookId)
         {
             var reservation = new Reservation
             {
                 UserId = userId,
                 LibraryId = libraryId,
-                ReservationDate = DateTime.Now
+				BookEditionId = bookId,
+				ReservationDate = DateTime.Now
             };
 
             _context.Set<Reservation>().Add(reservation);

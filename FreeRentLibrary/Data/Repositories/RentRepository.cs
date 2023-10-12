@@ -52,14 +52,15 @@ namespace FreeRentLibrary.Data.Repositories
             }
         }
 
-        public async Task RentBookAsync(string userId, int libraryId)
+        public async Task RentBookAsync(string userId, int libraryId, int bookId)
         {
             var rent = new Rent
             {
                 UserId = userId,
                 LibraryId = libraryId,
+                BookEditionId = bookId,
                 RentDate = DateTime.Now,
-                DueDate = DateTime.Now.AddDays(30)
+                DueDate = DateTime.Now.AddDays(30) //Roughly a Month to Return the Book
             };
 
             _context.Set<Rent>().Add(rent);
