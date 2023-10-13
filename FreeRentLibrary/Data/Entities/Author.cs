@@ -11,10 +11,10 @@ namespace FreeRentLibrary.Data.Entities
 
         public string Name { get; set; }
 
-        public string PenName { get; set; }
+        //public string PenName { get; set; }
 
-        public IEnumerable<Book> Books { get; set; }
+        public ICollection<Book> Books { get; set; }
 
-        public IEnumerable<Genre> Genres { get; set; }
+        public ICollection<Genre> Genres { get; set; }
     }
 }

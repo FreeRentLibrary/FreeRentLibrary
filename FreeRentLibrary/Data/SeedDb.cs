@@ -58,7 +58,7 @@ namespace FreeRentLibrary.Data
             await _userHelper.CheckRoleAsync("Reader");
         }
 
-        public async Task SeedCountry()
+        /*public async Task SeedCountry()
         {
             if (!_context.Countries.Any())
             {
@@ -75,7 +75,7 @@ namespace FreeRentLibrary.Data
 
                 await _context.SaveChangesAsync();
             }
-        }
+        }*/
 
         public async Task SeedAdmin()
         {

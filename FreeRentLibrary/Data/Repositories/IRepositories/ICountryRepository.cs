@@ -9,17 +9,39 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
 {
     public interface ICountryRepository : IGenericRepository<Country>
     {
+        #region Country
+
         IQueryable GetCountriesWithCities();
-        Task<Country> GetCountryWithCityAsync(int id);
-        Task<City> GetCityAsync(int id);
-        Task AddCityAsync(CityViewModel model);
-        Task<int> UpdateCityAsync(City city);
-        Task<int> DeleteCityAsync(City city);
-        IEnumerable<SelectListItem> GetComboCountries();
-        IEnumerable<SelectListItem> GetComboCities(int countryId);
+
         Task<Country> GetCountryAsync(City city);
-        Task<City> GetFirstCityByCountryNameAsync(string countryName);
+        
         Task<Country> GetCountryByNameAsync(string countryName);
+
+        Task<Country> GetCountryWithCityAsync(int id);
+
+        IEnumerable<SelectListItem> GetComboCountries();
+
+        #endregion
+
+        //--
+
+        #region City
+        
+        Task AddCityAsync(CityViewModel model);
+        
         Task AddCityListAsync(string countryName, List<City> cities);
+        
+        Task<City> GetCityAsync(int id);
+
+        Task<City> GetFirstCityByCountryNameAsync(string countryName);
+        
+        Task<int> UpdateCityAsync(City city);
+        
+        Task<int> DeleteCityAsync(City city);
+        
+        IEnumerable<SelectListItem> GetComboCities(int countryId);
+
+        #endregion
+        
     }
 }

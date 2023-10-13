@@ -12,8 +12,9 @@ using System.Threading.Tasks;
 //Ordered by CRUD -> Create(Add) > Read(Details) > Update(Edit) > Delete
 namespace FreeRentLibrary.Controllers
 {
+    //CREATE A NEW CONTROLLER
     [Authorize]
-    public class BooksController : Controller
+    public class BooksCNCController : Controller
     {
         private readonly IBookRepository _bookRepository;
         private readonly IUserHelper _userHelper;
@@ -21,7 +22,7 @@ namespace FreeRentLibrary.Controllers
         public readonly IBlobHelper _blobHelper;
         public readonly IConverterHelper _converterHelper;
 
-        public BooksController(IBookRepository bookRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
+        public BooksCNCController(IBookRepository bookRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
         {
             _bookRepository = bookRepository;
             _userHelper = userHelper;
@@ -110,7 +111,7 @@ namespace FreeRentLibrary.Controllers
             {
                 try
                 {
-                    Guid imageId = model.ImageId;
+                    /*Guid imageId = model.ImageId;
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
                         imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "books");
@@ -118,7 +119,7 @@ namespace FreeRentLibrary.Controllers
 
                     var book = _converterHelper.ToBook(model, imageId, false);
 
-                    await _bookRepository.UpdateAsync(book);
+                    await _bookRepository.UpdateAsync(book);*/
                 }
                 catch (DbUpdateConcurrencyException)
                 {

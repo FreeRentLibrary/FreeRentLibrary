@@ -9,13 +9,14 @@ namespace FreeRentLibrary.Helpers
     public class ConverterHelper : IConverterHelper
     {
         //TODO: Make major changes
+        
         public Book ToBook(BookViewModel model, Guid imageId, bool isNew)
         {
             return new Book
             {
                 Id = isNew ? 0 : model.Id,
-                ImageId = imageId,
-                IsAvailable = model.IsAvailable,
+                //ImageId = imageId,
+                //IsAvailable = model.IsAvailable,
             };
         }
 
@@ -24,8 +25,8 @@ namespace FreeRentLibrary.Helpers
             return new BookViewModel
             {
                 Id = product.Id,
-                IsAvailable = product.IsAvailable,
-                ImageId = product.ImageId,
+                //IsAvailable = product.IsAvailable,
+                //ImageId = product.ImageId,
             };
         }
     }

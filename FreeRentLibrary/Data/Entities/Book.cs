@@ -11,32 +11,33 @@ namespace FreeRentLibrary.Data.Entities
 
         [Required]
         [Display(Name = "Title")]
-        [MaxLength(50, ErrorMessage = "The field {0} only can contain {1} characters lenght.")]
         public string Name { get; set; }
               
-        [Display(Name = "Image")]
-        public Guid ImageId { get; set; }
+        /*[Display(Name = "Image")]
+        public Guid ImageId { get; set; }*/
 
         //TODO: Remove proprieties
-        [Display(Name = "Is Available")]
-        public bool IsAvailable { get; set; }
+        /*[Display(Name = "Is Available")]
+        public bool IsAvailable { get; set; }*/
 
         public string Synopsis { get; set; }
-               
+
+        //Language that the book was written
+        public string NativeLanguage { get; set; }
 
         //Change to ICollection in case of failure
-        public IEnumerable<BookEdition> Editions { get; set; }
+        public ICollection<BookEdition> BookEditions { get; set; }
 
-        public IEnumerable<Genre> Genres { get; set; }
+        public ICollection<Genre> Genres { get; set; }
 
         public int? AuthorId { get; set; }
 
         public Author Author { get; set; }
 
 
-        public string ImageFullPath => ImageId == Guid.Empty
+        /*public string ImageFullPath => ImageId == Guid.Empty
             ? $"/images/noimage.png"
-            : $"https://supershopsi.blob.core.windows.net/books/{ImageId}";
+            : $"https://supershopsi.blob.core.windows.net/books/{ImageId}";*/
 
     }
 }

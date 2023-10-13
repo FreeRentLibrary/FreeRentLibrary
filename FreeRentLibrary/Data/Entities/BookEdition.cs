@@ -20,19 +20,16 @@ namespace FreeRentLibrary.Data.Entities
 
         public Book Book { get; set; }
 
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
-        //Number of pages
-        public int Pages { get; set; }
-
-        //Language that the book was written
-        public string NativeLanguage { get; set; }
+        //Number of pages in the edition
+        public int? Pages { get; set; }
 
         //ISBN code of a book
         public string ISBN { get; set; }
 
         //Recomended minimum age to read
-        public int MinimumAge { get; set; }
+        public int? MinimumAge { get; set; }
 
         //In case the edition is a translated one
         public string? TranslatedLanguage { get; set; }

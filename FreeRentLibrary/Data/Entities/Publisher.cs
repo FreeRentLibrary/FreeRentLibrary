@@ -14,9 +14,9 @@ namespace FreeRentLibrary.Data.Entities
         public Country Country { get; set; }
 
         //TODO: URL connection to website
-        public string Url { get; set; }
+        //public string Url { get; set; }
 
         //Change to ICollection in case of failure
-        public IEnumerable<BookEdition> Editions { get; set; }
+        public ICollection<BookEdition> Editions { get; set; }
     }
 }
