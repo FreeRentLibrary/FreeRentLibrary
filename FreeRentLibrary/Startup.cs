@@ -72,6 +72,7 @@ namespace FreeRentLibrary
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IMailHelper, MailHelper>();
 
             services.AddMvc(options =>
