@@ -14,7 +14,9 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FreeRentLibrary</a>
+                <a href="@Url.Action("Index", "Home")">
+                    <img src="~/images/home/frlLogo.png" alt="FreeRentLibrary Logo" class="logo-image" />
+                </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -27,18 +29,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Books" asp-action="Index">Books</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="ListRoles">Roles</a>
-                        </li>
                         
                         @if(this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Users</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Roles</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Countries" asp-action="Index">Countries and Cities</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="ListUsers">Users</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Roles" asp-action="ListRoles">Roles</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Countries" asp-action="Index">Countries</a></li>
                                 </ul>
                             </li>
                         }
