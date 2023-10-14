@@ -17,7 +17,7 @@ namespace FreeRentLibrary.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<OrderDetailTemp> OrderDetailTemps { get; set; }
-        public DbSet<Publisher> Publishers { get; set; }
+        public DbSet<BookPublisher> Publishers { get; set; }
         public DbSet<Rent> Rentals { get; set; }
 		public DbSet<Reservation> Reservations { get; set; }
 		

@@ -1,53 +1,64 @@
-﻿using System.Collections.Generic;
+﻿using FreeRentLibrary.Data.Entities;
+using FreeRentLibrary.Data.Repositories.IRepositories;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FreeRentLibrary.Data.Entities;
-using FreeRentLibrary.Data.Repositories.IRepositories;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace FreeRentLibrary.Data.Repositories
 {
-    public class BookRepository : GenericRepository<Book>, IBookRepository
+    public class BookRepository:GenericRepository<Book>, IBookRepository
     {
         private readonly DataContext _context;
 
-        public BookRepository(DataContext context) : base(context)
+        public BookRepository(DataContext context):base(context)
         {
             _context = context;
         }
 
-        public async Task<IEnumerable<Book>> GetBooksByNameAsync(string name)
+        public IQueryable GetBooksWithAuthorsAndGenres()
         {
-            return await _context.Books.Where(b => b.Name == name).ToListAsync();
+            return _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Genres)
+                .OrderBy(b => b.Name);
         }
 
-        //TODO: In progress
-        public IQueryable GetBooksWithUsers()
+        public async Task<Book> GetBookWithAllDataAsync(int bookId)
         {
-            //return _context.Books.Include(b => b.User).OrderBy(b => b.Name);
-            //To change after
-            return _context.Books;
+            return await _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Genres)
+                .Include(b => b.BookEditions)
+                .Where(b => b.Id == bookId)
+                .FirstOrDefaultAsync();
         }
 
-        public Task<Book> GetBookWithAuthorAsync(string author)
+        public async Task<IEnumerable<Book>> GetBooksByAuthorAsync(int authorId)
         {
-            throw new System.NotImplementedException();
+            return await _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Genres)
+                .Where(b => b.Author.Id == authorId)
+                .ToListAsync();
         }
 
-        public IEnumerable<SelectListItem> GetComboBooks()
+        public async Task<IEnumerable<Book>> GetBooksByGenreAsync(int genreId)
         {
-            var list = _context.Books.Select(c => new SelectListItem
-            {
-                Text = c.Name,
-                Value = c.Id.ToString()
-            }).OrderBy(l => l.Text).ToList();
-            list.Insert(0, new SelectListItem
-            {
-                Text = "Select a book",
-                Value = "0"
-            });
-            return list;
+            return await _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Genres)
+                .Where(b => b.Genres.Any(g => g.Id == genreId))
+                .ToListAsync();
+        }
+
+        public async Task<BookEdition> GetBookEditionAsync(int bookEditionId)
+        {
+            return await _context.BookEditions
+                .Include(be => be.Book)
+                .Include(be => be.Publisher)
+                .Where(be => be.Id == bookEditionId)
+                .FirstOrDefaultAsync();
         }
     }
 }

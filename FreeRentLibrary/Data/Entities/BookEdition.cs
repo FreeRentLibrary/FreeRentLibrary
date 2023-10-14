@@ -39,7 +39,7 @@ namespace FreeRentLibrary.Data.Entities
 
         public int? PublisherId { get; set; }
 
-        public Publisher Publisher { get; set; }
+        public BookPublisher Publisher { get; set; }
 
         //Shows the Libraries that have the Book and the respective Stock
         public IEnumerable<LibraryStock> LibraryStocks { get; set; }
