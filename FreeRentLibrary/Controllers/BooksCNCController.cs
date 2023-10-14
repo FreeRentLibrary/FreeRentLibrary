@@ -16,13 +16,13 @@ namespace FreeRentLibrary.Controllers
     [Authorize]
     public class BooksCNCController : Controller
     {
-        private readonly IBookRepository _bookRepository;
+        private readonly IBookCNCRepository _bookRepository;
         private readonly IUserHelper _userHelper;
 
         public readonly IBlobHelper _blobHelper;
         public readonly IConverterHelper _converterHelper;
 
-        public BooksCNCController(IBookRepository bookRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
+        public BooksCNCController(IBookCNCRepository bookRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
         {
             _bookRepository = bookRepository;
             _userHelper = userHelper;

@@ -12,9 +12,9 @@ namespace FreeRentLibrary.Controllers
     public class OrdersController : Controller
     {
         private readonly IOrderRepository _orderRepository;
-        private readonly IBookRepository _bookRepository;
+        private readonly IBookCNCRepository _bookRepository;
 
-        public OrdersController(IOrderRepository orderRepository, IBookRepository bookRepository)
+        public OrdersController(IOrderRepository orderRepository, IBookCNCRepository bookRepository)
         {
             _orderRepository = orderRepository;
             _bookRepository = bookRepository;

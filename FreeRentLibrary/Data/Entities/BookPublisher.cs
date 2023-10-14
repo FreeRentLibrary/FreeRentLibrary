@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FreeRentLibrary.Data.Entities
 {
-    public class Publisher : IEntity
+    public class BookPublisher : IEntity
     {
         [Key]
         public int Id { get; set; }

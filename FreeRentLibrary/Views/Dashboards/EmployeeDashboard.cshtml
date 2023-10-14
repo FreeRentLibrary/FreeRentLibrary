@@ -1,0 +1,53 @@
+﻿@model FreeRentLibrary.Models.EmployeeDashboardViewModel
+
+<h6> Employee </h6>
+<br />
+<h4> Clients: </h4>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User.PhoneNumber)
+            </th>
+            @* <th>
+                @Html.DisplayNameFor(model => model.User.EmployeeApproved)
+            </th> *@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Readers)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelUser => user.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelUser => user.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelUser => user.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelUser => user.PhoneNumber)
+                </td>
+                @* <td>
+                    @Html.DisplayFor(ModelUser => user.EmployeeApproved)
+                </td> *@
+                <td>
+                    <a asp-controller="Account" asp-action="Details" asp-route-id="@user.Id" class="btn btn-info">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

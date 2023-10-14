@@ -1,0 +1,19 @@
+﻿@model FreeRentLibrary.Models.DashboardViewModel
+
+<h1> Welcome @User.Identity.Name </h1>
+
+@if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+{
+    <partial name="AdminDashboard" for="AdminDashboard"/>
+}
+else if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Employee"))
+{
+    <partial name="EmployeeDashboard" for="EmployeeDashboard" />
+
+}
+
+else if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Reader"))
+{
+    <partial name="ReaderDashboard" for="ReaderDashboard" />
+    
+}

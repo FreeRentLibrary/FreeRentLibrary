@@ -12,10 +12,10 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light nav-bg border-bottom box-shadow mb-3">
             <div class="container">
-                <a href="@Url.Action("Index", "Home")">
-                    <img src="~/images/home/frlLogo.png" alt="FreeRentLibrary Logo" class="logo-image" />
+                <a href="@Url.Action("Dashboard", "Dashboards")">
+                    <img src="~/images/home/frlLogoHeader.png" alt="FreeRentLibrary Logo" class="logo-image" />
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -24,20 +24,22 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Books" asp-action="Index">Books</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Books" asp-action="Index">Books</a>
                         </li>
                         
                         @if(this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
                         {
+                            <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="RegisterAsAdmin">Register New Staff</a>
+                            </li>
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+                                <a class="nav-link dropdown-toggle text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="ListUsers">Users</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Dashboards" asp-action="Dashboard">Users</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Roles" asp-action="ListRoles">Roles</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Countries" asp-action="Index">Countries</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Countries" asp-action="Index">Countries and Cities</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Genres" asp-action="Index">Genres</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Authors" asp-action="Index">Authors</a></li>
                                 </ul>
                             </li>
                         }
@@ -46,19 +48,19 @@
                         @if(this.User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a>                                
+                                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a>                                
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
                             </li>
                         }
                     </ul>
@@ -71,10 +73,10 @@
             @RenderBody()
         </main>
     </div>
-
+    <br />
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - FreeRentLibrary - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <p class="footer-text">&copy; 2023 - FreeRentLibrary - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></p>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

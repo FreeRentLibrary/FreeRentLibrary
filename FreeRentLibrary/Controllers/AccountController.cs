@@ -23,12 +23,17 @@ namespace FreeRentLibrary.Controllers
         private readonly IUserHelper _userHelper;
         private readonly IConfiguration _configuration;
         private readonly IMailHelper _mailHelper;
+        private readonly IRoleRepository _roleRepository;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ICountryRepository _countryRepository;
 
-        public AccountController(IUserHelper userHelper, ICountryRepository countryRepository, IConfiguration configuration, IMailHelper mailHelper)
+        public AccountController(IUserHelper userHelper, ICountryRepository countryRepository, IConfiguration configuration, IMailHelper mailHelper,
+            IRoleRepository roleRepository, RoleManager<IdentityRole>roleManager)
         {
             _configuration = configuration;
             _mailHelper = mailHelper;
+            _roleRepository = roleRepository;
+            _roleManager = roleManager;
             _userHelper = userHelper;
             _countryRepository = countryRepository;
         }
@@ -37,7 +42,7 @@ namespace FreeRentLibrary.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Dashboard", "Dashboards");
             }
             return View();
         }
@@ -61,7 +66,7 @@ namespace FreeRentLibrary.Controllers
                     {
                         return Redirect(this.Request.Query["ReturnUrl"].First());
                     }
-                    return this.RedirectToAction("Index", "Home");
+                    return this.RedirectToAction("Dashboard", "Dashboards");
                 }
             }
             this.ModelState.AddModelError(string.Empty, "Failed  to Login");
@@ -82,7 +87,7 @@ namespace FreeRentLibrary.Controllers
               var validToken = _userHelper.TwoFactorAuthenticationConfirmationAsync(user, model.TwoFactorCode);
                 if(validToken.IsCompleted)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Dashboard", "Dashboards");
                 }
             }
             return View(model);
@@ -94,8 +99,77 @@ namespace FreeRentLibrary.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        //registar através da conta Admin
+        public IActionResult RegisterAsAdmin()
+        {
+            var model = new RegisterAsAdminViewModel
+            {
+                Countries = _countryRepository.GetComboCountries(),
+                Cities = _countryRepository.GetComboCities(0),
+                Roles = _roleRepository.GetComboRoles()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult>RegisterAsAdmin(RegisterAsAdminViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.Username);
+                if (user == null)
+                {
+                    var city = await _countryRepository.GetCityAsync(model.CityId);
+                    user = new User
+                    {
+                        FirstName = model.FirtsName,
+                        LastName = model.LastName,
+                        Email = model.Username,
+                        UserName = model.Username,
+                        Address = model.Address,
+                        PhoneNumber = model.PhoneNumber,
+                        CityId = city.Id,
+                        City = city
+                    };
+                    var result = await _userHelper.AddUserAsync(user, model.Password);
+                    if (result != IdentityResult.Success)
+                    {
+                        ModelState.AddModelError(string.Empty, "The user could not be created");
+                        return View(model);
+                    }
+                    
+                    string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                    string tokenLink = Url.Action("ConfirmEmail", "Account", new
+                    {
+                        userid = user.Id,
+                        token = myToken,
+
+                    }, protocol: HttpContext.Request.Scheme);
+                    var role = await _roleManager.FindByIdAsync(model.RoleId);
+                    await _userHelper.AddUserToRoleAsync(user, role.Name);
+                    Response response = _mailHelper.SendEmail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+                        $"To allow the user, " +
+                        $"plase click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+
+                    if (response.IsSuccess)
+                    {
+                        ViewBag.Message = "The instructions to allow you user has been send to email";
+                        return View(model);
+                    }
+
+                    ModelState.AddModelError(string.Empty, "The user could not be logged");
+
+                }
+                model.Cities = _countryRepository.GetComboCities(model.CountryId);
+                model.Countries = _countryRepository.GetComboCountries();
+                model.Roles= _roleRepository.GetComboRoles();
+            }
+            return View(model);
+        }
+
         public IActionResult Register()
         {
+            
             var model = new RegisterNewUserViewModel
             {
                 Countries = _countryRepository.GetComboCountries(),
@@ -130,7 +204,7 @@ namespace FreeRentLibrary.Controllers
                         ModelState.AddModelError(string.Empty, "The user could not be created");
                         return View(model);
                     }
-                     await _userHelper.AddUserToRoleAsync(user, "Custumer");
+                     await _userHelper.AddUserToRoleAsync(user, "Reader");
                     string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
                     string tokenLink = Url.Action("ConfirmEmail", "Account", new
                     {
