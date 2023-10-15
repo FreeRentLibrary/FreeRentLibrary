@@ -1,6 +1,7 @@
 ﻿using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Data.Repositories.IRepositories;
 using FreeRentLibrary.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace FreeRentLibrary.Data.Repositories
                 .OrderBy(a => a.Name);
         }
 
-        public async Task AddGenresToAuthorCreateAsync(AddAuthorViewModel viewModel)
+        public async Task AddAuthorWithGenresAsync(AddAuthorViewModel viewModel)
         {
             var author = new Author
             {
@@ -37,7 +38,7 @@ namespace FreeRentLibrary.Data.Repositories
             };
 
             _context.Authors.Add(author);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Author> GetAuthorWithGenresAndBooks(int authorId)
@@ -66,6 +67,21 @@ namespace FreeRentLibrary.Data.Repositories
                 .Select(group => group.FirstOrDefault());
 
             return await authors.ToListAsync();
+        }
+
+        public IEnumerable<SelectListItem> GetComboAuthors()
+        {
+            var list = _context.Authors.Select(a => new SelectListItem
+            {
+                Text = a.Name,
+                Value = a.Id.ToString()
+            }).OrderBy(l => l.Text).ToList();
+            list.Insert(0, new SelectListItem
+            {
+                Text = "Select an Author...",
+                Value = "0"
+            });
+            return list;
         }
     }
 }

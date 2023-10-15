@@ -1,5 +1,6 @@
 ﻿using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Data.Repositories.IRepositories;
+using FreeRentLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,29 @@ namespace FreeRentLibrary.Data.Repositories
             return _context.Publishers
                 .Include(g => g.Country)
                 .OrderBy(g => g.Name);
+        }
+
+        public async Task<BookPublisher> AddBookPublisherWithCountry(AddBookPublisherViewModel viewModel)
+        {
+            var bookPublisher = new BookPublisher
+            {
+                Name = viewModel.Name,
+                CountryId = viewModel.CountryId,
+                Country = _context.Countries
+                    .Where(c => c.Id == viewModel.CountryId)
+                    .FirstOrDefault(),
+            };
+
+            _context.Publishers.Add(bookPublisher);
+            await _context.SaveChangesAsync();
+            return bookPublisher;
+        }
+
+        public async Task<BookPublisher> GetPublisherWithNameAsync(string publisherName)
+        {
+            return await _context.Publishers
+                .Where(p => p.Name == publisherName)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<BookPublisher> GetPublisherWithBooksAndCountry(int publisherId)

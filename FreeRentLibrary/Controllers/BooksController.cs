@@ -9,27 +9,30 @@ using FreeRentLibrary.Data;
 using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Data.Repositories.IRepositories;
 using FreeRentLibrary.Models;
+using FreeRentLibrary.Data.Repositories;
 
 namespace FreeRentLibrary.Controllers
 {
-    public class AuthorsController : Controller
+    public class BooksController : Controller
     {
-        private readonly IAuthorRepository _authorRepository;
+        private readonly IBookRepository _bookRepository;
         private readonly IGenreRepository _genreRepository;
+        private readonly IAuthorRepository _authorRepository;
 
-        public AuthorsController(IAuthorRepository authorRepository, IGenreRepository genreRepository)
+        public BooksController(IBookRepository bookRepository, IGenreRepository genreRepository, IAuthorRepository authorRepository)
         {
-            _authorRepository = authorRepository;
+            _bookRepository = bookRepository;
             _genreRepository = genreRepository;
+            _authorRepository = authorRepository;
         }
 
-        // GET: Authors
+        // GET: Books
         public IActionResult Index()
         {
-            return View(_authorRepository.GetAll());
+            return View(_bookRepository.GetBooksWithAuthorsAndGenres());
         }
 
-        // GET: Authors/Details/5
+        // GET: Books/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -37,48 +40,61 @@ namespace FreeRentLibrary.Controllers
                 return NotFound();
             }
 
-            var author = await _authorRepository.GetAuthorWithGenresAndBooks(id.Value);
-            if (author == null)
+            var book = await _bookRepository.GetBookWithAllDataAsync(id.Value);
+            if (book == null)
             {
                 return NotFound();
             }
 
-            return View(author);
+            return View(book);
         }
 
-        // GET: Authors/Create
+        // GET: Books/Create
         public IActionResult Create()
         {
-            var viewModel = new AddAuthorViewModel
+            var viewModel = new AddBookViewModel
             {
-                Genres = _genreRepository.GetAll()
+                Genres = _genreRepository.GetAll(),
+                Authors = _authorRepository.GetComboAuthors()
             };
-
             return View(viewModel);
         }
 
-        // POST: Authors/Create
+        // POST: Books/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AddAuthorViewModel viewModel)
+        public async Task<IActionResult> Create(AddBookViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 if (viewModel.SelectedGenres == null || viewModel.SelectedGenres.Count == 0)
                 {
                     viewModel.Genres = _genreRepository.GetAll();
+                    viewModel.Authors = _authorRepository.GetComboAuthors();
                     return View(viewModel);
                 }
-                await _authorRepository.AddAuthorWithGenresAsync(viewModel);
-                return RedirectToAction(nameof(Index));
+
+                if (!_bookRepository.CheckIfBookExists(viewModel))
+                {
+                    await _bookRepository.AddBookAsync(viewModel);
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "That book already exists in the database.");
+                    viewModel.Genres = _genreRepository.GetAll();
+                    viewModel.Authors = _authorRepository.GetComboAuthors();
+                    return View(viewModel);
+                }
             }
             viewModel.Genres = _genreRepository.GetAll();
+            viewModel.Authors = _authorRepository.GetComboAuthors();
             return View(viewModel);
         }
 
-        // GET: Authors/Edit/5
+        // GET: Books/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,30 +102,30 @@ namespace FreeRentLibrary.Controllers
                 return NotFound();
             }
 
-            var author = await _authorRepository.GetAuthorWithGenresAndBooks(id.Value);
-            if (author == null)
+            var book = await _bookRepository.GetBookWithAllDataAsync(id.Value);
+            if (book == null)
             {
                 return NotFound();
             }
-            return View(author);
+            return View(book);
         }
 
-        // POST: Authors/Edit/5
+        // POST: Books/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Author author)
+        public async Task<IActionResult> Edit(Book book)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _authorRepository.UpdateAsync(author);
+                    await _bookRepository.UpdateAsync(book);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await _authorRepository.ExistAsync(author.Id))
+                    if (!await _bookRepository.ExistAsync(book.Id))
                     {
                         return NotFound();
                     }
@@ -120,10 +136,10 @@ namespace FreeRentLibrary.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(author);
+            return View(book);
         }
 
-        // GET: Authors/Delete/5
+        // GET: Books/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -131,24 +147,23 @@ namespace FreeRentLibrary.Controllers
                 return NotFound();
             }
 
-            var author = await _authorRepository.GetByIdAsync(id.Value);
-            if (author == null)
+            var book = await _bookRepository.GetByIdAsync(id.Value);
+            if (book == null)
             {
                 return NotFound();
             }
 
-            return View(author);
+            return View(book);
         }
 
-        // POST: Authors/Delete/5
+        // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var author = await _authorRepository.GetByIdAsync(id);
-            await _authorRepository.DeleteAsync(author);
+            var book = await _bookRepository.GetByIdAsync(id);
+            await _bookRepository.DeleteAsync(book);
             return RedirectToAction(nameof(Index));
         }
-
     }
 }

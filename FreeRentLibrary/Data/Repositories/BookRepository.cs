@@ -1,5 +1,6 @@
 ﻿using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Data.Repositories.IRepositories;
+using FreeRentLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,43 @@ namespace FreeRentLibrary.Data.Repositories
                 .Include(b => b.Author)
                 .Include(b => b.Genres)
                 .OrderBy(b => b.Name);
+        }
+
+        public async Task AddBookAsync(AddBookViewModel viewModel)
+        {
+            var book = new Book
+            {
+                Name = viewModel.Name,
+                Synopsis = viewModel.Synopsis,
+                NativeLanguage = viewModel.NativeLanguage,
+                AuthorId = viewModel.AuthorId,
+                Author = _context.Authors
+                    .Where(a => a.Id == viewModel.AuthorId)
+                    .FirstOrDefault(),
+                Genres = _context.Genres
+                    .Where(g => viewModel.SelectedGenres
+                    .Contains(g.Id))
+                    .ToList(),
+            };
+
+            _context.Books.Add(book);
+            await _context.SaveChangesAsync();
+        }
+
+        public bool CheckIfBookExists(AddBookViewModel viewModel)
+        {
+            bool bookCheck = _context.Books
+                .Any(b => b.Name == viewModel.Name
+                && b.Author.Id == viewModel.AuthorId);
+
+            return bookCheck;
+        }
+
+        public async Task<Book> GetBookWithNameAsync(string bookName)
+        {
+            return await _context.Books
+                .Where(b => b.Name == bookName)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Book> GetBookWithAllDataAsync(int bookId)
