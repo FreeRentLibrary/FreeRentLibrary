@@ -1,16 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using FreeRentLibrary.Data.Entities;
+using FreeRentLibrary.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FreeRentLibrary.Data.Entities;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FreeRentLibrary.Data.Repositories.IRepositories
 {
-    public interface IBookRepository : IGenericRepository<Book>
+    public interface IBookRepository:IGenericRepository<Book>
     {
-        IQueryable GetBooksWithUsers();
-        Task<IEnumerable<Book>> GetBooksByNameAsync(string name);
-        Task<Book> GetBookWithAuthorAsync(string author);
-        IEnumerable<SelectListItem> GetComboBooks();
+        IQueryable GetBooksWithAuthorsAndGenres();
+
+        Task AddBookAsync(AddBookViewModel viewModel);
+
+        bool CheckIfBookExists(AddBookViewModel viewModel);
+
+        Task<Book> GetBookWithNameAsync(string bookName);
+
+        Task<Book> GetBookWithAllDataAsync(int bookId);
+
+        Task<IEnumerable<Book>> GetBooksByAuthorAsync(int authorId);
+
+        Task<IEnumerable<Book>> GetBooksByGenreAsync(int genreId);
+
+        Task<BookEdition> GetBookEditionAsync(int bookEditionId);
     }
 }

@@ -4,12 +4,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FreeRentLibrary.Data.Entities
 {
-    public class Publisher : IEntity
+    public class BookPublisher : IEntity
     {
         [Key]
         public int Id { get; set; }
 
         public string Name { get; set; }
+
+        public int CountryId { get; set; }
 
         public Country Country { get; set; }
 

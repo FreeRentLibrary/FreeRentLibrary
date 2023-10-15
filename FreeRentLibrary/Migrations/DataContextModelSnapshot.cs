@@ -137,6 +137,26 @@ namespace FreeRentLibrary.Migrations
                     b.ToTable("BookEditions");
                 });
 
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.BookPublisher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CountryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.ToTable("Publishers");
+                });
+
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.City", b =>
                 {
                     b.Property<int>("Id")
@@ -319,26 +339,6 @@ namespace FreeRentLibrary.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("OrderDetailTemps");
-                });
-
-            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Publisher", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("CountryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
-
-                    b.ToTable("Publishers");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Rent", b =>
@@ -666,13 +666,24 @@ namespace FreeRentLibrary.Migrations
                         .WithMany("BookEditions")
                         .HasForeignKey("BookId");
 
-                    b.HasOne("FreeRentLibrary.Data.Entities.Publisher", "Publisher")
+                    b.HasOne("FreeRentLibrary.Data.Entities.BookPublisher", "Publisher")
                         .WithMany("Editions")
                         .HasForeignKey("PublisherId");
 
                     b.Navigation("Book");
 
                     b.Navigation("Publisher");
+                });
+
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.BookPublisher", b =>
+                {
+                    b.HasOne("FreeRentLibrary.Data.Entities.Country", "Country")
+                        .WithMany("Publishers")
+                        .HasForeignKey("CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Country");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.City", b =>
@@ -741,15 +752,6 @@ namespace FreeRentLibrary.Migrations
                     b.Navigation("Book");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Publisher", b =>
-                {
-                    b.HasOne("FreeRentLibrary.Data.Entities.Country", "Country")
-                        .WithMany()
-                        .HasForeignKey("CountryId");
-
-                    b.Navigation("Country");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Rent", b =>
@@ -871,9 +873,16 @@ namespace FreeRentLibrary.Migrations
                     b.Navigation("LibraryStocks");
                 });
 
+            modelBuilder.Entity("FreeRentLibrary.Data.Entities.BookPublisher", b =>
+                {
+                    b.Navigation("Editions");
+                });
+
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Country", b =>
                 {
                     b.Navigation("Cities");
+
+                    b.Navigation("Publishers");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Library", b =>
@@ -888,11 +897,6 @@ namespace FreeRentLibrary.Migrations
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Order", b =>
                 {
                     b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Publisher", b =>
-                {
-                    b.Navigation("Editions");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.User", b =>

@@ -17,7 +17,7 @@ namespace FreeRentLibrary.Controllers
     {
         private readonly DataContext _context;
         private readonly ILibraryRepository _libraryRepository;
-        private readonly IBookRepository _bookRepository;
+        private readonly IBookCNCRepository _bookRepository;
         private readonly IUserHelper _userHelper;
 		private readonly IRentRepository _rentRepository;
 		private readonly IReserveRepository _reserveRepository;
@@ -25,7 +25,7 @@ namespace FreeRentLibrary.Controllers
 		public LibrariesController(
             DataContext context, 
             ILibraryRepository libraryRepository, 
-            IBookRepository bookRepository, 
+            IBookCNCRepository bookRepository, 
             IUserHelper userHelper,
             IRentRepository rentRepository,
             IReserveRepository reserveRepository)

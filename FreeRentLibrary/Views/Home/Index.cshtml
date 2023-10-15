@@ -1,8 +1,31 @@
 ﻿@{
+    Layout = "~/Views/Shared/_LayoutHome.cshtml";
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container middle-section">
+    <div class="row">
+        <div class="col-md-7">
+            <img src="~/images/home/frlLogo.png" alt="Login Image" class="login-image img-fluid" />
+        </div>
+        <div class="col-md-5 login-section">
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <h2>Welcome to Free Rent Library</h2>
+                    <br />
+                    <p>Your World Wide Library Service. <br /> Login or Register down below to get started on your book.</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <a class="btn btn-primary btn-block btn-spacing" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                </div>
+                <div class="col-md-12">
+                    <a class="btn btn-primary btn-block btn-spacing" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

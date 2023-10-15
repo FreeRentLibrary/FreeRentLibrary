@@ -17,5 +17,7 @@ namespace FreeRentLibrary.Data.Entities
 
         [Display(Name = "Number of cities")]
         public int NumberCities => Cities == null ? 0 : Cities.Count();
+
+        public ICollection<BookPublisher> Publishers { get; set; }
     }
 }

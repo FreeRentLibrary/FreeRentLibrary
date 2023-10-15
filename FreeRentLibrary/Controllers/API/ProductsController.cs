@@ -12,9 +12,9 @@ namespace FreeRentLibrary.Controllers.API
     //[Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme)]
     public class ProductsController : Controller
     {
-        private readonly IBookRepository _productRepository;
+        private readonly IBookCNCRepository _productRepository;
 
-        public ProductsController(IBookRepository productRepository)
+        public ProductsController(IBookCNCRepository productRepository)
         {
             _productRepository = productRepository;
         }
