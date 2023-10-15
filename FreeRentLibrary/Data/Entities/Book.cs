@@ -23,6 +23,7 @@ namespace FreeRentLibrary.Data.Entities
         public string Synopsis { get; set; }
 
         //Language that the book was written
+        [Display(Name = "Language")]
         public string NativeLanguage { get; set; }
 
         //Change to ICollection in case of failure
