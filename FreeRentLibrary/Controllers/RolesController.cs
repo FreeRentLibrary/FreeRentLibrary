@@ -35,7 +35,7 @@ namespace FreeRentLibrary.Controllers
                 var result = await _userHelper.CheckRoleAsync(model.RoleName);
                 if (result == true)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("ListRoles");
                 }
             }
             return View(model);
@@ -171,5 +171,31 @@ namespace FreeRentLibrary.Controllers
             }
             return RedirectToAction("EditRole", new { Id = roleId });
         }
+
+        public async Task<IActionResult>DeleteRole(string? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var role = await _roleManager.FindByIdAsync(id);
+            if (role == null)
+            {
+                return NotFound();
+            }
+            await _roleManager.DeleteAsync(role);
+
+            return RedirectToAction("ListRoles");
+        }
+
+        //[HttpPost, ActionName("DeleteRole")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DeleteConfirmed(IdentityRole identityRole)
+        //{
+        //    var role = await _roleManager.FindByIdAsync(identityRole.Id);
+        //    await _roleManager.DeleteAsync(role);
+        //    return RedirectToAction(nameof(ListRoles));
+        //}
     }
 }
