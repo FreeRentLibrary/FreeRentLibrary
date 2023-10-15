@@ -39,6 +39,21 @@ a:hover {
   border-color: #1861ac;
 }
 
+.frl-dropdown-item:hover {
+    background-color: #9fa8ed;
+    color: white;
+}
+
+.frl-dropdown-item:active {
+    background-color: #3551a4;
+    color: white;
+}
+
+.frl-dropdown-button {
+    background-color: #9fa8ed;
+    color: white;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
