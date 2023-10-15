@@ -41,9 +41,9 @@ namespace FreeRentLibrary.Models
 
         public IEnumerable<SelectListItem> Roles { get; set; }
         //TODO: verificar aceitação de roles
-        //[Required]
+        [Required]
         [Display(Name ="Funcion")]
-        [Range(1, int.MaxValue, ErrorMessage = "You must select a role")]
+        
         public string RoleId { get; set; } 
 
         [Required]

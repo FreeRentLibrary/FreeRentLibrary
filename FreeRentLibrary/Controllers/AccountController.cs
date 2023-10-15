@@ -145,15 +145,17 @@ namespace FreeRentLibrary.Controllers
                         token = myToken,
 
                     }, protocol: HttpContext.Request.Scheme);
+
                     var role = await _roleManager.FindByIdAsync(model.RoleId);
                     await _userHelper.AddUserToRoleAsync(user, role.Name);
+
                     Response response = _mailHelper.SendEmail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
-                        $"To allow the user, " +
-                        $"plase click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+                        $"An Account as {role.Name} was created for you, " +
+                        $"plase click in this link to confirm:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
 
                     if (response.IsSuccess)
                     {
-                        ViewBag.Message = "The instructions to allow you user has been send to email";
+                        ViewBag.Message = $"The instructions has been send to {model.Username}";
                         return View(model);
                     }
 
