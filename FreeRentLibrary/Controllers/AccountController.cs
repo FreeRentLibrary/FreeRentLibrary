@@ -67,6 +67,10 @@ namespace FreeRentLibrary.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Dashboard", "Dashboards");
+            }
             if (ModelState.IsValid)
             {                
                 var user = await _userHelper.GetUserByEmailAsync(model.UserName);
@@ -207,7 +211,10 @@ namespace FreeRentLibrary.Controllers
 
         public IActionResult Register()
         {
-            
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Dashboard", "Dashboards");
+            }
             var model = new RegisterNewUserViewModel
             {
                 Countries = _countryRepository.GetComboCountries(),
@@ -219,6 +226,10 @@ namespace FreeRentLibrary.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterNewUserViewModel model)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Dashboard", "Dashboards");
+            }
             if (ModelState.IsValid)
             {
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);

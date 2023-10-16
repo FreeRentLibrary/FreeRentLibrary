@@ -14,9 +14,5 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
         IEnumerable<SelectListItem> GetUserBooks();
 
         Task<bool> CheckStockAsync(int libraryId, int bookId);
-
-        Task ReserveBookAsync(int libraryId, int bookId, string userId);
-
-        Task RentBookAsync(int libraryId, int bookId, string userId);
 	}
 }

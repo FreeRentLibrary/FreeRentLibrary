@@ -212,5 +212,6 @@ namespace FreeRentLibrary.Controllers
 
             return View("UserRentals"); //Returns to the User's Rentals Page
 		}
+
 	}
 }
