@@ -29,5 +29,39 @@ namespace FreeRentLibrary.Helpers
                 //ImageId = product.ImageId,
             };
         }
+
+        public AddBookEditionViewModel ToBookEditionViewModel(BookAndBookEditionViewModel bbViewModel)
+        {
+            return new AddBookEditionViewModel
+            {
+                EditionName = bbViewModel.EditionName,
+                BookId = bbViewModel.BookId,
+                BookPublisherId = bbViewModel.BookPublisherId,
+                BookPublisher = bbViewModel.BookPublisher,
+                BookType = bbViewModel.BookType,
+                BookTypeId = bbViewModel.BookTypeId,
+                ISBN = bbViewModel.ISBN,
+                MinimumAge = bbViewModel.MinimumAge,
+                PageCount = bbViewModel.PageCount,
+                SameBookName = bbViewModel.SameBookName,
+                ReleaseDate = bbViewModel.ReleaseDate,
+                TranslatedLanguage = bbViewModel.TranslatedLanguage,
+                Translator = bbViewModel.Translator,
+            };
+        }
+
+        public AddBookViewModel ToBookViewModel(BookAndBookEditionViewModel bbViewModel)
+        {
+            return new AddBookViewModel
+            {
+                AuthorId = bbViewModel.AuthorId.Value,
+                Authors = bbViewModel.Authors,
+                Genres = bbViewModel.Genres,
+                Name = bbViewModel.Name,
+                NativeLanguage = bbViewModel.NativeLanguage,
+                SelectedGenres = bbViewModel.SelectedGenres,
+                Synopsis = bbViewModel.Synopsis,
+            };
+        }
     }
 }

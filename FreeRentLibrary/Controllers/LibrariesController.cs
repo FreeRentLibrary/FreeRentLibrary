@@ -18,26 +18,26 @@ namespace FreeRentLibrary.Controllers
     {
         private readonly DataContext _context;
         private readonly ILibraryRepository _libraryRepository;
-        private readonly IBookRepository _bookRepository;
         private readonly IUserHelper _userHelper;
 		private readonly IRentRepository _rentRepository;
 		private readonly IReserveRepository _reserveRepository;
+        private readonly IBookRepository _bookRepository;
 
-		public LibrariesController(
+        public LibrariesController(
             DataContext context, 
             ILibraryRepository libraryRepository, 
-            IBookRepository bookRepository, 
             IUserHelper userHelper,
             IRentRepository rentRepository,
-            IReserveRepository reserveRepository)
+            IReserveRepository reserveRepository,
+            IBookRepository bookRepository)
         {
             _context = context;
             _libraryRepository = libraryRepository;
-            _bookRepository = bookRepository;
             _userHelper = userHelper;
 			_rentRepository = rentRepository;
 			_reserveRepository = reserveRepository;
-		}
+            _bookRepository = bookRepository;
+        }
 
         // GET: Libraries
         public async Task<IActionResult> Index()
