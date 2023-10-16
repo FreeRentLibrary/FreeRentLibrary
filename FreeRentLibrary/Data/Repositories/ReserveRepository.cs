@@ -14,10 +14,9 @@ namespace FreeRentLibrary.Data.Repositories
         private readonly DataContext _context;
         private readonly RentRepository _rentRepository;
 
-        public ReserveRepository(DataContext context, RentRepository rentRepository): base(context)
+        public ReserveRepository(DataContext context): base(context)
         {
             _context = context;
-            _rentRepository = rentRepository;
         }
 
         public async Task CancelReservationAsync(string userId, int libraryId)
@@ -58,19 +57,20 @@ namespace FreeRentLibrary.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task ReserveToRentAsync(Reservation reservation)
-        {
-            if (reservation.UserId != null && reservation.LibraryId != null)
-            {
-                var userId = reservation.UserId;
-                int bookId = reservation.BookEditionId.Value;
-                int libraryId = reservation.LibraryId.Value;
+        //TODO: Add to Converter Helper
+        //public async Task ReserveToRentAsync(Reservation reservation)
+        //{
+        //    if (reservation.UserId != null && reservation.LibraryId != null)
+        //    {
+        //        var userId = reservation.UserId;
+        //        int bookId = reservation.BookEditionId.Value;
+        //        int libraryId = reservation.LibraryId.Value;
 
-                await _rentRepository.RentBookAsync(userId, libraryId, bookId);
+        //        await _rentRepository.RentBookAsync(userId, libraryId, bookId);
 
-                reservation.EndDate = DateTime.Now;
-                await _context.SaveChangesAsync();
-            }
-        }
+        //        reservation.EndDate = DateTime.Now;
+        //        await _context.SaveChangesAsync();
+        //    }
+        //}
     }
 }

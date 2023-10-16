@@ -16,11 +16,9 @@ namespace FreeRentLibrary.Data.Repositories
 		private readonly RentRepository _rentRepository;
 		private readonly ReserveRepository _reserveRepository;
 
-		public LibraryRepository(DataContext context, RentRepository rentRepository, ReserveRepository reserveRepository): base(context)
+		public LibraryRepository(DataContext context): base(context)
 		{
 			_context = context;
-			_rentRepository = rentRepository;
-			_reserveRepository = reserveRepository;
 		}
 
 		public async Task<bool> CheckStockAsync(int libraryId, int bookId)
@@ -36,17 +34,6 @@ namespace FreeRentLibrary.Data.Repositories
 		public IEnumerable<SelectListItem> GetUserBooks()
 		{
 			throw new System.NotImplementedException();
-		}
-
-
-		public async Task RentBookAsync(int libraryId, int bookId, string userId)
-		{
-			await _rentRepository.RentBookAsync(userId, libraryId, bookId);
-		}
-
-		public async Task ReserveBookAsync(int libraryId, int bookId, string userId)
-		{
-			await _reserveRepository.ReserveBookAsync(userId, libraryId, bookId);
 		}
 
 		public IQueryable GetUserLibrary()

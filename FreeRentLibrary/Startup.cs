@@ -76,10 +76,10 @@ namespace FreeRentLibrary
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();
             //Library
-            //services.AddScoped<ILibraryRepository, LibraryRepository>();
+            services.AddScoped<IRentRepository, RentRepository>();
+            services.AddScoped<IReserveRepository, ReserveRepository>();
+            services.AddScoped<ILibraryRepository, LibraryRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
-            //services.AddScoped<IRentRepository, RentRepository>();
-            //services.AddScoped<IReserveRepository, ReserveRepository>();
             //Misc
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();

@@ -8,7 +8,6 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
     {
         Task ReserveBookAsync(string userId, int libraryId, int bookId);
         Task<IEnumerable<Reservation>> GetReservationsByUserAsync(string userId);
-        Task ReserveToRentAsync(Reservation reservation);
         Task CancelReservationAsync(string userId, int libraryId);
     }
 
