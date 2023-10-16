@@ -26,7 +26,7 @@ namespace FreeRentLibrary.Data.Repositories
                 .OrderBy(a => a.Name);
         }
 
-        public async Task AddAuthorWithGenresAsync(AddAuthorViewModel viewModel)
+        public async Task AddAuthorWithGenresAsync(AuthorViewModel viewModel)
         {
             var author = new Author
             {

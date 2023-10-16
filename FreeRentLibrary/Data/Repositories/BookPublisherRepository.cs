@@ -24,7 +24,7 @@ namespace FreeRentLibrary.Data.Repositories
                 .OrderBy(g => g.Name);
         }
 
-        public async Task<BookPublisher> AddBookPublisherWithCountry(AddBookPublisherViewModel viewModel)
+        public async Task<BookPublisher> AddBookPublisherWithCountry(BookPublisherViewModel viewModel)
         {
             var bookPublisher = new BookPublisher
             {

@@ -49,7 +49,7 @@ namespace FreeRentLibrary.Controllers
         // GET: BookPublishers/Create
         public IActionResult Create()
         {
-            var viewModel = new AddBookPublisherViewModel
+            var viewModel = new BookPublisherViewModel
             {
                 Countries = _countryRepository.GetComboCountries(),
             };
@@ -61,7 +61,7 @@ namespace FreeRentLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AddBookPublisherViewModel viewModel)
+        public async Task<IActionResult> Create(BookPublisherViewModel viewModel)
         {
             if (ModelState.IsValid)
             {

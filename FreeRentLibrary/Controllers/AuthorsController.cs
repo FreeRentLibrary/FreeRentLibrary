@@ -49,7 +49,7 @@ namespace FreeRentLibrary.Controllers
         // GET: Authors/Create
         public IActionResult Create()
         {
-            var viewModel = new AddAuthorViewModel
+            var viewModel = new AuthorViewModel
             {
                 Genres = _genreRepository.GetAll()
             };
@@ -62,7 +62,7 @@ namespace FreeRentLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AddAuthorViewModel viewModel)
+        public async Task<IActionResult> Create(AuthorViewModel viewModel)
         {
             if (ModelState.IsValid)
             {

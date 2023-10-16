@@ -12,13 +12,6 @@ namespace FreeRentLibrary.Data.Entities
         [Required]
         [Display(Name = "Title")]
         public string Name { get; set; }
-              
-        /*[Display(Name = "Image")]
-        public Guid ImageId { get; set; }*/
-
-        //TODO: Remove proprieties
-        /*[Display(Name = "Is Available")]
-        public bool IsAvailable { get; set; }*/
 
         public string Synopsis { get; set; }
 
@@ -31,14 +24,10 @@ namespace FreeRentLibrary.Data.Entities
 
         public ICollection<Genre> Genres { get; set; }
 
-        public int? AuthorId { get; set; }
+        [Display(Name = "Author")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select an Author")]
+        public int AuthorId { get; set; }
 
         public Author Author { get; set; }
-
-
-        /*public string ImageFullPath => ImageId == Guid.Empty
-            ? $"/images/noimage.png"
-            : $"https://supershopsi.blob.core.windows.net/books/{ImageId}";*/
-
     }
 }
