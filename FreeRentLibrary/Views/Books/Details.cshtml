@@ -3,6 +3,18 @@
 @{
     ViewData["Title"] = "Details";
 }
+<style>
+    .table td img {
+        max-height: 100%;
+        width: auto;
+        display: block;
+    }
+
+    .table td {
+        height: 100px;
+        vertical-align: top;
+    }
+</style>
 
 <h1>Details</h1>
 
@@ -49,6 +61,7 @@
     <table class="table">
         <thead>
             <tr>
+                <th></th>
                 <th>Edition Name</th>
                 <th>Publisher</th>
                 <th>Release Data</th>
@@ -61,10 +74,13 @@
             {
                 <tr>
                     <td>
+                        <img src="@Url.Content(edition.ImageFullPath)" alt="Image" />
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => edition.EditionName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => edition.Publisher.Name)
+                        @Html.DisplayFor(modelItem => edition.BookPublisher.Name)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => edition.ReleaseDate)

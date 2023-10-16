@@ -10,10 +10,11 @@ namespace FreeRentLibrary.Helpers.IHelpers
         Book ToBook(BookViewModel model, Guid imageId, bool isNew);
         BookViewModel ToBookViewModel(Book product);
 
-        AddBookEditionViewModel ToBookEditionViewModel(BookAndBookEditionViewModel bbViewModel);
+        BookEditionViewModel ToBookEditionViewModel(BookAndBookEditionViewModel bbViewModel, Guid imageId);
 
         AddBookViewModel ToBookViewModel(BookAndBookEditionViewModel bbViewModel);
 
         Task ReserveToRentAsync(Reservation reservation);
+        BookViewModel ToBookViewModel(BookAndBookEditionViewModel bbViewModel);
     }
 }

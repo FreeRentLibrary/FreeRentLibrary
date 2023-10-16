@@ -29,7 +29,7 @@ namespace FreeRentLibrary.Data.Repositories
                 .OrderBy(b => b.Name);
         }
 
-        public async Task AddBookAsync(AddBookViewModel viewModel)
+        public async Task AddBookAsync(BookViewModel viewModel)
         {
             var book = new Book
             {
@@ -92,7 +92,7 @@ namespace FreeRentLibrary.Data.Repositories
                 await _context.Entry(book)
                     .Collection(b => b.BookEditions)
                     .Query()
-                    .Include(be => be.Publisher)
+                    .Include(be => be.BookPublisher)
                     .Include(be => be.BookType)
                     .LoadAsync();
             }
@@ -124,7 +124,7 @@ namespace FreeRentLibrary.Data.Repositories
 
         #region BookEdition
 
-        public async Task AddBookEditionAsync(AddBookEditionViewModel viewModel)
+        public async Task AddBookEditionAsync(BookEditionViewModel viewModel)
         {
             var book = await GetBookWithAllDataAsync(viewModel.BookId);
             if (book == null)
@@ -141,15 +141,16 @@ namespace FreeRentLibrary.Data.Repositories
                 BookType = _context.BookTypes.Where(bt => bt.Id == viewModel.BookTypeId).FirstOrDefault(),
                 EditionName = viewModel.SameBookName ? book.Name : viewModel.EditionName,
                 Book = book,
+                CoverId = viewModel.CoverId,
                 BookId = viewModel.BookId,
                 ReleaseDate = viewModel.ReleaseDate,
-                Pages = viewModel.PageCount,
+                PageCount = viewModel.PageCount,
                 ISBN = viewModel.ISBN,
                 MinimumAge = viewModel.MinimumAge,
                 TranslatedLanguage = viewModel.TranslatedLanguage,
                 Translator = viewModel.Translator,
-                PublisherId = viewModel.BookPublisherId,
-                Publisher = _context.Publishers.Where(p => p.Id == viewModel.BookPublisherId).FirstOrDefault(),
+                BookPublisherId = viewModel.BookPublisherId,
+                BookPublisher = _context.Publishers.Where(p => p.Id == viewModel.BookPublisherId).FirstOrDefault(),
 
             });
             _context.Books.Update(book);
@@ -163,7 +164,7 @@ namespace FreeRentLibrary.Data.Repositories
                 .ThenInclude(b => b.Genres)
                 .Include(be => be.Book)
                 .ThenInclude(b => b.Author)
-                .Include(be => be.Publisher)
+                .Include(be => be.BookPublisher)
                 .Include(be => be.BookType)
                 .Where(be => be.Id == bookEditionId)
                 .FirstOrDefaultAsync();

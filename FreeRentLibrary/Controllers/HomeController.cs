@@ -23,6 +23,10 @@ namespace FreeRentLibrary.Controllers
 
         public IActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Dashboard", "Dashboards");
+            }
             return View();
         }
 

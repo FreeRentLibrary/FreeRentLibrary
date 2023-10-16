@@ -9,6 +9,7 @@ namespace FreeRentLibrary.Data.Entities
         [Key]
         public int Id { get; set; }
 
+        [Required(ErrorMessage = "Please write a name.")]
         public string Name { get; set; }
 
         //public string PenName { get; set; }

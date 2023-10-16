@@ -9,68 +9,76 @@
 <div>
     <h4>BookEdition</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BookType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BookType.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EditionName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EditionName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Book)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Book.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ReleaseDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ReleaseDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Pages)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Pages)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ISBN)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ISBN)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MinimumAge)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MinimumAge)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TranslatedLanguage)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TranslatedLanguage)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Translator)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Translator)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Publisher)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Publisher.Name)
-        </dd>
-    </dl>
+    <div class="row">
+        <div class="col-md-8">
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.BookType)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.BookType.Name)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.EditionName)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.EditionName)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Book)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Book.Name)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ReleaseDate)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ReleaseDate)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.PageCount)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.PageCount)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ISBN)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ISBN)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.MinimumAge)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.MinimumAge)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.TranslatedLanguage)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.TranslatedLanguage)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Translator)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Translator)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.BookPublisher)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.BookPublisher.Name)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-4">
+            <img src="@Url.Content(Model.ImageFullPath)" alt="Image" style="width: 400px; height: 600; max-width:100%; max-height:auto;" />
+        </div>
+    </div>
+    
 </div>
 <div>
     <a asp-action="Details" asp-route-id="@Model.BookId">Editions List</a> |

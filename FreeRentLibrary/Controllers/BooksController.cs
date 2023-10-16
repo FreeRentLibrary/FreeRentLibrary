@@ -20,13 +20,19 @@ namespace FreeRentLibrary.Controllers
         private readonly IGenreRepository _genreRepository;
         private readonly IAuthorRepository _authorRepository;
         private readonly IConverterHelper _converterHelper;
+        private readonly IBlobHelper _blobHelper;
 
-        public BooksController(IBookRepository bookRepository, IGenreRepository genreRepository, IAuthorRepository authorRepository, IConverterHelper converterHelper)
+        public BooksController(IBookRepository bookRepository, 
+            IGenreRepository genreRepository, 
+            IAuthorRepository authorRepository, 
+            IConverterHelper converterHelper,
+            IBlobHelper blobHelper)
         {
             _bookRepository = bookRepository;
             _genreRepository = genreRepository;
             _authorRepository = authorRepository;
             _converterHelper = converterHelper;
+            _blobHelper = blobHelper;
         }
 
         // GET: Books
@@ -55,7 +61,7 @@ namespace FreeRentLibrary.Controllers
         // GET: Books/Create
         public IActionResult Create()
         {
-            var viewModel = new AddBookViewModel
+            var viewModel = new BookViewModel
             {
                 Genres = _genreRepository.GetAll(),
                 Authors = _authorRepository.GetComboAuthors()
@@ -68,7 +74,7 @@ namespace FreeRentLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AddBookViewModel viewModel)
+        public async Task<IActionResult> Create(BookViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -183,20 +189,29 @@ namespace FreeRentLibrary.Controllers
             {
                 return NotFound();
             }
-            var viewModel = new AddBookEditionViewModel
+            var viewModel = new BookEditionViewModel
             {
                 BookId = book.Id,
-                BookType = _bookRepository.GetComboBookTypes(),
-                BookPublisher = _bookRepository.GetComboBookPublishers(),
+                BookTypes = _bookRepository.GetComboBookTypes(),
+                BookPublishers = _bookRepository.GetComboBookPublishers(),
             };
             return View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddBookEdition(AddBookEditionViewModel viewModel)
+        public async Task<IActionResult> AddBookEdition(BookEditionViewModel viewModel)
         {
             if (this.ModelState.IsValid)
             {
+                Guid imageId = Guid.Empty;
+
+                if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
+                {
+                    imageId = await _blobHelper.UploadBlobAsync(viewModel.ImageFile, "covers");
+                    viewModel.CoverId = imageId;
+                }
+
+
                 await _bookRepository.AddBookEditionAsync(viewModel);
                 return RedirectToAction("Details", new { id = viewModel.BookId });
             }
@@ -241,6 +256,13 @@ namespace FreeRentLibrary.Controllers
         {
             if (ModelState.IsValid)
             {
+                Guid imageId = Guid.Empty;
+
+                if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
+                {
+                    imageId = await _blobHelper.UploadBlobAsync(viewModel.ImageFile, "covers");
+                }
+
                 if (viewModel.CreateNewBook == true)
                 {
                     if (viewModel.Name == null || viewModel.Name.Length == 0)
@@ -263,11 +285,11 @@ namespace FreeRentLibrary.Controllers
                     }
                     if (!_bookRepository.CheckIfBookExists(viewModel.Name, viewModel.AuthorId.Value))
                     {
-                        AddBookViewModel bookViewModel = _converterHelper.ToBookViewModel(viewModel);
+                        BookViewModel bookViewModel = _converterHelper.ToBookViewModel(viewModel);
                         await _bookRepository.AddBookAsync(bookViewModel);
                         var book = await _bookRepository.GetBookWithNameAsync(bookViewModel.Name);
                         viewModel.BookId = book.Id;
-                        AddBookEditionViewModel bookEditionViewModel = _converterHelper.ToBookEditionViewModel(viewModel);
+                        BookEditionViewModel bookEditionViewModel = _converterHelper.ToBookEditionViewModel(viewModel, imageId);
                         await _bookRepository.AddBookEditionAsync(bookEditionViewModel);
                         return RedirectToAction(nameof(Index));
                     }
@@ -280,7 +302,7 @@ namespace FreeRentLibrary.Controllers
                 }
                 else
                 {
-                    AddBookEditionViewModel bookEdition = _converterHelper.ToBookEditionViewModel(viewModel);
+                    BookEditionViewModel bookEdition = _converterHelper.ToBookEditionViewModel(viewModel, imageId);
                     await _bookRepository.AddBookEditionAsync(bookEdition);
                     return RedirectToAction(nameof(Index));
                 }

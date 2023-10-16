@@ -12,7 +12,7 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
         #region Book
         IQueryable GetBooksWithAuthorsAndGenres();
 
-        Task AddBookAsync(AddBookViewModel viewModel);
+        Task AddBookAsync(BookViewModel viewModel);
 
         Task DeleteBookAsync(int bookId);
 
@@ -32,7 +32,7 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
 
         #region BookEdition
         
-        Task AddBookEditionAsync(AddBookEditionViewModel viewModel);
+        Task AddBookEditionAsync(BookEditionViewModel viewModel);
 
         Task<BookEdition> GetBookEditionAsync(int bookEditionId);
 
