@@ -1,15 +1,26 @@
-﻿using FreeRentLibrary.Data.Entities;
+﻿using FreeRentLibrary.Data;
+using FreeRentLibrary.Data.Entities;
+using FreeRentLibrary.Data.Repositories;
 using FreeRentLibrary.Helpers.IHelpers;
 using FreeRentLibrary.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace FreeRentLibrary.Helpers
 {
     public class ConverterHelper : IConverterHelper
     {
-        //TODO: Make major changes
-        
+        private readonly DataContext _context;
+        private readonly RentRepository _rentRepository;
+
+        public ConverterHelper(DataContext context,RentRepository rentRepository)
+        {
+            _context = context;
+            _rentRepository = rentRepository;
+        }
+
         public Book ToBook(BookViewModel model, Guid imageId, bool isNew)
         {
             return new Book
@@ -62,6 +73,21 @@ namespace FreeRentLibrary.Helpers
                 SelectedGenres = bbViewModel.SelectedGenres,
                 Synopsis = bbViewModel.Synopsis,
             };
+        }
+
+        public async Task ReserveToRentAsync(Reservation reservation)
+        {
+            if (reservation.UserId != null && reservation.LibraryId != null)
+            {
+                var userId = reservation.UserId;
+                int bookId = reservation.BookEditionId.Value;
+                int libraryId = reservation.LibraryId.Value;
+
+                await _rentRepository.RentBookAsync(userId, libraryId, bookId);
+
+                reservation.EndDate = DateTime.Now;
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

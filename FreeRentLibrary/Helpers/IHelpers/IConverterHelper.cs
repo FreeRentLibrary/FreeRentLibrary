@@ -1,6 +1,7 @@
 ﻿using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Models;
 using System;
+using System.Threading.Tasks;
 
 namespace FreeRentLibrary.Helpers.IHelpers
 {
@@ -12,5 +13,7 @@ namespace FreeRentLibrary.Helpers.IHelpers
         AddBookEditionViewModel ToBookEditionViewModel(BookAndBookEditionViewModel bbViewModel);
 
         AddBookViewModel ToBookViewModel(BookAndBookEditionViewModel bbViewModel);
+
+        Task ReserveToRentAsync(Reservation reservation);
     }
 }

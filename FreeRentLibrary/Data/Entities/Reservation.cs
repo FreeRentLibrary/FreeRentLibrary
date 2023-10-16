@@ -25,6 +25,7 @@ namespace FreeRentLibrary.Data.Entities
 
         public int? BookEditionId { get; set; }
 
+        [Display(Name = "Book Edition")]
         public BookEdition BookEdition { get; set; }
     }
 }
