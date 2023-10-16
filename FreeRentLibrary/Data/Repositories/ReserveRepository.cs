@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace FreeRentLibrary.Data.Repositories
 {
-    public class ReserveRepository : IReserveRepository
+    public class ReserveRepository : GenericRepository<Book>,IReserveRepository
     {
         private readonly DataContext _context;
         private readonly RentRepository _rentRepository;
 
-        public ReserveRepository(DataContext context, RentRepository rentRepository)
+        public ReserveRepository(DataContext context, RentRepository rentRepository): base(context)
         {
             _context = context;
             _rentRepository = rentRepository;

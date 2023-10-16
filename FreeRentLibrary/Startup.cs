@@ -71,12 +71,18 @@ namespace FreeRentLibrary
             services.AddScoped<IBlobHelper, BlobHelper>();
             services.AddScoped<IConverterHelper, ConverterHelper>();
 
-            services.AddScoped<IBookCNCRepository, BookCNCRepository>();
-            services.AddScoped<IGenreRepository, GenreRepository>();
-            services.AddScoped<IAuthorRepository, AuthorRepository>();
+            //Book
             services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IBookCNCRepository, BookCNCRepository>();
             services.AddScoped<IBookPublisherRepository, BookPublisherRepository>();
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddScoped<IGenreRepository, GenreRepository>();
+            //Library
+            //services.AddScoped<ILibraryRepository, LibraryRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            //services.AddScoped<IRentRepository, RentRepository>();
+            //services.AddScoped<IReserveRepository, ReserveRepository>();
+            //Misc
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IMailHelper, MailHelper>();

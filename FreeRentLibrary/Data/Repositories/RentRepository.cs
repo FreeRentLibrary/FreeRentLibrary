@@ -1,7 +1,6 @@
 ﻿using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Data.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace FreeRentLibrary.Data.Repositories
 {
-    public class RentRepository : IRentRepository
+    public class RentRepository : GenericRepository<Rent>, IRentRepository
     {
         private readonly DataContext _context;
 
-        public RentRepository(DataContext context)
+        public RentRepository(DataContext context): base(context)
         {
             _context = context;
         }

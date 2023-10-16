@@ -27,11 +27,30 @@ a:hover {
     transition: .5s ease-out;
 }
 
-    .btn-primary:hover {
-        background-position: left;
-        color: white;
-        border-color: white;
-    }
+.btn-primary:hover {
+    background-position: left;
+    color: white;
+    border-color: white;
+}
+
+.horizontal-divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.divider-line {
+    flex: 1;
+    height: 1px;
+    background-color: white; /* Make the divider line white */
+}
+
+.divider-text {
+    padding: 0 10px;
+    color: white;
+    font-size: 18px;
+}
+}
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
     color: #9fa8ed;
