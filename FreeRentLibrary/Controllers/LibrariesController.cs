@@ -3,6 +3,7 @@ using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Data.Repositories;
 using FreeRentLibrary.Data.Repositories.IRepositories;
 using FreeRentLibrary.Helpers.IHelpers;
+using FreeRentLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ namespace FreeRentLibrary.Controllers
     {
         private readonly DataContext _context;
         private readonly ILibraryRepository _libraryRepository;
-        private readonly IBookCNCRepository _bookRepository;
+        private readonly IBookRepository _bookRepository;
         private readonly IUserHelper _userHelper;
 		private readonly IRentRepository _rentRepository;
 		private readonly IReserveRepository _reserveRepository;
@@ -25,7 +26,7 @@ namespace FreeRentLibrary.Controllers
 		public LibrariesController(
             DataContext context, 
             ILibraryRepository libraryRepository, 
-            IBookCNCRepository bookRepository, 
+            IBookRepository bookRepository, 
             IUserHelper userHelper,
             IRentRepository rentRepository,
             IReserveRepository reserveRepository)
@@ -41,7 +42,21 @@ namespace FreeRentLibrary.Controllers
         // GET: Libraries
         public async Task<IActionResult> Index()
         {
-            return View(_bookRepository.GetAll().OrderBy(b => b.Name));
+            Random rand = new Random();
+            int genreId = rand.Next(0,10); //Replace with _genreRepository.GetMaxGenreId();
+            int authorId = rand.Next(0,10); //Replace with _authorRepository.GetMaxAuthorId();
+            int bookDay = rand.Next(0, 10); //Set by Admin/Employee
+
+            var bookOfTheDay = await _bookRepository.GetBookEditionAsync(bookDay);
+            var booksByGenre = await _bookRepository.GetBooksByGenreAsync(genreId);
+            var booksByAuthor = await _bookRepository.GetBooksByAuthorAsync(authorId);
+
+            return View(new LibraryViewModel
+            {
+                BookOfTheDay = bookOfTheDay,
+                BooksByGenre = booksByGenre,
+                BooksByAuthor = booksByAuthor,
+            });
         }
 
         // GET: Libraries/Details/5

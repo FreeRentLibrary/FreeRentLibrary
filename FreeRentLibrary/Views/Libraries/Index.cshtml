@@ -1,29 +1,63 @@
-﻿@model IEnumerable<FreeRentLibrary.Data.Entities.Library>
+﻿@model FreeRentLibrary.Models.LibraryViewModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+@* User/Anon Section *@
+<h2>Search</h2>
+<div class="search-bar">
+    @Html.DropDownList("SearchCategory", new SelectList(Model.SearchCategories))
+    @Html.TextBox("SearchQuery")
+    <button type="submit">Search</button>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+<h2>Book of the Day</h2>
+<div class="book-of-the-day">
+    @Html.Partial("_Book", Model.BookOfTheDay)
+</div>
+
+<h2>Books by Genre</h2>
+<div class="books-by-genre">
+    @foreach (var book in Model.BooksByGenre)
+    {
+        @Html.Partial("_Book", book)
+    }
+</div>
+
+<h2>Books by Author</h2>
+<div class="books-by-author">
+    @foreach (var book in Model.BooksByAuthor)
+    {
+        @Html.Partial("_Book", book)
+    }
+</div>
+
+
+@* Admin/Employee Section *@
+@if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee")))
+{
+    <h1>Index</h1>
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model.Books) {
+            <tr>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
 }
-    </tbody>
-</table>
