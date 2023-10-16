@@ -35,25 +35,54 @@
             @Html.DisplayFor(model => model.Author.Name)
         </dd>
     </dl>
+    
+    <br /><label>Genres</label>
+    <ul class="list-inline">
+        @foreach (var genre in Model.Genres)
+            {
+                <li class="list-inline-item">
+                    @Html.DisplayFor(modelItem => genre.Name)
+                </li>
+            }
+    </ul>
+    <br />
     <table class="table">
         <thead>
             <tr>
-                <th>Genres</th>
+                <th>Edition Name</th>
+                <th>Publisher</th>
+                <th>Release Data</th>
+                <th>Book Type</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var genre in Model.Genres)
+            @foreach (var edition in Model.BookEditions)
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => genre.Name)
+                        @Html.DisplayFor(modelItem => edition.EditionName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => edition.Publisher.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => edition.ReleaseDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => edition.BookType.Name)
+                    </td>
+                    <td>
+                        <a asp-action="BookEditionsDetails" asp-route-id="@edition.Id" class="btn btn-primary">View</a> |
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+    
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Back to List</a> |
+    <a asp-action="AddBookEdition" asp-route-id="@Model.Id">Add Edition</a>
 </div>

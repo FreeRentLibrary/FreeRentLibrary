@@ -10,8 +10,9 @@ namespace FreeRentLibrary.Data.Entities
         [Key]
         public int Id { get; set; }
 
-        //Edition Type (ex. Hardback Children's Edition)
-        public string EditionType { get; set; }
+        public int? BookTypeId { get; set; }
+
+        public BookTypes BookType { get; set; }
 
         //Usualy is the Book name, unless it changes something in translation like (Harry Potter e a Pedra Filosofal)
         public string EditionName { get; set; }
@@ -20,6 +21,9 @@ namespace FreeRentLibrary.Data.Entities
 
         public Book Book { get; set; }
 
+        [DataType(DataType.Date)]
+        [Display(Name = "Release Date")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? ReleaseDate { get; set; }
 
         //Number of pages in the edition
@@ -42,6 +46,6 @@ namespace FreeRentLibrary.Data.Entities
         public BookPublisher Publisher { get; set; }
 
         //Shows the Libraries that have the Book and the respective Stock
-        public IEnumerable<LibraryStock> LibraryStocks { get; set; }
+        public ICollection<LibraryStock> LibraryStocks { get; set; }
     }
 }

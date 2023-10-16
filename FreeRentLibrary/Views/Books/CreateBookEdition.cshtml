@@ -1,0 +1,174 @@
+﻿@model FreeRentLibrary.Models.BookAndBookEditionViewModel
+@{
+    ViewData["Title"] = "CreateBookEdition";
+}
+
+<h1>Add a new Book Edition</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateBookEdition">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="BookId" class="control-label"></label>
+                <select asp-for="BookId" asp-items="Model.Books" class="form-control" id="BookSelect"></select>
+                <span asp-validation-for="BookId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check">
+                    <input asp-for="CreateNewBook" class="form-check-input" id="CreateNewBook" />
+                    <label asp-for="CreateNewBook" class="form-check-label">Create a New Book</label>
+                </div>
+            </div>
+
+            <div class="form-group" style="display: none;" id="bookFields">
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Synopsis" class="control-label"></label>
+                    <textarea asp-for="Synopsis" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Synopsis" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NativeLanguage" class="control-label"></label>
+                    <input asp-for="NativeLanguage" class="form-control" />
+                    <span asp-validation-for="NativeLanguage" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AuthorId" class="control-label"></label>
+                    <select asp-for="AuthorId" asp-items="Model.Authors" class="form-control"></select>
+                    <span asp-validation-for="AuthorId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Genres</label>
+                    <br /><span asp-validation-for="SelectedGenres" class="text-danger"></span>
+
+                    <div class="genre-list" style="max-height: 200px; overflow-y: auto;">
+                        @foreach (var genre in Model.Genres)
+                        {
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="SelectedGenres" value="@genre.Id" id="genre-@genre.Id" />
+                                <label class="form-check-label" for="genre-@genre.Id">@genre.Name</label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="form-group">
+                <label asp-for="BookTypeId" class="control-label"></label>
+                <select asp-for="BookTypeId" asp-items="Model.BookType" class="form-control"></select>
+                <span asp-validation-for="BookTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EditionName" class="control-label"></label>
+                <input asp-for="EditionName" class="form-control" id="EditionNameInput" />
+                <span asp-validation-for="EditionName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input asp-for="SameBookName" id="SameBookNameCheckbox" class="form-check-input" />
+                    <label class="form-check-label" for="SameBookNameCheckbox">Unchanged Name</label>
+                </div>
+            </div><br />
+            <div class="form-group">
+                <label asp-for="ReleaseDate" class="control-label"></label>
+                <input asp-for="ReleaseDate" class="form-control" type="date" id="releaseDateInput" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PageCount" class="control-label"></label>
+                <input asp-for="PageCount" class="form-control" />
+                <span asp-validation-for="PageCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ISBN" class="control-label"></label>
+                <input asp-for="ISBN" class="form-control" />
+                <span asp-validation-for="ISBN" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MinimumAge" class="control-label"></label>
+                <input asp-for="MinimumAge" class="form-control" />
+                <span asp-validation-for="MinimumAge" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TranslatedLanguage" class="control-label"></label>
+                <input asp-for="TranslatedLanguage" class="form-control" />
+                <span asp-validation-for="TranslatedLanguage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Translator" class="control-label"></label>
+                <input asp-for="Translator" class="form-control" />
+                <span asp-validation-for="Translator" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BookPublisherId" class="control-label"></label>
+                <select asp-for="BookPublisherId" asp-items="Model.BookPublisher" class="form-control"></select>
+                <span asp-validation-for="BookPublisherId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="CreateBookEdition" class="btn btn-primary" />
+                <a asp-action="Index">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        //ForBookFields
+        document.addEventListener("DOMContentLoaded", function () {
+            var createNewBookCheckbox = document.getElementById("CreateNewBook");
+            var bookFields = document.getElementById("bookFields");
+
+            createNewBookCheckbox.addEventListener("change", function () {
+                bookFields.style.display = createNewBookCheckbox.checked ? "block" : "none";
+            });
+
+            // Initial state
+            bookFields.style.display = createNewBookCheckbox.checked ? "block" : "none";
+        });
+        
+        // Get references to the checkbox and the EditionName input
+        var isCreateNewBookCheckbox = document.getElementById("CreateNewBook");
+        var bookSelect = document.getElementById("BookSelect");
+        // Add an event listener to the checkbox to toggle the disabled state of the input
+        isCreateNewBookCheckbox.addEventListener("change", function () {
+            bookSelect.disabled = isCreateNewBookCheckbox.checked;
+        });
+        // Initially set the input state based on the checkbox state
+        bookSelect.disabled = isCreateNewBookCheckbox.checked;
+
+
+        // Get references to the checkbox and the EditionName input
+        var isEditionNameCheckbox = document.getElementById("SameBookNameCheckbox");
+        var editionNameInput = document.getElementById("EditionNameInput");
+        // Add an event listener to the checkbox to toggle the disabled state of the input
+        isEditionNameCheckbox.addEventListener("change", function () {
+            editionNameInput.disabled = isEditionNameCheckbox.checked;
+        });
+        // Initially set the input state based on the checkbox state
+        editionNameInput.disabled = isEditionNameCheckbox.checked;
+
+
+        //For ReleaseDate
+        document.querySelector("form").addEventListener("submit", function () {
+            var releaseDateInput = document.getElementById("ReleaseDate");
+            var dateValue = new Date(releaseDateInput.value);
+            dateValue.setHours(0, 0, 0);
+            releaseDateInput.value = dateValue.toISOString().split("T")[0];
+        });
+    </script>
+}
+
