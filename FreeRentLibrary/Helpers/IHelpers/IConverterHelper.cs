@@ -8,5 +8,9 @@ namespace FreeRentLibrary.Helpers.IHelpers
     {
         Book ToBook(BookViewModel model, Guid imageId, bool isNew);
         BookViewModel ToBookViewModel(Book product);
+
+        AddBookEditionViewModel ToBookEditionViewModel(BookAndBookEditionViewModel bbViewModel);
+
+        AddBookViewModel ToBookViewModel(BookAndBookEditionViewModel bbViewModel);
     }
 }

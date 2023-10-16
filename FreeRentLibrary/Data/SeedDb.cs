@@ -17,13 +17,12 @@ namespace FreeRentLibrary.Data
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
         private readonly ICountryRepository _countryRepository;
-        private Random _random;
+        
         public SeedDB(DataContext context, IUserHelper userHelper, ICountryRepository countryRepository)
         {
             _context = context;
             _userHelper = userHelper;
             _countryRepository = countryRepository;
-            _random = new Random();
         }
 
         public async Task SeedAsync()
@@ -32,7 +31,9 @@ namespace FreeRentLibrary.Data
             
             await SeedRoles();
 
-            //await SeedCountry();
+            await SeedBookTypes();
+
+            await SeedDefaultGenres();
 
             await SeedCountriesApi();
 
@@ -40,15 +41,6 @@ namespace FreeRentLibrary.Data
 
             await _context.SaveChangesAsync();
             
-
-            /*if (!_context.Books.Any())
-            {
-                AddBook("Iphone X", user);
-                AddBook("Magic Mause", user);
-                AddBook("Iwatch", user);
-                AddBook("Ipad mini", user);
-                await _context.SaveChangesAsync();
-            }*/
         }
 
         public async Task SeedRoles()
@@ -58,24 +50,47 @@ namespace FreeRentLibrary.Data
             await _userHelper.CheckRoleAsync("Reader");
         }
 
-        /*public async Task SeedCountry()
+        public async Task SeedBookTypes()
         {
-            if (!_context.Countries.Any())
+            if (!_context.BookTypes.Any())
             {
-                var cities = new List<City>();
-                cities.Add(new City { Name = "Lisboa" });
-                cities.Add(new City { Name = "Porto" });
-                cities.Add(new City { Name = "Faro" });
-
-                _context.Countries.Add(new Country
-                {
-                    Cities = cities,
-                    Name = "Portugal"
-                });
-
+                await _context.BookTypes.AddAsync(new BookTypes { Name = "Hardcover" });
+                await _context.BookTypes.AddAsync(new BookTypes { Name = "Paperback" });
                 await _context.SaveChangesAsync();
             }
-        }*/
+        }
+
+        public async Task SeedDefaultGenres()
+        {
+            if (!_context.Genres.Any())
+            {
+                List<Genre> genresToAdd = new List<Genre>
+                {
+                    new Genre { Name = "Action and Adventure" },
+                    new Genre { Name = "Biography" },
+                    new Genre { Name = "Children's" },
+                    new Genre { Name = "Classic" },
+                    new Genre { Name = "Crime" },
+                    new Genre { Name = "Drama" },
+                    new Genre { Name = "Fantasy" },
+                    new Genre { Name = "Historical Fiction" },
+                    new Genre { Name = "Horror" },
+                    new Genre { Name = "Mystery" },
+                    new Genre { Name = "Non-Fiction" },
+                    new Genre { Name = "Paranormal" },
+                    new Genre { Name = "Poetry" },
+                    new Genre { Name = "Romance" },
+                    new Genre { Name = "Science Fiction" },
+                    new Genre { Name = "Self-Help" },
+                    new Genre { Name = "Suspense" },
+                    new Genre { Name = "Thriller" },
+                    new Genre { Name = "Travel" },
+                    new Genre { Name = "Western" }
+                };
+                await _context.Genres.AddRangeAsync(genresToAdd);
+                await _context.SaveChangesAsync();
+            }
+        }
 
         public async Task SeedAdmin()
         {
@@ -118,18 +133,6 @@ namespace FreeRentLibrary.Data
             }
         }
 
-        /*private void AddBook(string name, User user)
-        {
-            _context.Books.Add(new Book
-            {
-                Title = name,
-                Price = _random.Next(1000),
-                IsAvailable = true,
-                Stock = _random.Next(100),
-                User = user
-            });
-        }*/
-
         public async Task SeedCountriesApi() 
         {
             if (!_context.Countries.Any())
@@ -153,12 +156,16 @@ namespace FreeRentLibrary.Data
                             });
                             await _context.SaveChangesAsync();
 
-                            if (country.States != null)
+                            if (country.States != null && country.States.Count != 0)
                             {
                                 foreach (var city in country.States)
                                 {
                                     cities.Add(new City { Name = city.Name });
                                 }
+                            }
+                            else if(country.States.Count == 0)
+                            {
+                                cities.Add(new City { Name = country.Name });
                             }
 
                             await _countryRepository.AddCityListAsync(country.Name, cities);

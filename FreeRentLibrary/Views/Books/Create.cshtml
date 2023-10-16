@@ -37,13 +37,15 @@
                 <label>Genres</label>
                 <br /><span asp-validation-for="SelectedGenres" class="text-danger"></span>
 
-                @foreach (var genre in Model.Genres)
-                {
-                    <div class="form-check">
-                        <input type="checkbox" name="SelectedGenres" value="@genre.Id" id="genre-@genre.Id" />
-                        <label for="genre-@genre.Id">@genre.Name</label>
-                    </div>
-                }
+                <div class="genre-list" style="max-height: 200px; overflow-y: auto;">
+                    @foreach (var genre in Model.Genres)
+                    {
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="SelectedGenres" value="@genre.Id" id="genre-@genre.Id" />
+                            <label class="form-check-label" for="genre-@genre.Id">@genre.Name</label>
+                        </div>
+                    }
+                </div>
 
             </div>
 

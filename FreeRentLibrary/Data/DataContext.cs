@@ -9,6 +9,8 @@ namespace FreeRentLibrary.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<BookEdition> BookEditions { get; set; }
+        public DbSet<BookPublisher> Publishers { get; set; }
+        public DbSet<BookTypes> BookTypes { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Genre> Genres { get; set; }
@@ -17,7 +19,6 @@ namespace FreeRentLibrary.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<OrderDetailTemp> OrderDetailTemps { get; set; }
-        public DbSet<BookPublisher> Publishers { get; set; }
         public DbSet<Rent> Rentals { get; set; }
 		public DbSet<Reservation> Reservations { get; set; }
 		
