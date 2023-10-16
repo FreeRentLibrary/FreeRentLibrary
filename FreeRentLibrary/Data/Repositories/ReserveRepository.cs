@@ -57,20 +57,5 @@ namespace FreeRentLibrary.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        //TODO: Add to Converter Helper
-        //public async Task ReserveToRentAsync(Reservation reservation)
-        //{
-        //    if (reservation.UserId != null && reservation.LibraryId != null)
-        //    {
-        //        var userId = reservation.UserId;
-        //        int bookId = reservation.BookEditionId.Value;
-        //        int libraryId = reservation.LibraryId.Value;
-
-        //        await _rentRepository.RentBookAsync(userId, libraryId, bookId);
-
-        //        reservation.EndDate = DateTime.Now;
-        //        await _context.SaveChangesAsync();
-        //    }
-        //}
     }
 }
