@@ -7,11 +7,9 @@ namespace FreeRentLibrary.Helpers.IHelpers
 {
     public interface IConverterHelper
     {
-        Book ToBook(BookViewModel model, Guid imageId, bool isNew);
-        BookViewModel ToBookViewModel(Book product);
-
         BookEditionViewModel ToBookEditionViewModel(BookAndBookEditionViewModel bbViewModel, Guid imageId);
 
+        Task ReserveToRentAsync(Reservation reservation);
         BookViewModel ToBookViewModel(BookAndBookEditionViewModel bbViewModel);
     }
 }

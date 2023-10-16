@@ -21,26 +21,6 @@ namespace FreeRentLibrary.Helpers
             _rentRepository = rentRepository;
         }
 
-        public Book ToBook(BookViewModel model, Guid imageId, bool isNew)
-        {
-            return new Book
-            {
-                Id = isNew ? 0 : model.Id,
-                //ImageId = imageId,
-                //IsAvailable = model.IsAvailable,
-            };
-        }
-
-        public BookViewModel ToBookViewModel(Book product)
-        {
-            return new BookViewModel
-            {
-                Id = product.Id,
-                //IsAvailable = product.IsAvailable,
-                //ImageId = product.ImageId,
-            };
-        }
-
         public BookEditionViewModel ToBookEditionViewModel(BookAndBookEditionViewModel bbViewModel, Guid imageId)
         {
             return new BookEditionViewModel
