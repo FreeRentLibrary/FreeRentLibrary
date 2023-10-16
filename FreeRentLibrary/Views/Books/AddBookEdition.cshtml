@@ -1,4 +1,4 @@
-﻿@model FreeRentLibrary.Models.AddBookEditionViewModel
+﻿@model FreeRentLibrary.Models.BookEditionViewModel
 
 @{
     ViewData["Title"] = "AddBookEdition";
@@ -10,12 +10,17 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="AddBookEdition">
+        <form asp-action="AddBookEdition" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="BookId" />
             <div class="form-group">
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" class="form-control" type="file" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="BookTypeId" class="control-label"></label>
-                <select asp-for="BookTypeId" asp-items="Model.BookType" class="form-control"></select>
+                <select asp-for="BookTypeId" asp-items="Model.BookTypes" class="form-control"></select>
                 <span asp-validation-for="BookTypeId" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -61,7 +66,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="BookPublisherId" class="control-label"></label>
-                <select asp-for="BookPublisherId" asp-items="Model.BookPublisher" class="form-control"></select>
+                <select asp-for="BookPublisherId" asp-items="Model.BookPublishers" class="form-control"></select>
                 <span asp-validation-for="BookPublisherId" class="text-danger"></span>
             </div>
             <div class="form-group">

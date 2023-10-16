@@ -29,6 +29,10 @@ namespace FreeRentLibrary.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<BookEdition>()
+                .HasIndex(be => be.ISBN)
+                .IsUnique();
+
             //Rentals - User : One-to-many Relationship
             modelBuilder.Entity<Rent>()
                 .HasOne(c => c.User)

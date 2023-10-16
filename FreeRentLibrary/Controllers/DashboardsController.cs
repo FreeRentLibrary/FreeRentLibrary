@@ -26,7 +26,7 @@ namespace FreeRentLibrary.Controllers
         {
             if (!User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Home","Index");
+                return RedirectToAction("Index", "Home");
             }
 
             DashboardViewModel dashboard = new DashboardViewModel();

@@ -4,11 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FreeRentLibrary.Models
 {
-    public class AddAuthorViewModel
+    public class AuthorViewModel : Author
     {
-        [Required(ErrorMessage = "Please write a name.")]
-        public string Name { get; set; }
-
         public IEnumerable<Genre> Genres { get; set; } = new List<Genre>();
 
         [Required(ErrorMessage = "Please select at least one genre.")]

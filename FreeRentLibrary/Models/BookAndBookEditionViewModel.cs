@@ -1,4 +1,5 @@
 ﻿using FreeRentLibrary.Data.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,9 @@ namespace FreeRentLibrary.Models
         [Display(Name = "Books")]
         public int BookId { get; set; }
         public IEnumerable<SelectListItem> Books { get; set; }
+
+        [Display(Name = "Cover")]
+        public IFormFile ImageFile { get; set; }
 
         [Display(Name = "Title")]
         public string? Name { get; set; }

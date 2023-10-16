@@ -30,15 +30,15 @@ namespace FreeRentLibrary.Helpers
             };
         }
 
-        public AddBookEditionViewModel ToBookEditionViewModel(BookAndBookEditionViewModel bbViewModel)
+        public BookEditionViewModel ToBookEditionViewModel(BookAndBookEditionViewModel bbViewModel, Guid imageId)
         {
-            return new AddBookEditionViewModel
+            return new BookEditionViewModel
             {
                 EditionName = bbViewModel.EditionName,
                 BookId = bbViewModel.BookId,
                 BookPublisherId = bbViewModel.BookPublisherId,
-                BookPublisher = bbViewModel.BookPublisher,
-                BookType = bbViewModel.BookType,
+                BookPublishers = bbViewModel.BookPublisher,
+                BookTypes = bbViewModel.BookType,
                 BookTypeId = bbViewModel.BookTypeId,
                 ISBN = bbViewModel.ISBN,
                 MinimumAge = bbViewModel.MinimumAge,
@@ -47,12 +47,13 @@ namespace FreeRentLibrary.Helpers
                 ReleaseDate = bbViewModel.ReleaseDate,
                 TranslatedLanguage = bbViewModel.TranslatedLanguage,
                 Translator = bbViewModel.Translator,
+                CoverId = imageId,
             };
         }
 
-        public AddBookViewModel ToBookViewModel(BookAndBookEditionViewModel bbViewModel)
+        public BookViewModel ToBookViewModel(BookAndBookEditionViewModel bbViewModel)
         {
-            return new AddBookViewModel
+            return new BookViewModel
             {
                 AuthorId = bbViewModel.AuthorId.Value,
                 Authors = bbViewModel.Authors,
