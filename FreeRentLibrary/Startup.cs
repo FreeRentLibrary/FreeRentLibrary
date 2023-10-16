@@ -73,7 +73,6 @@ namespace FreeRentLibrary
 
             //Book
             services.AddScoped<IBookRepository, BookRepository>();
-            services.AddScoped<IBookCNCRepository, BookCNCRepository>();
             services.AddScoped<IBookPublisherRepository, BookPublisherRepository>();
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();
