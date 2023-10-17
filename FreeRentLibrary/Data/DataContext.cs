@@ -7,8 +7,10 @@ namespace FreeRentLibrary.Data
     public class DataContext : IdentityDbContext<User>
     {
         public DbSet<Author> Authors { get; set; }
+        public DbSet<AuthorGenre> AuthorGenres { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<BookEdition> BookEditions { get; set; }
+        public DbSet<BookGenre> BookGenres { get; set; }
         public DbSet<BookPublisher> Publishers { get; set; }
         public DbSet<BookTypes> BookTypes { get; set; }
         public DbSet<City> Cities { get; set; }
@@ -29,6 +31,32 @@ namespace FreeRentLibrary.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AuthorGenre>()
+                .HasKey(ag => new { ag.AuthorId, ag.GenreId });
+
+            modelBuilder.Entity<AuthorGenre>()
+                .HasOne(ag => ag.Author)
+                .WithMany(a => a.AuthorGenres)
+                .HasForeignKey(ag => ag.AuthorId);
+
+            modelBuilder.Entity<AuthorGenre>()
+                .HasOne(ag => ag.Genre)
+                .WithMany(g => g.AuthorGenres)
+                .HasForeignKey(ag => ag.GenreId);
+
+            modelBuilder.Entity<BookGenre>()
+                .HasKey(bg => new { bg.BookId, bg.GenreId });
+
+            modelBuilder.Entity<BookGenre>()
+                .HasOne(bg => bg.Book)
+                .WithMany(b => b.BookGenres)
+                .HasForeignKey(bg => bg.BookId);
+
+            modelBuilder.Entity<BookGenre>()
+                .HasOne(bg => bg.Genre)
+                .WithMany(g => g.BookGenres)
+                .HasForeignKey(bg => bg.GenreId);
+
             modelBuilder.Entity<BookEdition>()
                 .HasIndex(be => be.ISBN)
                 .IsUnique();

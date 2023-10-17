@@ -48,12 +48,12 @@
         </dd>
     </dl>
     
-    <br /><label>Genres</label>
+    <br /><label>@Html.DisplayNameFor(model => model.BookGenres)</label>
     <ul class="list-inline">
-        @foreach (var genre in Model.Genres)
+        @foreach (var genre in Model.BookGenres)
             {
                 <li class="list-inline-item">
-                    @Html.DisplayFor(modelItem => genre.Name)
+                    @Html.DisplayFor(modelItem => genre.Genre.Name)
                 </li>
             }
     </ul>

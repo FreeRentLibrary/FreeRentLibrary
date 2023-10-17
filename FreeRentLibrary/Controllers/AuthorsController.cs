@@ -9,6 +9,7 @@ using FreeRentLibrary.Data;
 using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Data.Repositories.IRepositories;
 using FreeRentLibrary.Models;
+using FreeRentLibrary.Helpers.IHelpers;
 
 namespace FreeRentLibrary.Controllers
 {
@@ -16,11 +17,18 @@ namespace FreeRentLibrary.Controllers
     {
         private readonly IAuthorRepository _authorRepository;
         private readonly IGenreRepository _genreRepository;
+        private readonly IBlobHelper _blobHelper;
+        private readonly IConverterHelper _converterHelper;
 
-        public AuthorsController(IAuthorRepository authorRepository, IGenreRepository genreRepository)
+        public AuthorsController(IAuthorRepository authorRepository, 
+            IGenreRepository genreRepository, 
+            IBlobHelper blobHelper,
+            IConverterHelper converterHelper)
         {
             _authorRepository = authorRepository;
             _genreRepository = genreRepository;
+            _blobHelper = blobHelper;
+            _converterHelper = converterHelper;
         }
 
         // GET: Authors
@@ -42,8 +50,9 @@ namespace FreeRentLibrary.Controllers
             {
                 return NotFound();
             }
+            var viewModel = _converterHelper.ToAuthorViewModel(author);
 
-            return View(author);
+            return View(viewModel);
         }
 
         // GET: Authors/Create
@@ -71,6 +80,15 @@ namespace FreeRentLibrary.Controllers
                     viewModel.Genres = _genreRepository.GetAll();
                     return View(viewModel);
                 }
+
+                Guid imageId = Guid.Empty;
+
+                if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
+                {
+                    imageId = await _blobHelper.UploadBlobAsync(viewModel.ImageFile, "authors");
+                    viewModel.AuthorPhotoId = imageId;
+                }
+
                 await _authorRepository.AddAuthorWithGenresAsync(viewModel);
                 return RedirectToAction(nameof(Index));
             }
@@ -91,7 +109,9 @@ namespace FreeRentLibrary.Controllers
             {
                 return NotFound();
             }
-            return View(author);
+            var viewModel = _converterHelper.ToAuthorViewModel(author);
+            viewModel.Genres = _genreRepository.GetAll();
+            return View(viewModel);
         }
 
         // POST: Authors/Edit/5
@@ -99,17 +119,51 @@ namespace FreeRentLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Author author)
+        public async Task<IActionResult> Edit(AuthorViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _authorRepository.UpdateAsync(author);
+                    if (viewModel.SelectedGenres == null || viewModel.SelectedGenres.Count == 0)
+                    {
+                        viewModel.Genres = _genreRepository.GetAll();
+                        return View(viewModel);
+                    }
+
+                    var existingAuthor = await _authorRepository.GetAuthorWithGenresAndBooks(viewModel.Id);
+                    if (existingAuthor == null)
+                    {
+                        return NotFound();
+                    }
+
+                    var genres = _genreRepository.GetGenres(viewModel.SelectedGenres);
+
+                    Guid imageId = Guid.Empty;
+
+                    if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
+                    {
+                        imageId = await _blobHelper.UploadBlobAsync(viewModel.ImageFile, "authors");
+                        existingAuthor.AuthorPhotoId = imageId;
+                    }
+
+                    existingAuthor.AuthorGenres.Clear();
+                    foreach (var genre in genres)
+                    {
+                        existingAuthor.AuthorGenres.Add(new AuthorGenre
+                        {
+                            Author = existingAuthor,
+                            Genre = genre
+                        });
+                    }
+                    
+                    //var author = _converterHelper.ToAuthor(viewModel, genres);
+                    await _authorRepository.UpdateAsync(existingAuthor);
+                    //await _authorRepository.UpdateAuthorWithGenresAsync(viewModel);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await _authorRepository.ExistAsync(author.Id))
+                    if (!await _authorRepository.ExistAsync(viewModel.Id))
                     {
                         return NotFound();
                     }
@@ -118,9 +172,9 @@ namespace FreeRentLibrary.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = viewModel.Id });
             }
-            return View(author);
+            return View(viewModel);
         }
 
         // GET: Authors/Delete/5
@@ -145,8 +199,7 @@ namespace FreeRentLibrary.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var author = await _authorRepository.GetByIdAsync(id);
-            await _authorRepository.DeleteAsync(author);
+            await _authorRepository.DeleteAllAuthorInfoAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

@@ -10,9 +10,9 @@ namespace FreeRentLibrary.Data.Entities
 
         public string Name { get; set; }
 
-        public ICollection<Book> Books { get; set; }
+        public ICollection<BookGenre> BookGenres { get; set; }
 
-        public ICollection<Author> Authors { get; set; }
+        public ICollection<AuthorGenre> AuthorGenres { get; set; }
 
     }
 }

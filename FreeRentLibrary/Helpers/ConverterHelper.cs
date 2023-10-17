@@ -5,7 +5,9 @@ using FreeRentLibrary.Helpers.IHelpers;
 using FreeRentLibrary.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FreeRentLibrary.Helpers
@@ -17,6 +19,46 @@ namespace FreeRentLibrary.Helpers
         public ConverterHelper(DataContext context)
         {
             _context = context;
+        }
+
+        public Book ToBook(BookViewModel viewModel)
+        {
+            return new Book
+            {
+                Id = viewModel.Id,
+                Name = viewModel.Name,
+                AuthorId = viewModel.AuthorId,
+                Author = viewModel.Author,
+                NativeLanguage = viewModel.NativeLanguage,
+                BookEditions = viewModel.BookEditions,
+                Synopsis = viewModel.Synopsis,
+                BookGenres = viewModel.BookGenres,
+            };
+        }
+
+        public BookViewModel ToBookViewModel(Book book)
+        {
+            List<int> selectedGenres = new List<int>();
+            foreach (var ag in book.BookGenres)
+            {
+                selectedGenres.Add(ag.GenreId.Value);
+            }
+
+            var genres = _context.Genres.Where(g => selectedGenres.Contains(g.Id)).ToList();
+
+            return new BookViewModel
+            {
+                Id = book.Id,
+                Name = book.Name,
+                AuthorId = book.AuthorId,
+                Author = book.Author,
+                Genres = genres,
+                NativeLanguage = book.NativeLanguage,
+                BookGenres = book.BookGenres,
+                Synopsis = book.Synopsis,
+                BookEditions = book.BookEditions,
+                SelectedGenres = selectedGenres,
+            };
         }
 
         public BookViewModel ToBookViewModel(BookAndBookEditionViewModel bbViewModel)
@@ -97,6 +139,32 @@ namespace FreeRentLibrary.Helpers
                 CoverId = imageId,
             };
         }
+
+        public AuthorViewModel ToAuthorViewModel(Author author)
+        {
+            List<int> selectedGenres = new List<int>();
+            foreach (var ag in author.AuthorGenres)
+            {
+                selectedGenres.Add(ag.GenreId.Value);
+            }
+
+            var genres = _context.Genres.Where(g => selectedGenres.Contains(g.Id)).ToList();
+
+            //selectedGenres = author.AuthorGenres.Select(g => g.Id).ToList();
+
+            return new AuthorViewModel
+            {
+                Id = author.Id,
+                Name = author.Name,
+                AuthorPhotoId = author.AuthorPhotoId,
+                Books = author.Books,
+                Genres = genres,
+                SelectedGenres = selectedGenres,
+                AuthorGenres = author.AuthorGenres,
+            };
+        }
+
+
 
     }
 }
