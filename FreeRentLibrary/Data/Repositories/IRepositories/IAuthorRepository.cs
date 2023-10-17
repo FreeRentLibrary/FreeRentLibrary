@@ -13,6 +13,8 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
 
         Task AddAuthorWithGenresAsync(AuthorViewModel viewModel);
 
+        Task DeleteAllAuthorInfoAsync(int authorId);
+
         Task<Author> GetAuthorWithGenresAndBooks(int authorId);
 
         Task<IEnumerable<Author>> GetAuthorsByGenreAsync(int genreId);
@@ -20,6 +22,8 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
         Task<IEnumerable<Author>> GetAuthorsByGenreListAsync(IEnumerable<int> genreIdList);
 
         IEnumerable<SelectListItem> GetComboAuthors();
+
+        IEnumerable<SelectListItem> GetComboAuthors(int authorId);
 
     }
 }

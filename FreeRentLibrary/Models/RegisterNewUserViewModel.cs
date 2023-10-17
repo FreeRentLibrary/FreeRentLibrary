@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,13 +12,14 @@ namespace FreeRentLibrary.Models
         [Display(Name = "First Name")]
         public string FirtsName { get; set; }
 
-
         [Required]
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
         [Required]
         [DataType(DataType.EmailAddress)]
+        [EmailAddress]
+        [Remote(action:"IsEmailInUse", controller:"Account")]
         public string Username { get; set; }
 
         [MaxLength(100, ErrorMessage = "The field {0} only can contain {1} characters length")]

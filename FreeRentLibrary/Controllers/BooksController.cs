@@ -11,6 +11,7 @@ using FreeRentLibrary.Data.Repositories.IRepositories;
 using FreeRentLibrary.Models;
 using FreeRentLibrary.Data.Repositories;
 using FreeRentLibrary.Helpers.IHelpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FreeRentLibrary.Controllers
 {
@@ -36,12 +37,14 @@ namespace FreeRentLibrary.Controllers
         }
 
         // GET: Books
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View(_bookRepository.GetBooksWithAuthorsAndGenres());
         }
 
         // GET: Books/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -116,7 +119,10 @@ namespace FreeRentLibrary.Controllers
             {
                 return NotFound();
             }
-            return View(book);
+            var viewModel = _converterHelper.ToBookViewModel(book);
+            viewModel.Genres = _genreRepository.GetAll();
+            viewModel.Authors = _authorRepository.GetComboAuthors(viewModel.AuthorId);
+            return View(viewModel);
         }
 
         // POST: Books/Edit/5
@@ -124,17 +130,42 @@ namespace FreeRentLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Book book)
+        public async Task<IActionResult> Edit(BookViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _bookRepository.UpdateAsync(book);
+                    if (viewModel.SelectedGenres == null || viewModel.SelectedGenres.Count == 0)
+                    {
+                        viewModel.Genres = _genreRepository.GetAll();
+                        return View(viewModel);
+                    }
+
+                    var existingBook = await _bookRepository.GetBookWithAllDataAsync(viewModel.Id);
+                    if (existingBook == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingBook.Name = viewModel.Name;
+                    existingBook.Synopsis = viewModel.Synopsis;
+                    existingBook.NativeLanguage = viewModel.NativeLanguage;
+                    existingBook.AuthorId = viewModel.AuthorId;
+
+                    var genres = _genreRepository.GetGenres(viewModel.SelectedGenres);
+
+                    existingBook.BookGenres = genres.Select(genre => new BookGenre
+                    {
+                        Book = existingBook,
+                        Genre = genre
+                    }).ToList();
+
+                    await _bookRepository.UpdateAsync(existingBook);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await _bookRepository.ExistAsync(book.Id))
+                    if (!await _bookRepository.ExistAsync(viewModel.Id))
                     {
                         return NotFound();
                     }
@@ -143,9 +174,9 @@ namespace FreeRentLibrary.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = viewModel.Id });
             }
-            return View(book);
+            return View(viewModel);
         }
 
         // GET: Books/Delete/5

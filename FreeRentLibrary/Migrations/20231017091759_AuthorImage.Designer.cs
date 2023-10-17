@@ -4,20 +4,52 @@ using FreeRentLibrary.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FreeRentLibrary.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231017091759_AuthorImage")]
+    partial class AuthorImage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("AuthorGenre", b =>
+                {
+                    b.Property<int>("AuthorsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GenresId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AuthorsId", "GenresId");
+
+                    b.HasIndex("GenresId");
+
+                    b.ToTable("AuthorGenre");
+                });
+
+            modelBuilder.Entity("BookGenre", b =>
+                {
+                    b.Property<int>("BooksId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GenresId")
+                        .HasColumnType("int");
+
+                    b.HasKey("BooksId", "GenresId");
+
+                    b.HasIndex("GenresId");
+
+                    b.ToTable("BookGenre");
+                });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Author", b =>
                 {
@@ -36,24 +68,6 @@ namespace FreeRentLibrary.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Authors");
-                });
-
-            modelBuilder.Entity("FreeRentLibrary.Data.Entities.AuthorGenre", b =>
-                {
-                    b.Property<int?>("AuthorId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("GenreId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.HasKey("AuthorId", "GenreId");
-
-                    b.HasIndex("GenreId");
-
-                    b.ToTable("AuthorGenres");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Book", b =>
@@ -136,24 +150,6 @@ namespace FreeRentLibrary.Migrations
                         .IsUnique();
 
                     b.ToTable("BookEditions");
-                });
-
-            modelBuilder.Entity("FreeRentLibrary.Data.Entities.BookGenre", b =>
-                {
-                    b.Property<int?>("BookId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("GenreId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.HasKey("BookId", "GenreId");
-
-                    b.HasIndex("GenreId");
-
-                    b.ToTable("BookGenres");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.BookPublisher", b =>
@@ -656,23 +652,34 @@ namespace FreeRentLibrary.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("FreeRentLibrary.Data.Entities.AuthorGenre", b =>
+            modelBuilder.Entity("AuthorGenre", b =>
                 {
-                    b.HasOne("FreeRentLibrary.Data.Entities.Author", "Author")
-                        .WithMany("AuthorGenres")
-                        .HasForeignKey("AuthorId")
+                    b.HasOne("FreeRentLibrary.Data.Entities.Author", null)
+                        .WithMany()
+                        .HasForeignKey("AuthorsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FreeRentLibrary.Data.Entities.Genre", "Genre")
-                        .WithMany("AuthorGenres")
-                        .HasForeignKey("GenreId")
+                    b.HasOne("FreeRentLibrary.Data.Entities.Genre", null)
+                        .WithMany()
+                        .HasForeignKey("GenresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BookGenre", b =>
+                {
+                    b.HasOne("FreeRentLibrary.Data.Entities.Book", null)
+                        .WithMany()
+                        .HasForeignKey("BooksId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Author");
-
-                    b.Navigation("Genre");
+                    b.HasOne("FreeRentLibrary.Data.Entities.Genre", null)
+                        .WithMany()
+                        .HasForeignKey("GenresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Book", b =>
@@ -711,25 +718,6 @@ namespace FreeRentLibrary.Migrations
                     b.Navigation("BookPublisher");
 
                     b.Navigation("BookType");
-                });
-
-            modelBuilder.Entity("FreeRentLibrary.Data.Entities.BookGenre", b =>
-                {
-                    b.HasOne("FreeRentLibrary.Data.Entities.Book", "Book")
-                        .WithMany("BookGenres")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FreeRentLibrary.Data.Entities.Genre", "Genre")
-                        .WithMany("BookGenres")
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Book");
-
-                    b.Navigation("Genre");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.BookPublisher", b =>
@@ -917,16 +905,12 @@ namespace FreeRentLibrary.Migrations
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Author", b =>
                 {
-                    b.Navigation("AuthorGenres");
-
                     b.Navigation("Books");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Book", b =>
                 {
                     b.Navigation("BookEditions");
-
-                    b.Navigation("BookGenres");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.BookEdition", b =>
@@ -949,13 +933,6 @@ namespace FreeRentLibrary.Migrations
                     b.Navigation("Cities");
 
                     b.Navigation("Publishers");
-                });
-
-            modelBuilder.Entity("FreeRentLibrary.Data.Entities.Genre", b =>
-                {
-                    b.Navigation("AuthorGenres");
-
-                    b.Navigation("BookGenres");
                 });
 
             modelBuilder.Entity("FreeRentLibrary.Data.Entities.Library", b =>

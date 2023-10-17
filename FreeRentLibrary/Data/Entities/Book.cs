@@ -20,9 +20,11 @@ namespace FreeRentLibrary.Data.Entities
         public string NativeLanguage { get; set; }
 
         //Change to ICollection in case of failure
+        [Display(Name = "Editions")]
         public ICollection<BookEdition> BookEditions { get; set; }
 
-        public ICollection<Genre> Genres { get; set; }
+        [Display(Name = "Genres")]
+        public ICollection<BookGenre> BookGenres { get; set; }
 
         [Display(Name = "Author")]
         [Range(1, int.MaxValue, ErrorMessage = "You must select an Author")]

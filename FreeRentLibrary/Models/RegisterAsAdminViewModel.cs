@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using FreeRentLibrary.Helpers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
+using Xunit.Abstractions;
 using Xunit.Sdk;
 
 namespace FreeRentLibrary.Models
@@ -19,6 +22,7 @@ namespace FreeRentLibrary.Models
 
         [Required]
         [DataType(DataType.EmailAddress)]
+        [Remote(action: "IsEmailInUse", controller: "Account")]
         public string Username { get; set; }
 
         [MaxLength(100, ErrorMessage = "The field {0} only can contain {1} characters length")]
@@ -41,9 +45,11 @@ namespace FreeRentLibrary.Models
 
         public IEnumerable<SelectListItem> Roles { get; set; }
         //TODO: verificar aceitação de roles
-        //[Required]
-        [Display(Name ="Funcion")]
-        public string RoleId { get; set; } 
+        [Required]
+        [StringRequired(ErrorMessage = "You must select a role")]
+        [Display(Name = "Function")]
+        public string RoleId { get; set; }
+
 
         [Required]
         [MinLength(6)]

@@ -1,4 +1,5 @@
 ﻿using FreeRentLibrary.Data.Entities;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,5 +11,8 @@ namespace FreeRentLibrary.Models
 
         [Required(ErrorMessage = "Please select at least one genre.")]
         public List<int> SelectedGenres { get; set; }
+
+        [Display(Name = "Author Photo")]
+        public IFormFile ImageFile { get; set; }
     }
 }
