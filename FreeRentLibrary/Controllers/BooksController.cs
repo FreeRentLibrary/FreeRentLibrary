@@ -36,12 +36,14 @@ namespace FreeRentLibrary.Controllers
         }
 
         // GET: Books
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View(_bookRepository.GetBooksWithAuthorsAndGenres());
         }
 
         // GET: Books/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

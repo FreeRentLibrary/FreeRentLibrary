@@ -103,4 +103,16 @@
             })
         });
     </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("form").submit(function (e) {
+                var selectedRoleId = $("#RoleId").val();
+                if (selectedRoleId === "0") { // "0" é o valor da opção padrão
+                    e.preventDefault(); // Impede o envio do formulário
+                    alert("You must select a role."); // Exibe uma mensagem de erro
+                }
+            });
+        });
+    </script>
+    
 }

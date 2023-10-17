@@ -24,6 +24,7 @@ namespace FreeRentLibrary.Helpers
 
         #region UserRegion
 
+
         public async Task<User> GetUserByIdAsync(string userId)
         {
             return await _userManager.FindByIdAsync(userId);
