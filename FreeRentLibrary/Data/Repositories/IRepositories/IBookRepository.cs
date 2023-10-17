@@ -34,7 +34,11 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
         
         Task AddBookEditionAsync(BookEditionViewModel viewModel);
 
+        Task UpdateBookEditionAsync(BookEdition bookEdition);
+
         Task<BookEdition> GetBookEditionAsync(int bookEditionId);
+
+        Task<bool> BookEditionExistsAsync(int bookEditionId);
 
         #endregion
 
@@ -44,9 +48,15 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
 
         IEnumerable<SelectListItem> GetComboBooks();
 
+        IEnumerable<SelectListItem> GetComboBooks(int bookId);
+
         IEnumerable<SelectListItem> GetComboBookTypes();
 
+        IEnumerable<SelectListItem> GetComboBookTypes(int typeId);
+
         IEnumerable<SelectListItem> GetComboBookPublishers();
+
+        IEnumerable<SelectListItem> GetComboBookPublishers(int publisherId);
 
         #endregion
     }

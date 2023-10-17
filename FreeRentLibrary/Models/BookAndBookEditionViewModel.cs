@@ -42,7 +42,7 @@ namespace FreeRentLibrary.Models
         [Range(1, int.MaxValue, ErrorMessage = "You must select a book type!")]
         public int BookTypeId { get; set; }
 
-        public IEnumerable<SelectListItem> BookType { get; set; }
+        public IEnumerable<SelectListItem> BookTypes { get; set; }
 
         [Display(Name = "Publisher")]
         [Range(1, int.MaxValue, ErrorMessage = "You must select a Publisher!")]

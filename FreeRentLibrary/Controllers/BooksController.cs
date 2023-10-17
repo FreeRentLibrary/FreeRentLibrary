@@ -220,6 +220,64 @@ namespace FreeRentLibrary.Controllers
             return this.View(viewModel);
         }
 
+        // GET: Books/Edit/5
+        public async Task<IActionResult> EditBookEdition(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var bookEdition = await _bookRepository.GetBookEditionAsync(id.Value);
+            if (bookEdition == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = _converterHelper.ToBookEditionViewModel(bookEdition);
+            viewModel.BookTypes = _bookRepository.GetComboBookTypes(viewModel.BookTypeId);
+            viewModel.BookPublishers = _bookRepository.GetComboBookPublishers(viewModel.BookPublisherId);
+            return View(viewModel);
+        }
+
+        // POST: Books/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditBookEdition(BookEditionViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    Guid imageId = Guid.Empty;
+
+                    if (viewModel.ImageFile != null && viewModel.ImageFile.Length > 0)
+                    {
+                        imageId = await _blobHelper.UploadBlobAsync(viewModel.ImageFile, "covers");
+                        viewModel.CoverId = imageId;
+                    }
+
+                    var bookEdition = _converterHelper.ToBookEdition(viewModel);
+                    await _bookRepository.UpdateBookEditionAsync(bookEdition);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!await _bookRepository.BookEditionExistsAsync(viewModel.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("BookEditionsDetails", new { id = viewModel.Id });
+            }
+            return View(viewModel);
+        }
+
         public async Task<IActionResult> BookEditionsDetails(int? id)
         {
             if (id == null)
@@ -243,7 +301,7 @@ namespace FreeRentLibrary.Controllers
                 Genres = _genreRepository.GetAll(),
                 Authors = _authorRepository.GetComboAuthors(),
                 Books = _bookRepository.GetComboBooks(),
-                BookType = _bookRepository.GetComboBookTypes(),
+                BookTypes = _bookRepository.GetComboBookTypes(),
                 BookPublisher = _bookRepository.GetComboBookPublishers(),
             };
             return View(viewModel);
@@ -319,7 +377,7 @@ namespace FreeRentLibrary.Controllers
             viewModel.Genres = _genreRepository.GetAll();
             viewModel.Authors = _authorRepository.GetComboAuthors();
             viewModel.Books = _bookRepository.GetComboBooks();
-            viewModel.BookType = _bookRepository.GetComboBookTypes();
+            viewModel.BookTypes = _bookRepository.GetComboBookTypes();
             viewModel.BookPublisher = _bookRepository.GetComboBookPublishers();
             return viewModel;
         }

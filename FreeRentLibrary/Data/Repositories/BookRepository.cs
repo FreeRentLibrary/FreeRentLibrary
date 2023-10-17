@@ -157,6 +157,12 @@ namespace FreeRentLibrary.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdateBookEditionAsync(BookEdition bookEdition)
+        {
+            _context.BookEditions.Update(bookEdition);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<BookEdition> GetBookEditionAsync(int bookEditionId)
         {
             return await _context.BookEditions
@@ -168,6 +174,11 @@ namespace FreeRentLibrary.Data.Repositories
                 .Include(be => be.BookType)
                 .Where(be => be.Id == bookEditionId)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> BookEditionExistsAsync(int bookEditionId)
+        {
+            return await _context.BookEditions.AnyAsync(be => be.Id == bookEditionId);
         }
 
         #endregion
@@ -191,6 +202,22 @@ namespace FreeRentLibrary.Data.Repositories
             return list;
         }
 
+        public IEnumerable<SelectListItem> GetComboBooks(int bookId)
+        {
+            var book = _context.Books.Find(bookId);
+            var list = new List<SelectListItem>();
+            if (book != null)
+            {
+                list = _context.Books.Select(b => new SelectListItem
+                {
+                    Text = b.Name,
+                    Value = b.Id.ToString()
+                }).OrderBy(l => l.Text).ToList();
+
+            }
+            return list;
+        }
+
         public IEnumerable<SelectListItem> GetComboBookTypes()
         {
             var list = _context.BookTypes.Select(bt => new SelectListItem
@@ -206,6 +233,22 @@ namespace FreeRentLibrary.Data.Repositories
             return list;
         }
 
+        public IEnumerable<SelectListItem> GetComboBookTypes(int typeId)
+        {
+            var type = _context.BookTypes.Find(typeId);
+            var list = new List<SelectListItem>();
+            if (type != null)
+            {
+                list = _context.BookTypes.Select(bt => new SelectListItem
+                {
+                    Text = bt.Name,
+                    Value = bt.Id.ToString()
+                }).OrderBy(l => l.Text).ToList();
+
+            }
+            return list;
+        }
+
         public IEnumerable<SelectListItem> GetComboBookPublishers()
         {
             var list = _context.Publishers.Select(bp => new SelectListItem
@@ -218,6 +261,22 @@ namespace FreeRentLibrary.Data.Repositories
                 Text = "Select a Publisher...",
                 Value = "0"
             });
+            return list;
+        }
+
+        public IEnumerable<SelectListItem> GetComboBookPublishers(int publisherId)
+        {
+            var publisher = _context.Publishers.Find(publisherId);
+            var list = new List<SelectListItem>();
+            if (publisher != null)
+            {
+                list = _context.Publishers.Select(bp => new SelectListItem
+                {
+                    Text = bp.Name,
+                    Value = bp.Id.ToString()
+                }).OrderBy(l => l.Text).ToList();
+
+            }
             return list;
         }
 

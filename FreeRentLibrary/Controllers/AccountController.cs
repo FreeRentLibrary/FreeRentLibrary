@@ -158,6 +158,14 @@ namespace FreeRentLibrary.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.RoleId == "0")
+                {
+                    model.Countries = _countryRepository.GetComboCountries();
+                    model.Cities = _countryRepository.GetComboCities(model.CountryId);
+                    model.Roles = _roleRepository.GetComboRoles();
+                    ModelState.AddModelError("RoleId", "Please select a role...");
+                    return View(model);
+                }
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);
                 if (user == null)
                 {
@@ -176,6 +184,9 @@ namespace FreeRentLibrary.Controllers
                     var result = await _userHelper.AddUserAsync(user, model.Password);
                     if (result != IdentityResult.Success)
                     {
+                        model.Countries = _countryRepository.GetComboCountries();
+                        model.Cities = _countryRepository.GetComboCities(0);
+                        model.Roles = _roleRepository.GetComboRoles();
                         ModelState.AddModelError(string.Empty, "The user could not be created");
                         return View(model);
                     }
