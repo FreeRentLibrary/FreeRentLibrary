@@ -25,12 +25,18 @@ namespace FreeRentLibrary.Data.Repositories
         {
             return _context.Books
                 .Include(b => b.Author)
-                .Include(b => b.Genres)
+                .Include(b => b.BookGenres)
                 .OrderBy(b => b.Name);
         }
 
         public async Task AddBookAsync(BookViewModel viewModel)
         {
+            var author = await _context.Authors.FindAsync(viewModel.AuthorId);
+            if (author == null)
+            {
+                return;
+            }
+
             var book = new Book
             {
                 Name = viewModel.Name,
@@ -40,11 +46,21 @@ namespace FreeRentLibrary.Data.Repositories
                 Author = _context.Authors
                     .Where(a => a.Id == viewModel.AuthorId)
                     .FirstOrDefault(),
-                Genres = _context.Genres
-                    .Where(g => viewModel.SelectedGenres
-                    .Contains(g.Id))
-                    .ToList(),
             };
+
+            var selectedGenres = await _context.Genres
+                .Where(g => viewModel.SelectedGenres.Contains(g.Id))
+                .ToListAsync();
+
+            var bookGenres = selectedGenres.Select(genre => new BookGenre
+            {
+                GenreId = genre.Id,
+                Genre = genre,
+                BookId = book.Id,
+                Book = book,
+            }).ToList();
+
+            book.BookGenres = bookGenres;
 
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
@@ -82,7 +98,8 @@ namespace FreeRentLibrary.Data.Repositories
         {
             var bookQuery = _context.Books
                 .Include(b => b.Author)
-                .Include(b => b.Genres)
+                .Include(b => b.BookGenres)
+                .ThenInclude(bg => bg.Genre)
                 .Where(b => b.Id == bookId);
 
             var book = await bookQuery.FirstOrDefaultAsync();
@@ -104,7 +121,8 @@ namespace FreeRentLibrary.Data.Repositories
         {
             return await _context.Books
                 .Include(b => b.Author)
-                .Include(b => b.Genres)
+                .Include(b => b.BookGenres)
+                .ThenInclude(bg => bg.Genre)
                 .Where(b => b.Author.Id == authorId)
                 .ToListAsync();
         }
@@ -113,8 +131,9 @@ namespace FreeRentLibrary.Data.Repositories
         {
             return await _context.Books
                 .Include(b => b.Author)
-                .Include(b => b.Genres)
-                .Where(b => b.Genres.Any(g => g.Id == genreId))
+                .Include(b => b.BookGenres)
+                .ThenInclude(bg => bg.Genre)
+                .Where(b => b.BookGenres.Any(g => g.Id == genreId))
                 .ToListAsync();
         }
 
@@ -167,7 +186,7 @@ namespace FreeRentLibrary.Data.Repositories
         {
             return await _context.BookEditions
                 .Include(be => be.Book)
-                .ThenInclude(b => b.Genres)
+                .ThenInclude(b => b.BookGenres)
                 .Include(be => be.Book)
                 .ThenInclude(b => b.Author)
                 .Include(be => be.BookPublisher)
