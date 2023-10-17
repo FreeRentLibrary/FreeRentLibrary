@@ -64,7 +64,23 @@ namespace FreeRentLibrary.Data.Repositories
             });
             return list;
         }
-        
+
+        public IEnumerable<SelectListItem> GetComboCountries(int countryId)
+        {
+            var country = _context.Countries.Find(countryId);
+            var list = new List<SelectListItem>();
+            if (country != null)
+            {
+                list = _context.Countries.Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
+                }).OrderBy(l => l.Text).ToList();
+
+            }
+            return list;
+        }
+
         #endregion
 
         //--

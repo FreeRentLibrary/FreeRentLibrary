@@ -19,6 +19,7 @@ namespace FreeRentLibrary.Data.Entities
         public Country Country { get; set; }
 
         //Change to ICollection in case of failure
+        [Display(Name = "Books")]
         public ICollection<BookEdition> Editions { get; set; }
     }
 }

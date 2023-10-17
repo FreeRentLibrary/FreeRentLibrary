@@ -78,6 +78,7 @@ namespace FreeRentLibrary.Data.Repositories
             return await _context.Authors
                 .Include(a => a.AuthorGenres)
                 .Include(a => a.Books)
+                .ThenInclude(b => b.BookEditions)
                 .Where(a => a.Id == authorId)
                 .FirstOrDefaultAsync();
         }
