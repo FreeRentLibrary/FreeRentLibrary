@@ -11,6 +11,7 @@ using FreeRentLibrary.Data.Repositories.IRepositories;
 using FreeRentLibrary.Models;
 using FreeRentLibrary.Data.Repositories;
 using FreeRentLibrary.Helpers.IHelpers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FreeRentLibrary.Controllers
 {
