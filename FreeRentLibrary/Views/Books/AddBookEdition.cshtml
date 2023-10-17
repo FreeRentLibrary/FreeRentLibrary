@@ -19,6 +19,12 @@
                 <span asp-validation-for="ImageFile" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="BookPublisherId" class="control-label"></label>
+                <select asp-for="BookPublisherId" asp-items="Model.BookPublishers" class="form-control"></select>
+                <a asp-controller="BookPublishers" asp-action="Create">Create a new publisher</a>
+                <span asp-validation-for="BookPublisherId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="BookTypeId" class="control-label"></label>
                 <select asp-for="BookTypeId" asp-items="Model.BookTypes" class="form-control"></select>
                 <span asp-validation-for="BookTypeId" class="text-danger"></span>
@@ -64,11 +70,7 @@
                 <input asp-for="Translator" class="form-control" />
                 <span asp-validation-for="Translator" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="BookPublisherId" class="control-label"></label>
-                <select asp-for="BookPublisherId" asp-items="Model.BookPublishers" class="form-control"></select>
-                <span asp-validation-for="BookPublisherId" class="text-danger"></span>
-            </div>
+            
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
                 <a asp-action="Index">Back to List</a>

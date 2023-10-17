@@ -3,6 +3,18 @@
 @{
     ViewData["Title"] = "Details";
 }
+<style>
+    .table td img {
+        max-height: 100%;
+        width: auto;
+        display: block;
+    }
+
+    .table td {
+        height: 100px;
+        vertical-align: top;
+    }
+</style>
 
 <h1>Details</h1>
 
@@ -23,6 +35,46 @@
             @Html.DisplayFor(model => model.Country.Name)
         </dd>
     </dl>
+    <div class="row">
+        <label>@Html.DisplayFor(model => model.Editions)</label>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Edition Name</th>
+                    <th>Publisher</th>
+                    <th>Release Data</th>
+                    <th>Book Type</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var edition in Model.Editions)
+                {
+                    <tr>
+                        <td>
+                            <img src="@Url.Content(edition.ImageFullPath)" alt="Image" />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => edition.EditionName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => edition.BookPublisher.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => edition.ReleaseDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => edition.BookType.Name)
+                        </td>
+                        <td>
+                            <a asp-controller="Books" asp-action="BookEditionsDetails" asp-route-id="@edition.Id" class="btn btn-primary">View</a> |
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |

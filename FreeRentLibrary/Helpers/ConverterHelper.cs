@@ -164,7 +164,17 @@ namespace FreeRentLibrary.Helpers
             };
         }
 
-
+        public BookPublisherViewModel ToBookPublisherViewModel(BookPublisher bookPublisher)
+        {
+            return new BookPublisherViewModel
+            {
+                Id = bookPublisher.Id,
+                Name = bookPublisher.Name,
+                Editions = bookPublisher.Editions,
+                Country = bookPublisher.Country,
+                CountryId = bookPublisher.CountryId,
+            };
+        }
 
     }
 }

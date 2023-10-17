@@ -137,7 +137,7 @@ namespace FreeRentLibrary.Controllers
                         return NotFound();
                     }
 
-                    var genres = _genreRepository.GetGenres(viewModel.SelectedGenres);
+                    existingAuthor.Name = viewModel.Name;
 
                     Guid imageId = Guid.Empty;
 
@@ -147,19 +147,15 @@ namespace FreeRentLibrary.Controllers
                         existingAuthor.AuthorPhotoId = imageId;
                     }
 
-                    existingAuthor.AuthorGenres.Clear();
-                    foreach (var genre in genres)
+                    var genres = _genreRepository.GetGenres(viewModel.SelectedGenres);
+
+                    existingAuthor.AuthorGenres = genres.Select(genre => new AuthorGenre
                     {
-                        existingAuthor.AuthorGenres.Add(new AuthorGenre
-                        {
-                            Author = existingAuthor,
-                            Genre = genre
-                        });
-                    }
+                        Author = existingAuthor,
+                        Genre = genre
+                    }).ToList();
                     
-                    //var author = _converterHelper.ToAuthor(viewModel, genres);
                     await _authorRepository.UpdateAsync(existingAuthor);
-                    //await _authorRepository.UpdateAuthorWithGenresAsync(viewModel);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -9,6 +9,7 @@ using FreeRentLibrary.Data;
 using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Data.Repositories.IRepositories;
 using FreeRentLibrary.Models;
+using FreeRentLibrary.Helpers.IHelpers;
 
 namespace FreeRentLibrary.Controllers
 {
@@ -16,11 +17,13 @@ namespace FreeRentLibrary.Controllers
     {
         private readonly IBookPublisherRepository _publisherRepository;
         private readonly ICountryRepository _countryRepository;
+        private readonly IConverterHelper _converterHelper;
 
-        public BookPublishersController(IBookPublisherRepository publisherRepository, ICountryRepository countryRepository)
+        public BookPublishersController(IBookPublisherRepository publisherRepository, ICountryRepository countryRepository, IConverterHelper converterHelper)
         {
             _publisherRepository = publisherRepository;
             _countryRepository = countryRepository;
+            _converterHelper = converterHelper;
         }
 
         // GET: BookPublishers
@@ -95,7 +98,9 @@ namespace FreeRentLibrary.Controllers
             {
                 return NotFound();
             }
-            return View(bookPublisher);
+            var viewModel = _converterHelper.ToBookPublisherViewModel(bookPublisher);
+            viewModel.Countries = _countryRepository.GetComboCountries(bookPublisher.CountryId);
+            return View(viewModel);
         }
 
         // POST: BookPublishers/Edit/5
@@ -103,17 +108,29 @@ namespace FreeRentLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(BookPublisher bookPublisher)
+        public async Task<IActionResult> Edit(BookPublisherViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _publisherRepository.UpdateAsync(bookPublisher);
+                    var existingPublisher = await _publisherRepository.GetPublisherWithBooksAndCountry(viewModel.Id);
+                    if (existingPublisher == null)
+                    {
+                        return NotFound();
+                    }
+
+                    var country = await _countryRepository.GetCountryWithCityAsync(viewModel.CountryId);
+
+                    existingPublisher.Name = viewModel.Name;
+                    existingPublisher.CountryId = viewModel.CountryId;
+                    existingPublisher.Country = country;
+
+                    await _publisherRepository.UpdateAsync(existingPublisher);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await _publisherRepository.ExistAsync(bookPublisher.Id))
+                    if (!await _publisherRepository.ExistAsync(viewModel.Id))
                     {
                         return NotFound();
                     }
@@ -124,7 +141,7 @@ namespace FreeRentLibrary.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(bookPublisher);
+            return View(viewModel);
         }
 
         // GET: BookPublishers/Delete/5
