@@ -1,0 +1,110 @@
+﻿@model FreeRentLibrary.Models.BookEditionViewModel
+
+@{
+    ViewData["Title"] = "EditBookEdition";
+}
+
+<h1>EditBookEdition</h1>
+
+<h4>BookEdition</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditBookEdition" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="BookId" />
+            <input type="hidden" asp-for="CoverId" />
+            
+            <div class="form-group">
+                <label asp-for="ISBN" class="control-label"></label>
+                <input asp-for="ISBN" class="form-control" />
+                <span asp-validation-for="ISBN" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" class="form-control" type="file" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="BookTypeId" class="control-label"></label>
+                <select asp-for="BookTypeId" asp-items="Model.BookTypes" class="form-control"></select>
+                <span asp-validation-for="BookTypeId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="EditionName" class="control-label"></label>
+                <input asp-for="EditionName" class="form-control" id="EditionNameInput" />
+                <span asp-validation-for="EditionName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input asp-for="SameBookName" id="SameBookNameCheckbox" class="form-check-input" />
+                    <label class="form-check-label" for="SameBookNameCheckbox">Unchanged Name</label>
+                </div>
+            </div><br />
+
+            <div class="form-group">
+                <label asp-for="ReleaseDate" class="control-label"></label>
+                <input asp-for="ReleaseDate" class="form-control" type="date" id="releaseDateInput" />
+                <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PageCount" class="control-label"></label>
+                <input asp-for="PageCount" class="form-control" />
+                <span asp-validation-for="PageCount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MinimumAge" class="control-label"></label>
+                <input asp-for="MinimumAge" class="form-control" />
+                <span asp-validation-for="MinimumAge" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TranslatedLanguage" class="control-label"></label>
+                <input asp-for="TranslatedLanguage" class="form-control" />
+                <span asp-validation-for="TranslatedLanguage" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Translator" class="control-label"></label>
+                <input asp-for="Translator" class="form-control" />
+                <span asp-validation-for="Translator" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BookPublisherId" class="control-label"></label>
+                <select asp-for="BookPublisherId" asp-items="Model.BookPublishers" class="form-control"></select>
+                <span asp-validation-for="BookPublisherId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="BookEditionsDetails" asp-route-id="@Model.Id">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // Get references to the checkbox and the EditionName input
+        var isEditionNameCheckbox = document.getElementById("SameBookNameCheckbox");
+        var editionNameInput = document.getElementById("EditionNameInput");
+        // Add an event listener to the checkbox to toggle the disabled state of the input
+        isEditionNameCheckbox.addEventListener("change", function () {
+            editionNameInput.disabled = isEditionNameCheckbox.checked;
+        });
+        // Initially set the input state based on the checkbox state
+        editionNameInput.disabled = isEditionNameCheckbox.checked;
+
+
+        //For ReleaseDate
+        document.querySelector("form").addEventListener("submit", function () {
+            var releaseDateInput = document.getElementById("ReleaseDate");
+            var dateValue = new Date(releaseDateInput.value);
+            dateValue.setHours(0, 0, 0);
+            releaseDateInput.value = dateValue.toISOString().split("T")[0];
+        });
+    </script>
+}

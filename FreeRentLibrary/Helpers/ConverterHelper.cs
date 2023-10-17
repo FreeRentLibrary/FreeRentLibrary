@@ -13,33 +13,10 @@ namespace FreeRentLibrary.Helpers
     public class ConverterHelper : IConverterHelper
     {
         private readonly DataContext _context;
-        private readonly RentRepository _rentRepository;
 
-        public ConverterHelper(DataContext context,RentRepository rentRepository)
+        public ConverterHelper(DataContext context)
         {
             _context = context;
-            _rentRepository = rentRepository;
-        }
-
-        public BookEditionViewModel ToBookEditionViewModel(BookAndBookEditionViewModel bbViewModel, Guid imageId)
-        {
-            return new BookEditionViewModel
-            {
-                EditionName = bbViewModel.EditionName,
-                BookId = bbViewModel.BookId,
-                BookPublisherId = bbViewModel.BookPublisherId,
-                BookPublishers = bbViewModel.BookPublisher,
-                BookTypes = bbViewModel.BookType,
-                BookTypeId = bbViewModel.BookTypeId,
-                ISBN = bbViewModel.ISBN,
-                MinimumAge = bbViewModel.MinimumAge,
-                PageCount = bbViewModel.PageCount,
-                SameBookName = bbViewModel.SameBookName,
-                ReleaseDate = bbViewModel.ReleaseDate,
-                TranslatedLanguage = bbViewModel.TranslatedLanguage,
-                Translator = bbViewModel.Translator,
-                CoverId = imageId,
-            };
         }
 
         public BookViewModel ToBookViewModel(BookAndBookEditionViewModel bbViewModel)
@@ -56,19 +33,70 @@ namespace FreeRentLibrary.Helpers
             };
         }
 
-        public async Task ReserveToRentAsync(Reservation reservation)
+        public BookEdition ToBookEdition(BookEditionViewModel viewModel)
         {
-            if (reservation.UserId != null && reservation.LibraryId != null)
+            return new BookEdition
             {
-                var userId = reservation.UserId;
-                int bookId = reservation.BookEditionId.Value;
-                int libraryId = reservation.LibraryId.Value;
-
-                await _rentRepository.RentBookAsync(userId, libraryId, bookId);
-
-                reservation.EndDate = DateTime.Now;
-                await _context.SaveChangesAsync();
-            }
+                Id = viewModel.Id,
+                EditionName = viewModel.EditionName,
+                BookId = viewModel.BookId,
+                Book = viewModel.Book,
+                BookPublisherId = viewModel.BookPublisherId,
+                BookPublisher = viewModel.BookPublisher,
+                BookTypeId = viewModel.BookTypeId,
+                BookType = viewModel.BookType,
+                ISBN = viewModel.ISBN,
+                MinimumAge = viewModel.MinimumAge,
+                PageCount = viewModel.PageCount,
+                ReleaseDate = viewModel.ReleaseDate,
+                TranslatedLanguage = viewModel.TranslatedLanguage,
+                Translator = viewModel.Translator,
+                CoverId = viewModel.CoverId,
+            };
         }
+
+        public BookEditionViewModel ToBookEditionViewModel(BookEdition bookEdition)
+        {
+            return new BookEditionViewModel
+            {
+                Id = bookEdition.Id,
+                EditionName = bookEdition.EditionName,
+                BookId = bookEdition.BookId,
+                Book = bookEdition.Book,
+                BookPublisherId = bookEdition.BookPublisherId,
+                BookPublisher = bookEdition.BookPublisher,
+                BookTypeId = bookEdition.BookTypeId,
+                BookType = bookEdition.BookType,
+                ISBN = bookEdition.ISBN,
+                MinimumAge = bookEdition.MinimumAge,
+                PageCount = bookEdition.PageCount,
+                ReleaseDate = bookEdition.ReleaseDate,
+                TranslatedLanguage = bookEdition.TranslatedLanguage,
+                Translator = bookEdition.Translator,
+                CoverId = bookEdition.CoverId,
+            };
+        }
+
+        public BookEditionViewModel ToBookEditionViewModel(BookAndBookEditionViewModel bbViewModel, Guid imageId)
+        {
+            return new BookEditionViewModel
+            {
+                EditionName = bbViewModel.EditionName,
+                BookId = bbViewModel.BookId,
+                BookPublisherId = bbViewModel.BookPublisherId,
+                BookPublishers = bbViewModel.BookPublisher,
+                BookTypes = bbViewModel.BookTypes,
+                BookTypeId = bbViewModel.BookTypeId,
+                ISBN = bbViewModel.ISBN,
+                MinimumAge = bbViewModel.MinimumAge,
+                PageCount = bbViewModel.PageCount,
+                SameBookName = bbViewModel.SameBookName,
+                ReleaseDate = bbViewModel.ReleaseDate,
+                TranslatedLanguage = bbViewModel.TranslatedLanguage,
+                Translator = bbViewModel.Translator,
+                CoverId = imageId,
+            };
+        }
+
     }
 }

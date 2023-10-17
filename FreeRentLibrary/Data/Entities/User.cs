@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -13,6 +14,9 @@ namespace FreeRentLibrary.Data.Entities
         [Display(Name = "Surname")]
         [MaxLength(50, ErrorMessage = "The field {0} only can contain {1} characters lenght.")]
         public string LastName { get; set; }
+
+        //[Display(Name = "Profile Picture")]
+        //public Guid ProfilePicId { get; set; }
 
         [MaxLength(100, ErrorMessage = "The field {0} only can contain {1} characters lenght.")]
         public string Address { get; set; }
@@ -47,5 +51,9 @@ namespace FreeRentLibrary.Data.Entities
 
         [Display(Name = "Full Name")]
         public string FullName => $"{FirstName} {LastName}";
+
+        //public string ImageFullPath => ProfilePicId == Guid.Empty
+        //    ? $"https://frlcontainer.blob.core.windows.net/default/noimage.png"
+        //    : $"https://frlcontainer.blob.core.windows.net/users/{ProfilePicId}";
     }
 }

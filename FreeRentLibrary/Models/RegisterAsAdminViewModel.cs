@@ -43,7 +43,6 @@ namespace FreeRentLibrary.Models
         //TODO: verificar aceitação de roles
         //[Required]
         [Display(Name ="Funcion")]
-        [Range(1, int.MaxValue, ErrorMessage = "You must select a role")]
         public string RoleId { get; set; } 
 
         [Required]
