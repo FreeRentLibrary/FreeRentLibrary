@@ -21,12 +21,14 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
 
         IEnumerable<SelectListItem> GetComboCountries();
 
+        IEnumerable<SelectListItem> GetComboCountries(int countryId);
+
         #endregion
 
         //--
 
         #region City
-        
+
         Task AddCityAsync(CityViewModel model);
         
         Task AddCityListAsync(string countryName, List<City> cities);

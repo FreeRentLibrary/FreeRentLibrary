@@ -23,5 +23,7 @@ namespace FreeRentLibrary.Helpers.IHelpers
         BookEditionViewModel ToBookEditionViewModel(BookAndBookEditionViewModel bbViewModel, Guid imageId);
 
         AuthorViewModel ToAuthorViewModel(Author author);
+
+        BookPublisherViewModel ToBookPublisherViewModel(BookPublisher bookPublisher);
     }
 }

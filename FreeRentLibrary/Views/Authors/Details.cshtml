@@ -3,6 +3,18 @@
 @{
     ViewData["Title"] = "Details";
 }
+<style>
+    .table td img {
+        max-height: 100%;
+        width: auto;
+        display: block;
+    }
+
+    .table td {
+        height: 100px;
+        vertical-align: top;
+    }
+</style>
 
 <h1>Details</h1>
 
@@ -40,6 +52,39 @@
                 </ul>
             </dd>
         </dl>
+    </div>
+    <br />
+    <label>@Html.DisplayNameFor(model => model.Books)</label>
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Nº of Editions</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var edition in Model.Books)
+                {
+                    <tr>
+                        <td>
+                            <img src="@Url.Content(edition.BookEditions.FirstOrDefault().ImageFullPath)" alt="Image" />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => edition.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => edition.BookEditions.Count)
+                        </td>
+                        <td>
+                            <a asp-controller="Books" asp-action="Details" asp-route-id="@edition.Id" class="btn btn-primary">Go to Book</a> |
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 
     <div class="row">

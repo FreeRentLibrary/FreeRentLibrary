@@ -18,6 +18,7 @@ namespace FreeRentLibrary.Data.Entities
 
         //public string PenName { get; set; }
 
+        [Display(Name = "Books")]
         public ICollection<Book> Books { get; set; }
 
         [Display(Name = "Genres")]
