@@ -24,6 +24,16 @@ namespace FreeRentLibrary.Data.Repositories
                 .OrderBy(g => g.Name);
         }
 
+        public async Task<IEnumerable<BookPublisher>> SearchBookPublisherAsync(string query)
+        {
+            return await _context.Publishers
+                .Include(p => p.Editions)
+                .ThenInclude(be => be.Book)
+                .ThenInclude(b => b.Author)
+                .Where(p => p.Name.Contains(query))
+                .ToListAsync();
+        }
+
         public async Task<BookPublisher> AddBookPublisherWithCountry(BookPublisherViewModel viewModel)
         {
             var bookPublisher = new BookPublisher

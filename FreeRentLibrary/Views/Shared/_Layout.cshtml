@@ -48,13 +48,20 @@
                                 </ul>
                             </li>
                         }
+
+                        <form asp-controller="Home" asp-action="SearchResults" method="get">
+                            <select name="category">
+                                <option value="BookEdition">Book</option>
+                                <option value="Author">Author</option>
+                                <option value="Publisher">Publisher</option>
+                            </select>
+                            <input type="text" name="query" placeholder="Search...">
+                            <button type="submit">Search</button>
+                        </form>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         @if(this.User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a>                                
                             </li>

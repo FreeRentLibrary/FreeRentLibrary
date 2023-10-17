@@ -13,7 +13,7 @@ namespace FreeRentLibrary.Data.Entities
         [Required(ErrorMessage = "Please write a name.")]
         public string Name { get; set; }
 
-        [Display(Name = "Author Photo")]
+        [Display(Name = "Photo")]
         public Guid AuthorPhotoId { get; set; }
 
         //public string PenName { get; set; }

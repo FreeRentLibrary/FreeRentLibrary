@@ -11,6 +11,8 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
     {
         IQueryable GetPublishersWithCountry();
 
+        Task<IEnumerable<BookPublisher>> SearchBookPublisherAsync(string query);
+
         Task<BookPublisher> AddBookPublisherWithCountry(BookPublisherViewModel viewModel);
 
         Task<BookPublisher> GetPublisherWithNameAsync(string publisherName);

@@ -31,7 +31,9 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
         //--
 
         #region BookEdition
-        
+
+        Task<IEnumerable<BookEdition>> SearchBookEditionsAsync(string query);
+
         Task AddBookEditionAsync(BookEditionViewModel viewModel);
 
         Task UpdateBookEditionAsync(BookEdition bookEdition);

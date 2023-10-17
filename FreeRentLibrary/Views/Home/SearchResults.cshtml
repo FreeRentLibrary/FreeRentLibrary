@@ -1,0 +1,155 @@
+﻿@model FreeRentLibrary.Models.SearchResultsViewModel
+@{
+    ViewData["Title"] = "SearchResults";
+}
+<style>
+    .table td img {
+        max-height: 100%;
+        width: auto;
+        display: block;
+    }
+
+    .table td {
+        height: 100px;
+        vertical-align: top;
+    }
+</style>
+
+<h1>SearchResults</h1>
+
+@if (Model.BookEditionResults != null && Model.BookEditionResults.Count() != 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.BookEditionResults.FirstOrDefault().CoverId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BookEditionResults.FirstOrDefault().EditionName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BookEditionResults.FirstOrDefault().Book.Author)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BookEditionResults.FirstOrDefault().ISBN)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BookEditionResults.FirstOrDefault().BookType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BookEditionResults.FirstOrDefault().BookPublisher)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.BookEditionResults)
+            {
+                <tr>
+                    <td>
+                        <img src="@Url.Content(item.ImageFullPath)" alt="Image" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EditionName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Book.Author.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ISBN)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BookType.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BookPublisher.Name)
+                    </td>
+                    <td>
+                        <a asp-controller="Books" asp-action="BookEditionsDetails" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (Model.AuthorResults != null && Model.AuthorResults.Count() != 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.AuthorResults.FirstOrDefault().AuthorPhotoId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AuthorResults.FirstOrDefault().Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.AuthorResults.FirstOrDefault().Books)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.AuthorResults)
+            {
+                <tr>
+                    <td>
+                        <img src="@Url.Content(item.ImageFullPath)" alt="Image" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Books.Count)
+                    </td>
+                    <td>
+                        <a asp-controller="Authors" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (Model.PublisherResults != null && Model.PublisherResults.Count() != 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.PublisherResults.FirstOrDefault().Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PublisherResults.FirstOrDefault().CountryId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PublisherResults.FirstOrDefault().Editions)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.PublisherResults)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Country.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Editions.Count)
+                    </td>
+                    <td>
+                        <a asp-controller="BookPublishers" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h3>No results found!</h3>
+}

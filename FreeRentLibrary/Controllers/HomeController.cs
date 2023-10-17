@@ -1,5 +1,7 @@
 ﻿using FreeRentLibrary.Data;
+using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Data.Repositories;
+using FreeRentLibrary.Data.Repositories.IRepositories;
 using FreeRentLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +21,21 @@ namespace FreeRentLibrary.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly DataContext _context;
+        private readonly IBookRepository _bookRepository;
+        private readonly IAuthorRepository _authorRepository;
+        private readonly IBookPublisherRepository _publisherRepository;
 
-        public HomeController(ILogger<HomeController> logger, DataContext dataContext)
+        public HomeController(ILogger<HomeController> logger, 
+            DataContext dataContext, 
+            IBookRepository bookRepository, 
+            IAuthorRepository authorRepository,
+            IBookPublisherRepository publisherRepository)
         {
             _logger = logger;
             _context = dataContext;
+            _bookRepository = bookRepository;
+            _authorRepository = authorRepository;
+            _publisherRepository = publisherRepository;
         }
 
         public IActionResult Index()
@@ -47,7 +59,8 @@ namespace FreeRentLibrary.Controllers
                 viewModel.Books = _context.Books
                     .Include(b => b.BookEditions)
                     .Include(b => b.Author)
-                    .Include(b => b.Genres)
+                    .Include(b => b.BookGenres)
+                    .ThenInclude(bg => bg.Genre)
                     .ToList();
 
                 viewModel.BookOfTheDay = _context.Books
@@ -70,5 +83,24 @@ namespace FreeRentLibrary.Controllers
         }
 
 
+        public async Task<IActionResult> SearchResults(string category, string query)
+        {
+            var viewModel = new SearchResultsViewModel();
+            switch (category)
+            {
+                case "BookEdition":
+                    viewModel.BookEditionResults = await _bookRepository.SearchBookEditionsAsync(query);
+                    break;
+                case "Author":
+                    viewModel.AuthorResults = await _authorRepository.SearchAuthorAsync(query);
+                    break;
+                case "Publisher":
+                    viewModel.PublisherResults = await _publisherRepository.SearchBookPublisherAsync(query);
+                    break;
+                default:
+                    return View("Error");
+            }
+            return View(viewModel);
+        }
     }
 }
