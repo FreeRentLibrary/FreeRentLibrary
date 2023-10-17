@@ -143,6 +143,16 @@ namespace FreeRentLibrary.Data.Repositories
 
         #region BookEdition
 
+        public async Task<IEnumerable<BookEdition>> SearchBookEditionsAsync(string query)
+        {
+            return await _context.BookEditions
+                .Include(be => be.Book).ThenInclude(b => b.Author)
+                .Include(be => be.BookPublisher)
+                .Where(be => be.EditionName.Contains(query) 
+                    || be.ISBN.Contains(query))
+                .ToListAsync();
+        }
+
         public async Task AddBookEditionAsync(BookEditionViewModel viewModel)
         {
             var book = await GetBookWithAllDataAsync(viewModel.BookId);

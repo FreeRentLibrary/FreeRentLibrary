@@ -11,6 +11,8 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
     {
         IQueryable GetAuthorsWithGenresAndBooks();
 
+        Task<IEnumerable<Author>> SearchAuthorAsync(string query);
+
         Task AddAuthorWithGenresAsync(AuthorViewModel viewModel);
 
         Task DeleteAllAuthorInfoAsync(int authorId);

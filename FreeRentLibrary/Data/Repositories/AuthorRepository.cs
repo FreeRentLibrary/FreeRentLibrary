@@ -28,6 +28,16 @@ namespace FreeRentLibrary.Data.Repositories
                 .OrderBy(a => a.Name);
         }
 
+        public async Task<IEnumerable<Author>> SearchAuthorAsync(string query)
+        {
+            return await _context.Authors
+                .Include(a => a.Books)
+                .ThenInclude(b => b.BookEditions)
+                .ThenInclude(be => be.BookPublisher)
+                .Where(a => a.Name.Contains(query))
+                .ToListAsync();
+        }
+
         public async Task AddAuthorWithGenresAsync(AuthorViewModel viewModel)
         {
             var author = new Author
