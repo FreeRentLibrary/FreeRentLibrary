@@ -4,23 +4,14 @@
     ViewData["Title"] = "Home";
 }
 <h1>@ViewData["Title"]</h1>
-
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book of the Week</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-    <header>
-        <div class="col md-4">
-            <div class="card mb-12">
-                @if (Model.BookOfTheDay != null)
-                {
-                    var bookOfTheDay = Model.BookOfTheDay.Book;
-                    @if (bookOfTheDay.BookEditions.Any() && !string.IsNullOrWhiteSpace(bookOfTheDay.BookEditions.FirstOrDefault().ImageFullPath))
+<div class="container align-content-center">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-5 mx-auto">
+                <div class="card mb-5">
+                    @if (Model.BookOfTheDay != null)
                     {
+                        var bookOfTheDay = Model.BookOfTheDay.Book;
                         <img src="@Url.Content(bookOfTheDay.BookEditions.FirstOrDefault().ImageFullPath)" class="card-img-top">
                         <div class="card-body">
                             <a asp-action="BookEditionsDetails" asp-controller="Books" asp-route-id="@bookOfTheDay.Id"><h5 class="card-title">@bookOfTheDay.Name</h5></a>
@@ -29,21 +20,14 @@
                     }
                     else
                     {
-                        <img src="~/images/noimage.png" class="card-img-top" alt="No Image Available">
+                        <br />
+                        <h3>No Book of the Week</h3>
+                        <br />
                     }
-                    <h5 class="card-title">@bookOfTheDay.Name</h5>
-                    <p class="card-text">Author: @bookOfTheDay.Author.Name</p>
-                    <p class="card-text">Genre: @bookOfTheDay.Genres.FirstOrDefault().Name</p>
-                }
-                else
-                {
-                    <br />
-                    <h3>No Book of the Week</h3>
-                    <br />
-                }
+                </div>
             </div>
         </div>
-    </header>
+    </div>
 
     <div class="container">
         <h1 class="mt-4">Trending Books</h1>
@@ -53,18 +37,10 @@
             {
                 <div class="col-md-4">
                     <div class="card mb-4">
-                        @if (book.BookEditions.Any() && !string.IsNullOrWhiteSpace(book.BookEditions.FirstOrDefault().ImageFullPath))
-                        {
-                            <img src="@Url.Content(book.BookEditions.FirstOrDefault().ImageFullPath)" class="card-img-top">
-                        }
-                        else
-                        {
-                            <img src="~/images/noimage.png" class="card-img-top" alt="No Image Available">
-                        }
+                        <img src="@Url.Content(book.BookEditions.FirstOrDefault().ImageFullPath)" class="card-img-top">
                         <div class="card-body">
-                            <a asp-action="BookEditionsDetails" asp-controller="Books"><h5 class="card-title">@book.Name</h5></a>
-                            <p class="card-text">Author: @book.Author.Name</p>
-                            <p class="card-text">Genre: @book.Genres.FirstOrDefault().Name</p>
+                            <a asp-action="BookEditionsDetails" asp-controller="Books" asp-route-id="@book.Id"><h5 class="card-title">@book.Name</h5></a>
+                            <p class="card-text">@book.Author.Name</p>
                         </div>
                     </div>
                 </div>
