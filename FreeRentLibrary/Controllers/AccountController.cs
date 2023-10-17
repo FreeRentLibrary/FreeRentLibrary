@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualBasic;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace FreeRentLibrary.Controllers
         private readonly IMailHelper _mailHelper;
         private readonly IRoleRepository _roleRepository;
         private readonly RoleManager<IdentityRole> _roleManager;
+        
         private readonly ICountryRepository _countryRepository;
 
         public AccountController(IUserHelper userHelper, ICountryRepository countryRepository, IConfiguration configuration, IMailHelper mailHelper,
@@ -34,8 +36,24 @@ namespace FreeRentLibrary.Controllers
             _mailHelper = mailHelper;
             _roleRepository = roleRepository;
             _roleManager = roleManager;
+           
             _userHelper = userHelper;
             _countryRepository = countryRepository;
+        }
+
+        [HttpPost][HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult>IsEmailInUse(string username)
+        {
+            var user = await _userHelper.GetUserByEmailAsync(username);
+            if (user == null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json($"Email {username} is already in use");
+            }
         }
 
         public IActionResult Login()
@@ -50,46 +68,64 @@ namespace FreeRentLibrary.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
-            {
-                var result = await _userHelper.LoginAsync(model);
-                if (result.Succeeded)
+            {                
+                var user = await _userHelper.GetUserByEmailAsync(model.UserName);
+                if (user != null)
                 {
-                    var user =  await _userHelper.GetUserByEmailAsync(model.UserName);
-                    if (user.TwoFactorEnabled)
-                    {
-                        var token = await _userHelper.GenerateTwoFactorAuthenticationTokenAsync(user);
-                        _mailHelper.SendEmail(user.Email, "Two Factor Authentication", "This is your code to login: "+token);
-                       
-                        return this.RedirectToAction("VerifyLoginToken", "Account",user);
-                    }
+                        if (user.TwoFactorEnabled)
+                        {
+                            var token = await _userHelper.GenerateTwoFactorAuthenticationTokenAsync(user);
+                            _mailHelper.SendEmail(user.Email, "Two Factor Authentication", $"This is your authentication code: {token}");
+                        
+                            return this.RedirectToAction("VerifyLoginToken", "Account", model);
+                        }
+                }
+                else
+                {
+                    this.ModelState.AddModelError(string.Empty, "User Not Found");
+                    return View(model);
+                }
+                    var result = await _userHelper.LoginAsync(model);
                     if (this.Request.Query.Keys.Contains("ReturnUrl"))
                     {
                         return Redirect(this.Request.Query["ReturnUrl"].First());
                     }
-                    return this.RedirectToAction("Dashboard", "Dashboards");
-                }
+                
             }
-            this.ModelState.AddModelError(string.Empty, "Failed  to Login");
-            return View(model);
+                this.ModelState.AddModelError(string.Empty, "Failed  to Login");
+                return View(model);
+            
         }
 
-        public IActionResult VerifyLoginToken()
-        {
-            return View();
-        }
+        //public IActionResult VerifyLoginToken()
+        //{
+        //    return View();
+        //}   
 
 
+        [HttpGet]
         [HttpPost]
-        public IActionResult VerifyLoginToken(TwoFactorViewModel model, User user)
+        public async Task<IActionResult> VerifyLoginToken(TwoFactorViewModel model, LoginViewModel modelLogin)
         {
-            if (ModelState.IsValid)
+            model.RememberMe = modelLogin.RememberMe;
+            model.UserName= modelLogin.UserName;
+            model.Password= modelLogin.Password;
+            var user = await _userHelper.GetUserByEmailAsync(modelLogin.UserName);
+            if (user != null)
             {
-              var validToken = _userHelper.TwoFactorAuthenticationConfirmationAsync(user, model.TwoFactorCode);
-                if(validToken.IsCompleted)
+                if (ModelState.IsValid)
                 {
-                    return RedirectToAction("Dashboard", "Dashboards");
+                    var validToken = await _userHelper.TwoFactorAuthenticationConfirmationAsync(user, model.TwoFactorCode);
+                    if (validToken)
+                    {
+                        await _userHelper.LoginAsync(modelLogin);
+                        return RedirectToAction("Dashboard", "Dashboards");
+                    }
                 }
+                this.ModelState.AddModelError(string.Empty, "Failed  validation");
+                return View(model);
             }
+            this.ModelState.AddModelError(string.Empty, "Login Failed");
             return View(model);
         }
 
@@ -100,6 +136,7 @@ namespace FreeRentLibrary.Controllers
         }
 
         //registar através da conta Admin
+        [Authorize(Roles ="Admin")]
         public IActionResult RegisterAsAdmin()
         {
             var model = new RegisterAsAdminViewModel
@@ -112,6 +149,7 @@ namespace FreeRentLibrary.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult>RegisterAsAdmin(RegisterAsAdminViewModel model)
         {
             if (ModelState.IsValid)
@@ -148,12 +186,12 @@ namespace FreeRentLibrary.Controllers
                     var role = await _roleManager.FindByIdAsync(model.RoleId);
                     await _userHelper.AddUserToRoleAsync(user, role.Name);
                     Response response = _mailHelper.SendEmail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
-                        $"To allow the user, " +
-                        $"plase click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+                       $"An Account as {role.Name} was created for you, " +
+                        $"plase click in this link to confirm:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
 
                     if (response.IsSuccess)
                     {
-                        ViewBag.Message = "The instructions to allow you user has been send to email";
+                        ViewBag.Message = $"The instructions has been send to {model.Username}";
                         return View(model);
                     }
 
@@ -277,6 +315,7 @@ namespace FreeRentLibrary.Controllers
                     user.CityId = model.CityId;
                     user.City = city;
                     user.TwoFactorEnabled = model.TwoFactorAuthentication;
+
                     var response = await _userHelper.UpdateUserAsync(user);
                     if (response.Succeeded)
                     {

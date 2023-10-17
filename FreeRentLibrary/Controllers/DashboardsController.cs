@@ -6,9 +6,11 @@ using FreeRentLibrary.Helpers.IHelpers;
 using FreeRentLibrary.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FreeRentLibrary.Controllers
 {
+    [AllowAnonymous]
     public class DashboardsController : Controller
     {
         private readonly ILogger<HomeController> _logger;

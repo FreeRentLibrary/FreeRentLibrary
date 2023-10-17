@@ -59,6 +59,8 @@ namespace FreeRentLibrary
                     };
                 });
 
+            
+
             services.AddDbContext<DataContext>(cfg =>
             {
                 cfg.UseSqlServer(this.Configuration.GetConnectionString("LocalConnection"));
@@ -83,6 +85,7 @@ namespace FreeRentLibrary
             {
                 var policy = new AuthorizationPolicyBuilder()
                 .RequireAuthenticatedUser()
+                
                 .Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
             }).AddXmlSerializerFormatters();
