@@ -6,6 +6,7 @@ namespace FreeRentLibrary.Models
     public class LibraryViewModel
     {
         public IEnumerable<Book> Books { get; set; }
+        public IEnumerable<BookEdition> BookEditions { get; set; }
         public BookEdition BookOfTheDay { get; set; }
         public IEnumerable<Book> BooksByGenre { get; set; }
         public IEnumerable<Book> BooksByAuthor { get; set; }
