@@ -101,13 +101,14 @@ namespace FreeRentLibrary.Controllers
             
         }
 
-        //public IActionResult VerifyLoginToken()
-        //{
-        //    return View();
-        //}   
+
+        public IActionResult VerifyLoginToken(TwoFactorViewModel model)
+        {
+            return View(model);
+        }
 
 
-        [HttpGet]
+        
         [HttpPost]
         public async Task<IActionResult> VerifyLoginToken(TwoFactorViewModel model, LoginViewModel modelLogin)
         {
@@ -125,6 +126,8 @@ namespace FreeRentLibrary.Controllers
                         await _userHelper.LoginAsync(modelLogin);
                         return RedirectToAction("Dashboard", "Dashboards");
                     }
+                    this.ModelState.AddModelError(string.Empty, "Failed  validation");
+                    return View(model);
                 }
                 this.ModelState.AddModelError(string.Empty, "Failed  validation");
                 return View(model);
