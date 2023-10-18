@@ -40,6 +40,8 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
 
         Task<BookEdition> GetBookEditionAsync(int bookEditionId);
 
+        Task<BookEdition> GetRandomBookEditionAsync();
+
         Task<bool> BookEditionExistsAsync(int bookEditionId);
 
         #endregion
@@ -59,6 +61,10 @@ namespace FreeRentLibrary.Data.Repositories.IRepositories
         IEnumerable<SelectListItem> GetComboBookPublishers();
 
         IEnumerable<SelectListItem> GetComboBookPublishers(int publisherId);
+
+        IEnumerable<SelectListItem> GetComboBookEditions();
+
+        IEnumerable<SelectListItem> GetComboBookEditions(int bookEditionId);
 
         #endregion
     }
