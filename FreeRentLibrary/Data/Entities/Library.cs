@@ -11,6 +11,7 @@ namespace FreeRentLibrary.Data.Entities
         public string Name { get; set; }
 
         //Shows the Books of this Library with the respective stocks
+        [Display(Name = "Stock")]
         public ICollection<LibraryStock> LibraryStocks { get; set; }
 
         //Rentals made to this library
@@ -21,6 +22,9 @@ namespace FreeRentLibrary.Data.Entities
 
         //TODO: Other data like address, name, city, etc...
         public string Address { get; set; }
+
+        [Display(Name = "City")]
+        public int CityId { get; set; }
 
         public City City { get; set; }
 

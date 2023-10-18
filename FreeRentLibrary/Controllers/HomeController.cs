@@ -42,10 +42,10 @@ namespace FreeRentLibrary.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                if (User.IsInRole("Admin") || User.IsInRole("Employee"))
-                {
-                    return RedirectToAction("Dashboard", "Dashboards");
-                }
+                //if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+                //{
+                //    return RedirectToAction("Dashboard", "Dashboards");
+                //}
                 return RedirectToAction("Home");
             }
             return View();

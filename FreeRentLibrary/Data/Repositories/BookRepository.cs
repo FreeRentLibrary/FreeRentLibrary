@@ -3,6 +3,7 @@ using FreeRentLibrary.Data.Repositories.IRepositories;
 using FreeRentLibrary.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -205,6 +206,25 @@ namespace FreeRentLibrary.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<BookEdition> GetRandomBookEditionAsync()
+        {
+            var count = await _context.BookEditions.CountAsync();
+
+            var randomIndex = new Random().Next(0, count);
+
+            var randomBookEdition = await _context.BookEditions
+                .Include(be => be.Book)
+                .ThenInclude(b => b.Author)
+                .Include(be => be.BookPublisher)
+                .Include(be => be.BookType)
+                .OrderBy(be => Guid.NewGuid())
+                .Skip(randomIndex)
+                .Take(1)
+                .SingleOrDefaultAsync();
+
+            return randomBookEdition;
+        }
+
         public async Task<bool> BookEditionExistsAsync(int bookEditionId)
         {
             return await _context.BookEditions.AnyAsync(be => be.Id == bookEditionId);
@@ -302,6 +322,37 @@ namespace FreeRentLibrary.Data.Repositories
                 list = _context.Publishers.Select(bp => new SelectListItem
                 {
                     Text = bp.Name,
+                    Value = bp.Id.ToString()
+                }).OrderBy(l => l.Text).ToList();
+
+            }
+            return list;
+        }
+
+        public IEnumerable<SelectListItem> GetComboBookEditions()
+        {
+            var list = _context.BookEditions.Select(bp => new SelectListItem
+            {
+                Text = bp.EditionName + " - " + bp.BookPublisher.Name,
+                Value = bp.Id.ToString()
+            }).OrderBy(l => l.Text).ToList();
+            list.Insert(0, new SelectListItem
+            {
+                Text = "Select a Book Edition...",
+                Value = "0"
+            });
+            return list;
+        }
+
+        public IEnumerable<SelectListItem> GetComboBookEditions(int bookEditionId)
+        {
+            var publisher = _context.BookEditions.Find(bookEditionId);
+            var list = new List<SelectListItem>();
+            if (publisher != null)
+            {
+                list = _context.BookEditions.Select(bp => new SelectListItem
+                {
+                    Text = bp.EditionName,
                     Value = bp.Id.ToString()
                 }).OrderBy(l => l.Text).ToList();
 

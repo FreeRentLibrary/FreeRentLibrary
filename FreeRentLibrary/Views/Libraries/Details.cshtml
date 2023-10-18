@@ -4,15 +4,90 @@
     ViewData["Title"] = "Details";
 }
 
+<style>
+    .table td img {
+        max-height: 100%;
+        width: auto;
+        display: block;
+    }
+
+    .table td {
+        height: 100px;
+        vertical-align: top;
+    }
+</style>
+
 <h1>Details</h1>
 
 <div>
     <h4>Library</h4>
     <hr />
     <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CityId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.City.Name)
+        </dd>
     </dl>
+
+    <br />
+    @if (Model.LibraryStocks.Count > 0 && Model.LibraryStocks != null)
+    {
+        <label>Books</label>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.LibraryStocks.FirstOrDefault().BookEdition.CoverId)</th>
+                    <th>@Html.DisplayNameFor(model => model.LibraryStocks.FirstOrDefault().BookEdition.EditionName)</th>
+                    <th>@Html.DisplayNameFor(model => model.LibraryStocks.FirstOrDefault().BookEdition.BookPublisherId)</th>
+                    <th>@Html.DisplayNameFor(model => model.LibraryStocks.FirstOrDefault().BookEdition.BookTypeId)</th>
+                    <th>@Html.DisplayNameFor(model => model.LibraryStocks)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.LibraryStocks)
+                {
+                    <tr>
+                        <td>
+                            <img src="@Url.Content(item.BookEdition.ImageFullPath)" alt="Image" />
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BookEdition.EditionName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BookEdition.BookPublisher.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BookEdition.BookType.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Quantity)
+                        </td>
+                        <td>
+                            <a asp-controller="Books" asp-action="BookEditionsDetails" asp-route-id="@item.BookEditionId" class="btn btn-primary">View</a> |
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
+    <a asp-action="AddLibraryStock" asp-route-id="@Model.Id">Add Book to Stock</a>
 </div>
