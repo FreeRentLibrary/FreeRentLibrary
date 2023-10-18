@@ -15,7 +15,7 @@ namespace FreeRentLibrary.Models
 
         public bool RememberMe { get; set; }
 
-        [Required]
+        //[Required]
         [Display(Name = "Two-Factor Authentication Code")]
         public string TwoFactorCode { get; set; }
     }
