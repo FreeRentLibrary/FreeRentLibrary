@@ -54,6 +54,36 @@ a:hover {
     color: white;
 }
 
+/* Search Bar */
+
+.frl-search-bar {
+    background-color: white;
+    color: black;
+    border-style: none;
+}
+
+.frl-search-form {
+    border-style: none;
+}
+
+.frl-search-item {
+    background-color: white;
+    color: black;
+    border-style: none;
+}
+
+.frl-search-input {
+    background-color: white;
+    color: black;
+    border-style: none;
+}
+
+.frl-search-button {
+    background-color: white;
+    color: #9fa8ed;
+    border-style: none;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {

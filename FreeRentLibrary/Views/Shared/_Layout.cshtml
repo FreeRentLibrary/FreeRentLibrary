@@ -4,70 +4,63 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - FreeRentLibrary</title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:500,800" rel="stylesheet" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css"/>
-    <link href="https://fonts.googleapis.com/css?family=Raleway:500,800" rel="stylesheet"/>
     <link rel="stylesheet" href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker.min.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
-<body>
+    <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light nav-bg border-bottom box-shadow mb-3">
             <div class="container">
-                <a href="@Url.Action("Home", "Home")">
-                    <img src="~/images/home/frlLogoHeader.png" alt="FreeRentLibrary Logo" class="logo-image" />
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Books" asp-action="Index">Books</a>
-                        </li>
-                        
-                        @if(this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
+                <div class="navbar-brand">
+                    <a href="@Url.Action("Home", "Home")">
+                        <img src="~/images/home/frlLogoHeader.png" alt="FreeRentLibrary Logo" class="logo-image" />
+                    </a>
+                </div>
+                <div class="search-bar frl-search-bar">
+                    <form asp-controller="Home" asp-action="SearchResults" method="get" class="search-form frl-search-form">
+                        <input type="text" name="query" class="search-input frl-search-input" placeholder="Search..." />
+                        <select name="category" class="search-category frl-search-button ">
+                            <option class="frl-search-item" value="BookEdition">Book</option>
+                            <option class="frl-search-item" value="Author">Author</option>
+                            <option class="frl-search-item" value="Publisher">Publisher</option>
+                        </select>
+                        <button type="submit" class="search-button frl-search-button"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                    <ul class="navbar-nav">
+                        @if (this.User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="RegisterAsAdmin">Register New Staff</a>
-                            </li>
+                            @if (!this.User.IsInRole("Reader"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle frl-dropdown-button text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage</a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        @if (this.User.IsInRole("Admin"))
+                                        {
+                                            <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Account" asp-action="RegisterAsAdmin">Add Staff</a></li>
+                                            <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Roles" asp-action="ListRoles">Roles</a></li>
+                                        }
+                                        <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Dashboards" asp-action="Dashboard">Users</a></li>
+                                        <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Rents" asp-action="Index">Rentals</a></li>
+                                        <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Reservations" asp-action="Index">Reservations</a></li>
+                                        <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Libraries" asp-action="Index">Libraries</a></li>
+                                        <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Books" asp-action="Index">Books</a></li>
+                                        <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Authors" asp-action="Index">Authors</a></li>
+                                        <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Genres" asp-action="Index">Genres</a></li>
+                                        <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Countries" asp-action="Index">Countries</a></li>
+                                    </ul>
+                                </li>
+                            }
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle frl-dropdown-button text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+                                <a class="nav-link dropdown-toggle frl-dropdown-button text-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-user"></i></a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Dashboards" asp-action="Dashboard">Users</a></li>
-                                    <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Roles" asp-action="ListRoles">Roles</a></li>
-                                    <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Countries" asp-action="Index">Countries and Cities</a></li>
-                                    <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Genres" asp-action="Index">Genres</a></li>
-                                    <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Authors" asp-action="Index">Authors</a></li>
-                                    <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="BookPublishers" asp-action="Index">Publishers</a></li>
-                                    <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Books" asp-action="Index">Books</a></li>
-                                    <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Books" asp-action="CreateBookEdition">New Book Edition</a></li>
-                                    <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Rents" asp-action="Index">Rentals</a></li>
-                                    <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Reservations" asp-action="Index">Reservations</a></li>
-                                    <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Libraries" asp-action="Index">Libraries</a></li>
+                                    <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Account" asp-action="ChangeUser"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                                    <li><a class="dropdown-item frl-dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Log-out</a></li>
                                 </ul>
-                            </li>
-                        }
-
-                        <form asp-controller="Home" asp-action="SearchResults" method="get">
-                            <select name="category">
-                                <option value="BookEdition">Book</option>
-                                <option value="Author">Author</option>
-                                <option value="Publisher">Publisher</option>
-                            </select>
-                            <input type="text" name="query" placeholder="Search...">
-                            <button type="submit">Search</button>
-                        </form>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        @if(this.User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a>                                
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-light" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
                             </li>
                         }
                         else
@@ -81,21 +74,21 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-    <br />
-    <footer class="border-top footer text-muted">
         <div class="container">
-            <p class="footer-text">&copy; 2023 - FreeRentLibrary - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></p>
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
         </div>
-    </footer>
+        <br />
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                <p class="footer-text">&copy; 2023 - FreeRentLibrary - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></p>
+            </div>
+        </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-</body>
+    </body>
 </html>

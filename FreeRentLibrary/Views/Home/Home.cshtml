@@ -37,7 +37,7 @@
             {
                 <div class="col-md-4">
                     <div class="card mb-4">
-                        <img src="@Url.Content(book.BookEditions.FirstOrDefault().ImageFullPath)" class="card-img-top">
+                        @* <img src="@Url.Content(book.BookEditions.FirstOrDefault().ImageFullPath)" class="card-img-top"> *@
                         <div class="card-body">
                             <a asp-action="BookEditionsDetails" asp-controller="Books" asp-route-id="@book.Id"><h5 class="card-title">@book.Name</h5></a>
                             <p class="card-text">@book.Author.Name</p>

@@ -9,6 +9,7 @@ using FreeRentLibrary.Helpers.IHelpers;
 using FreeRentLibrary.Helpers.SimpleHelpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace FreeRentLibrary.Data
 {
@@ -17,12 +18,14 @@ namespace FreeRentLibrary.Data
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
         private readonly ICountryRepository _countryRepository;
-        
-        public SeedDB(DataContext context, IUserHelper userHelper, ICountryRepository countryRepository)
+        private readonly ILogger<SeedDB> _logger;
+
+        public SeedDB(DataContext context, IUserHelper userHelper, ICountryRepository countryRepository, ILogger<SeedDB> logger)
         {
             _context = context;
             _userHelper = userHelper;
             _countryRepository = countryRepository;
+            _logger = logger;
         }
 
         public async Task SeedAsync()
@@ -39,8 +42,91 @@ namespace FreeRentLibrary.Data
 
             await SeedAdmin();
 
+            await SeedDefaultAuthors();
+
+            await SeedDefaultBooks();
+
             await _context.SaveChangesAsync();
             
+        }
+
+        private async Task SeedDefaultAuthors()
+        {
+            if (!_context.Authors.Any())
+            {
+                try
+                {
+                    await _context.Database.OpenConnectionAsync();
+                    await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Authors ON");
+
+                    List<Author> authorsToAdd = new List<Author>
+                    {
+                        new Author {Id = 1 , Name = "William Shakespeare"},
+                        new Author {Id = 2 , Name = "Fernando Pessoa"}
+                    };
+                    await _context.Authors.AddRangeAsync(authorsToAdd);
+                    await _context.SaveChangesAsync();
+
+                    await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Authors OFF");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Error occurred during data seeding for authors.");
+                    throw;
+                }
+            }
+        }
+
+        private async Task SeedDefaultBooks()
+        {
+            if (!_context.Books.Any())
+            {
+                try
+                {
+                    await _context.Database.OpenConnectionAsync();
+                    await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Books ON");
+
+                    List<Book> booksToAdd = new List<Book>
+                    {
+                        new Book 
+                        {  
+                            Id = 1, 
+                            Name = "Macbeth",
+                            AuthorId = 1,
+                            NativeLanguage = "en",
+                            Synopsis = "Macbeth is a tragedy by William Shakespeare. It is thought to have been first performed in 1606.It dramatises the damaging physical and psychological effects of political ambition on those who seek power.",
+                        },
+
+                        new Book 
+                        {
+                            Id = 2,
+                            Name = "Romeo and Juliet",
+                            AuthorId = 1,
+                            NativeLanguage = "en",
+                            Synopsis = "Romeo and Juliet is a tragedy written by William Shakespeare early in his career about the romance between two Italian youths from feuding families. It was among Shakespeare's most popular plays during his lifetime and, along with Hamlet, is one of his most frequently performed. Today, the title characters are regarded as archetypal young lovers.",
+                        },
+
+                        new Book
+                        {
+                            Id = 3,
+                            Name = "Mensagem",
+                            AuthorId = 2,
+                            NativeLanguage = "pt",
+                            Synopsis = "Mensagem is a book by Portuguese writer Fernando Pessoa. It is composed of 44 poems, and was called the \"livro pequeno de poemas\" or the \"little book of poems\". It was published in 1934 by Parceria António Maria Pereira. The book was awarded, in the same year, with the Prémio Antero de Quental in the poem category by the Secretariado Nacional de Informação of the Estado Novo."
+                        }
+                    };
+
+                    await _context.Books.AddRangeAsync(booksToAdd);
+                    await _context.SaveChangesAsync();
+
+                    await _context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Books OFF");
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Error occurred during data seeding for authors.");
+                    throw;
+                }
+            }
         }
 
         public async Task SeedRoles()
