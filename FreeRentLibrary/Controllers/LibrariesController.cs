@@ -2,6 +2,7 @@
 using FreeRentLibrary.Data.Entities;
 using FreeRentLibrary.Data.Repositories;
 using FreeRentLibrary.Data.Repositories.IRepositories;
+using FreeRentLibrary.Helpers;
 using FreeRentLibrary.Helpers.IHelpers;
 using FreeRentLibrary.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -22,6 +23,7 @@ namespace FreeRentLibrary.Controllers
 		private readonly IRentRepository _rentRepository;
 		private readonly IReserveRepository _reserveRepository;
         private readonly IBookRepository _bookRepository;
+        private readonly ICountryRepository _countryRepository;
 
         public LibrariesController(
             DataContext context, 
@@ -29,7 +31,8 @@ namespace FreeRentLibrary.Controllers
             IUserHelper userHelper,
             IRentRepository rentRepository,
             IReserveRepository reserveRepository,
-            IBookRepository bookRepository)
+            IBookRepository bookRepository,
+            ICountryRepository countryRepository)
         {
             _context = context;
             _libraryRepository = libraryRepository;
@@ -37,26 +40,28 @@ namespace FreeRentLibrary.Controllers
 			_rentRepository = rentRepository;
 			_reserveRepository = reserveRepository;
             _bookRepository = bookRepository;
+            _countryRepository = countryRepository;
         }
 
         // GET: Libraries
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            Random rand = new Random();
-            int genreId = rand.Next(0,10); //Replace with _genreRepository.GetMaxGenreId();
-            int authorId = rand.Next(0,10); //Replace with _authorRepository.GetMaxAuthorId();
-            int bookDay = rand.Next(0, 10); //Set by Admin/Employee
+            //Random rand = new Random();
+            //int genreId = rand.Next(0,10); //Replace with _genreRepository.GetMaxGenreId();
+            //int authorId = rand.Next(0,10); //Replace with _authorRepository.GetMaxAuthorId();
+            //int bookDay = rand.Next(0, 10); //Set by Admin/Employee
 
-            var bookOfTheDay = await _bookRepository.GetBookEditionAsync(bookDay);
-            var booksByGenre = await _bookRepository.GetBooksByGenreAsync(genreId);
-            var booksByAuthor = await _bookRepository.GetBooksByAuthorAsync(authorId);
+            //var bookOfTheDay = await _bookRepository.GetBookEditionAsync(bookDay);
+            //var booksByGenre = await _bookRepository.GetBooksByGenreAsync(genreId);
+            //var booksByAuthor = await _bookRepository.GetBooksByAuthorAsync(authorId);
 
-            return View(new LibraryViewModel
-            {
-                BookOfTheDay = bookOfTheDay,
-                BooksByGenre = booksByGenre,
-                BooksByAuthor = booksByAuthor,
-            });
+            //return View(new LibraryViewModel
+            //{
+            //    BookOfTheDay = bookOfTheDay,
+            //    BooksByGenre = booksByGenre,
+            //    BooksByAuthor = booksByAuthor,
+            //});
+            return View(_libraryRepository.GetLibrariesWithCity());
         }
 
         // GET: Libraries/Details/5
@@ -67,8 +72,7 @@ namespace FreeRentLibrary.Controllers
                 return NotFound();
             }
 
-            var library = await _context.Libraries
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var library = await _libraryRepository.GetLibraryWithAllInfo(id.Value);
             if (library == null)
             {
                 return NotFound();
@@ -80,7 +84,12 @@ namespace FreeRentLibrary.Controllers
         // GET: Libraries/Create
         public IActionResult Create()
         {
-            return View();
+            var viewModel = new LibraryViewModel
+            {
+                Countries = _countryRepository.GetComboCountries(),
+                Cities = _countryRepository.GetComboCities(0),
+            };
+            return View(viewModel);
         }
 
         // POST: Libraries/Create
@@ -88,15 +97,25 @@ namespace FreeRentLibrary.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] Library library)
+        public async Task<IActionResult> Create(LibraryViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(library);
-                await _context.SaveChangesAsync();
+                var library = new Library
+                {
+                    Name = viewModel.Name,
+                    Address = viewModel.Address,
+                    CityId = viewModel.CityId,
+                    City = await _countryRepository.GetCityAsync(viewModel.CityId),
+                };
+
+                await _libraryRepository.CreateAsync(library);
                 return RedirectToAction(nameof(Index));
             }
-            return View(library);
+
+            viewModel.Countries = _countryRepository.GetComboCountries(viewModel.CountryId);
+            viewModel.Cities = _countryRepository.GetComboCities(viewModel.CityId);
+            return View(viewModel);
         }
 
         // GET: Libraries/Edit/5
@@ -213,5 +232,39 @@ namespace FreeRentLibrary.Controllers
             return View("UserRentals"); //Returns to the User's Rentals Page
 		}
 
-	}
+        public async Task<IActionResult> AddLibraryStock(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var library = await _libraryRepository.GetByIdAsync(id.Value);
+
+            var book = await _bookRepository.GetByIdAsync(id.Value);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            var viewModel = new LibraryStockViewModel
+            {
+                LibraryId = id.Value,
+                BookEditions = _bookRepository.GetComboBookEditions(),
+            };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddLibraryStock(LibraryStockViewModel viewModel)
+        {
+            if (this.ModelState.IsValid)
+            {
+                await _libraryRepository.AddBookToStock(viewModel.BookEditionId.Value, viewModel.LibraryId.Value, viewModel.Quantity);
+                
+                return RedirectToAction("Details", new { id = viewModel.LibraryId.Value });
+            }
+            return this.View(viewModel);
+        }
+
+    }
 }
